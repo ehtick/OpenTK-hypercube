@@ -34,7 +34,19 @@ public static class HyperMath
 
     public const float RadiansToDegreesF = 180 / PIf;
     public const float DegreesToRadiansF = PIf / 180;
-    
+
+    public static bool AboutEquals(float a, float b, float tolerance = 1E-15f)
+    {
+        var epsilon = Math.Max(Math.Abs(a), Math.Abs(b)) * tolerance ;
+        return Math.Abs(a - b) <= epsilon;
+    }
+
+    public static bool AboutEquals(double a, double b, double tolerance = 1E-15d)
+    {
+        var epsilon = Math.Max(Math.Abs(a), Math.Abs(b)) * tolerance;
+        return Math.Abs(a - b) <= epsilon;
+    }
+
     public static byte MoveTowards(byte current, byte target, byte distance)
     {
         return current < target ?

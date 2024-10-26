@@ -1,4 +1,5 @@
 ﻿using Hypercube.Mathematics.Matrices;
+using Hypercube.Mathematics.Quaternions;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Mathematics.Transforms;

@@ -1,5 +1,6 @@
 ﻿using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
+using Hypercube.Mathematics.Quaternions;
 using Hypercube.Mathematics.Transforms;
 using Hypercube.Mathematics.Vectors;
 

@@ -1,4 +1,5 @@
 ﻿using Hypercube.Mathematics;
+using Hypercube.Mathematics.Quaternions;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.UnitTests.Mathematics.Quaternions;

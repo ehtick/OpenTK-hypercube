@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Hypercube.Mathematics.Quaternions;
 using Hypercube.Mathematics.Shapes;
 using Hypercube.Mathematics.Transforms;
 using Hypercube.Mathematics.Vectors;

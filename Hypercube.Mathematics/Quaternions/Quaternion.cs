@@ -1,10 +1,11 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Hypercube.Mathematics.Vectors;
+using JetBrains.Annotations;
 
-namespace Hypercube.Mathematics;
+namespace Hypercube.Mathematics.Quaternions;
 
-[StructLayout(LayoutKind.Sequential)]
+[PublicAPI, StructLayout(LayoutKind.Sequential)]
 public readonly struct Quaternion : IEquatable<Quaternion> 
 {
     private const float SingularityThreshold = 0.4999995f;
