@@ -4,5 +4,5 @@ namespace Hypercube.Mathematics.Transforms;
 
 public interface ITransform
 {
-    Matrix4X4 Matrix { get; }
+    Matrix4x4 Matrix { get; }
 }

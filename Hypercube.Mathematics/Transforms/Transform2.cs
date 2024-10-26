@@ -5,7 +5,7 @@ namespace Hypercube.Mathematics.Transforms;
 
 public partial struct Transform2 : ITransform
 {
-    public Matrix4X4 Matrix { get; private set; }
+    public Matrix4x4 Matrix { get; private set; }
     
     public Vector2 Position { get; private set; }
     public Angle Rotation { get; private set; }
@@ -55,6 +55,6 @@ public partial struct Transform2 : ITransform
     
     private void UpdateMatrix()
     {
-        Matrix = Matrix4X4.CreateTransform(this);
+        Matrix = Matrix4x4.CreateTransform(this);
     }
 }

@@ -211,7 +211,7 @@ public sealed partial class Renderer
         var currentIndex = _batchIndexIndex;
 
         var batch = new Batch(data.StartIndex, currentIndex - data.StartIndex, data.TextureHandle, data.PrimitiveType,
-            Matrix4X4.Identity);
+            Matrix4x4.Identity);
 
         _batches.Add(batch);
     }

@@ -13,9 +13,9 @@ public partial struct Matrix3x2
     public static Matrix3x2 One => new(Vector2.One);
     public static Matrix3x2 Identity => new(Vector2.UnitX, Vector2.UnitY, Vector2.Zero);
 
-    public Vector2 Row0;
-    public Vector2 Row1;
-    public Vector2 Row2;
+    public readonly Vector2 Row0;
+    public readonly Vector2 Row1;
+    public readonly Vector2 Row2;
 
     public Vector3 Column0 => new(M00, M10, M20);
     public Vector3 Column1 => new(M01, M11, M21);
@@ -27,8 +27,6 @@ public partial struct Matrix3x2
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => Row0.X;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        set => Row0 = Row0.WithX(value);
     }
 
     /// <summary>
@@ -38,10 +36,7 @@ public partial struct Matrix3x2
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => Row0.Y;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        set => Row0 = Row0.WithY(value);
     }
-
 
     /// <summary>
     /// Matrix x: 0, y: 1 element.
@@ -50,8 +45,6 @@ public partial struct Matrix3x2
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => Row1.X;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        set => Row1 = Row1.WithX(value);
     }
 
     /// <summary>
@@ -61,8 +54,6 @@ public partial struct Matrix3x2
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => Row1.Y;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        set => Row1 = Row1.WithY(value);
     }
 
     /// <summary>
@@ -72,8 +63,6 @@ public partial struct Matrix3x2
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => Row2.X;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        set => Row2 = Row2.WithX(value);
     }
 
     /// <summary>
@@ -83,8 +72,6 @@ public partial struct Matrix3x2
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => Row2.Y;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        set => Row2 = Row2.WithY(value);
     }
 
     public Matrix3x2(float m00, float m01, float m10, float m11, float m20, float m21)
@@ -135,7 +122,6 @@ public partial struct Matrix3x2
     {
         var cos = (float)Math.Cos(angle);
         var sin = (float)Math.Sin(angle);
-
         return new Matrix3x2(cos, sin, -sin, cos, 0, 0);
     }
     

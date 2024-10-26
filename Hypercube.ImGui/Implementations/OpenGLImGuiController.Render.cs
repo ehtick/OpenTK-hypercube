@@ -66,7 +66,7 @@ public partial class OpenGLImGuiController
             CheckErrors("Setup data");
         }
 
-        var project = Matrix4X4.CreateOrthographicOffCenter(0f, _io.DisplaySize.X, _io.DisplaySize.Y, 0f, -1f, 1f);
+        var project = Matrix4x4.CreateOrthographicOffCenter(0f, _io.DisplaySize.X, _io.DisplaySize.Y, 0f, -1f, 1f);
         
         _shader.Use();
         _shader.SetUniform("projection", project);

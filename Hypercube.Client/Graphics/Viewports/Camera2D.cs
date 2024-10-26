@@ -8,8 +8,8 @@ namespace Hypercube.Client.Graphics.Viewports;
 
 public sealed class Camera2D : ICamera
 {
-    public Matrix4X4 Projection { get; private set; }
-    public Matrix4X4 View { get; private set; }
+    public Matrix4x4 Projection { get; private set; }
+    public Matrix4x4 View { get; private set; }
 
     public Vector3 Position => _transform.Position;
     public Vector3 Rotation => _transform.Rotation.ToEuler();
@@ -53,7 +53,7 @@ public sealed class Camera2D : ICamera
 
     private void UpdateProjection()
     {
-        Projection = Matrix4X4.CreateOrthographic(Size, _zNear, _zFar);
+        Projection = Matrix4x4.CreateOrthographic(Size, _zNear, _zFar);
         View = _transform.Matrix;
     }
 }

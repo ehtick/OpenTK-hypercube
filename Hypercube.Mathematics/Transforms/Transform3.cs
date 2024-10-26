@@ -6,7 +6,7 @@ namespace Hypercube.Mathematics.Transforms;
 
 public partial struct Transform3 : ITransform
 {
-    public Matrix4X4 Matrix { get; private set; }
+    public Matrix4x4 Matrix { get; private set; }
     
     public Vector3 Position { get; private set; }
     public Quaternion Rotation { get; private set; }
@@ -62,6 +62,6 @@ public partial struct Transform3 : ITransform
 
     private void UpdateMatrix()
     {
-        Matrix = Matrix4X4.CreateTranslation(Position) * Matrix4X4.CreateRotation(Rotation) *Matrix4X4.CreateScale(Scale);
+        Matrix = Matrix4x4.CreateTranslation(Position) * Matrix4x4.CreateRotation(Rotation) *Matrix4x4.CreateScale(Scale);
     }
 }

@@ -7,8 +7,8 @@ public interface ICameraManager
 {
     ICamera? MainCamera { get; }
     
-    Matrix4X4 Projection { get; }
-    Matrix4X4 View { get; }
+    Matrix4x4 Projection { get; }
+    Matrix4x4 View { get; }
     
     
     void SetMainCamera(ICamera camera);

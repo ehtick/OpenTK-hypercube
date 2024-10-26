@@ -11,15 +11,15 @@ public sealed partial class Renderer
 {
     public void DrawPoint(Vector2 vector, Color color)
     {
-        DrawPoint(vector, color, Matrix4X4.Identity);
+        DrawPoint(vector, color, Matrix4x4.Identity);
     }
 
     public void DrawPoint(Vector2 vector, Color color, Matrix3x3 model)
     {
-        DrawPoint(vector, color, Matrix4X4.CreateIdentity(model));
+        DrawPoint(vector, color, Matrix4x4.CreateIdentity(model));
     }
 
-    public void DrawPoint(Vector2 vector, Color color, Matrix4X4 model)
+    public void DrawPoint(Vector2 vector, Color color, Matrix4x4 model)
     {
         BreakCurrentBatch();
         EnsureBatch(PrimitiveType.Points, null, _primitiveShaderProgram.Handle);
@@ -28,30 +28,30 @@ public sealed partial class Renderer
 
     public void DrawLine(Vector2 pointA, Vector2 pointB, Color color)
     {
-        DrawLine(pointA, pointB, color, Matrix4X4.Identity);
+        DrawLine(pointA, pointB, color, Matrix4x4.Identity);
     }
 
     public void DrawLine(Vector2 pointA, Vector2 pointB, Color color, Matrix3x3 model)
     {
-        DrawLine(pointA, pointB, color, Matrix4X4.CreateIdentity(model));
+        DrawLine(pointA, pointB, color, Matrix4x4.CreateIdentity(model));
     }
 
-    public void DrawLine(Vector2 pointA, Vector2 pointB, Color color, Matrix4X4 model)
+    public void DrawLine(Vector2 pointA, Vector2 pointB, Color color, Matrix4x4 model)
     {
         DrawLine(new Box2(pointA, pointB), color, model);
     }
 
     public void DrawLine(Box2 box, Color color)
     {
-        DrawLine(box, color, Matrix4X4.Identity);
+        DrawLine(box, color, Matrix4x4.Identity);
     }
 
     public void DrawLine(Box2 box, Color color, Matrix3x3 model)
     {
-        DrawLine(box, color, Matrix4X4.CreateIdentity(model));
+        DrawLine(box, color, Matrix4x4.CreateIdentity(model));
     }
 
-    public void DrawLine(Box2 box, Color color, Matrix4X4 model)
+    public void DrawLine(Box2 box, Color color, Matrix4x4 model)
     {
         EnsureBatch(PrimitiveType.Lines, null, _primitiveShaderProgram.Handle);
         AddLineBatch((uint)_batchVertexIndex, model.Transform(box), color);
@@ -59,15 +59,15 @@ public sealed partial class Renderer
 
     public void DrawCircle(Circle circle, Color color)
     {
-        DrawCircle(circle, color, Matrix4X4.Identity);
+        DrawCircle(circle, color, Matrix4x4.Identity);
     }
 
     public void DrawCircle(Circle circle, Color color, Matrix3x3 model)
     {
-        DrawCircle(circle, color, Matrix4X4.CreateIdentity(model));
+        DrawCircle(circle, color, Matrix4x4.CreateIdentity(model));
     }
 
-    public void DrawCircle(Circle circle, Color color, Matrix4X4 model)
+    public void DrawCircle(Circle circle, Color color, Matrix4x4 model)
     {
         EnsureBatch(PrimitiveType.Lines, null, _primitiveShaderProgram.Handle);
         AddCircleBatch(_batchVertexIndex, circle, color, 20);
@@ -75,15 +75,15 @@ public sealed partial class Renderer
 
     public void DrawRectangle(Box2 box, Color color, bool outline = false)
     {
-        DrawRectangle(box, color, Matrix4X4.Identity, outline);
+        DrawRectangle(box, color, Matrix4x4.Identity, outline);
     }
 
     public void DrawRectangle(Box2 box, Color color, Matrix3x3 model, bool outline = false)
     {
-        DrawRectangle(box, color, Matrix4X4.CreateIdentity(model), outline);
+        DrawRectangle(box, color, Matrix4x4.CreateIdentity(model), outline);
     }
     
-    public void DrawRectangle(Box2 box, Color color, Matrix4X4 model, bool outline = false)
+    public void DrawRectangle(Box2 box, Color color, Matrix4x4 model, bool outline = false)
     {
         EnsureBatch(outline ? PrimitiveType.Lines : PrimitiveType.Triangles, null, _primitiveShaderProgram.Handle);
         AddQuadTriangleBatch((uint)_batchVertexIndex, model.Transform(box), Box2.UV, color);
@@ -91,15 +91,15 @@ public sealed partial class Renderer
     
     public void DrawPolygon(Vector2[] vertices, Color color, bool outline = false)
     {
-        DrawPolygon(vertices, color, Matrix4X4.Identity, outline);
+        DrawPolygon(vertices, color, Matrix4x4.Identity, outline);
     }
 
     public void DrawPolygon(Vector2[] vertices, Color color, Matrix3x3 model, bool outline = false)
     {
-        DrawPolygon(vertices, color, Matrix4X4.CreateIdentity(model), outline);
+        DrawPolygon(vertices, color, Matrix4x4.CreateIdentity(model), outline);
     }
 
-    public void DrawPolygon(Vector2[] vertices, Color color, Matrix4X4 model, bool outline = false)
+    public void DrawPolygon(Vector2[] vertices, Color color, Matrix4x4 model, bool outline = false)
     {
         if (outline)
         {
@@ -120,7 +120,7 @@ public sealed partial class Renderer
         }
     }
 
-    private void DrawPolygonOutline(Vector2[] vertices, Color color, Matrix4X4 model)
+    private void DrawPolygonOutline(Vector2[] vertices, Color color, Matrix4x4 model)
     {
         EnsureBatch(PrimitiveType.Lines, null, _primitiveShaderProgram.Handle);
         var startIndex = (uint)_batchVertexIndex;
@@ -146,15 +146,15 @@ public sealed partial class Renderer
     
     public void DrawTexture(ITextureHandle texture, Box2 quad, Box2 uv, Color color)
     {
-        DrawTexture(texture, quad, uv, color, Matrix4X4.Identity);
+        DrawTexture(texture, quad, uv, color, Matrix4x4.Identity);
     }
 
     public void DrawTexture(ITextureHandle texture, Box2 quad, Box2 uv, Color color, Matrix3x3 model)
     {
-        DrawTexture(texture, quad, uv, color, Matrix4X4.CreateIdentity(model));
+        DrawTexture(texture, quad, uv, color, Matrix4x4.CreateIdentity(model));
     }
     
-    public void DrawTexture(ITextureHandle texture, Box2 quad, Box2 uv, Color color, Matrix4X4 model)
+    public void DrawTexture(ITextureHandle texture, Box2 quad, Box2 uv, Color color, Matrix4x4 model)
     {
         EnsureBatch(PrimitiveType.Triangles, texture.Handle, _texturingShaderProgram.Handle);
         AddQuadTriangleBatch(_batchVertexIndex, model.Transform(quad), uv, color);

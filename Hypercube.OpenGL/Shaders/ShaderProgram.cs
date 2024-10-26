@@ -146,9 +146,9 @@ public class ShaderProgram : IShaderProgram
         GL.UniformMatrix3(GL.GetUniformLocation(Handle, name), 1, false, (float*)&matrix);
     }
 
-    public unsafe void SetUniform(string name, Matrix4X4 value, bool transpose = false)
+    public unsafe void SetUniform(string name, Matrix4x4 value, bool transpose = false)
     {
-        var matrix = transpose ? Matrix4X4.Transpose(value) : new Matrix4X4(value);
+        var matrix = transpose ? Matrix4x4.Transpose(value) : new Matrix4x4(value);
         GL.UniformMatrix4(GL.GetUniformLocation(Handle, name), 1, false, (float*)&matrix);
     }
 

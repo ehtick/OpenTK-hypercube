@@ -27,22 +27,22 @@ public interface IRenderer
     // Drawing
     void DrawPoint(Vector2 vector, Color color);
     void DrawPoint(Vector2 vector, Color color, Matrix3x3 model);
-    void DrawPoint(Vector2 vector, Color color, Matrix4X4 model);
+    void DrawPoint(Vector2 vector, Color color, Matrix4x4 model);
     void DrawLine(Vector2 pointA, Vector2 pointB, Color color);
     void DrawLine(Vector2 pointA, Vector2 pointB, Color color, Matrix3x3 model);
-    void DrawLine(Vector2 pointA, Vector2 pointB, Color color, Matrix4X4 model);
+    void DrawLine(Vector2 pointA, Vector2 pointB, Color color, Matrix4x4 model);
     void DrawLine(Box2 box, Color color);
     void DrawLine(Box2 box, Color color, Matrix3x3 model);
-    void DrawLine(Box2 box, Color color, Matrix4X4 model);
+    void DrawLine(Box2 box, Color color, Matrix4x4 model);
     void DrawCircle(Circle circle, Color color);
     void DrawCircle(Circle circle, Color color, Matrix3x3 model);
-    void DrawCircle(Circle circle, Color color, Matrix4X4 model);
+    void DrawCircle(Circle circle, Color color, Matrix4x4 model);
     void DrawRectangle(Box2 box, Color color, bool outline = false);
     void DrawRectangle(Box2 box, Color color, Matrix3x3 model, bool outline = false);
-    void DrawRectangle(Box2 box, Color color, Matrix4X4 model, bool outline = false);
+    void DrawRectangle(Box2 box, Color color, Matrix4x4 model, bool outline = false);
     void DrawPolygon(Vector2[] vertices, Color color, bool outline = false);
     void DrawPolygon(Vector2[] vertices, Color color, Matrix3x3 model, bool outline = false);
-    void DrawPolygon(Vector2[] vertices, Color color, Matrix4X4 model, bool outline = false);
+    void DrawPolygon(Vector2[] vertices, Color color, Matrix4x4 model, bool outline = false);
     void DrawTexture(ITextureHandle texture, Box2 quad, Box2 uv, Color color);
-    void DrawTexture(ITextureHandle texture, Box2 quad, Box2 uv, Color color, Matrix4X4 model);
+    void DrawTexture(ITextureHandle texture, Box2 quad, Box2 uv, Color color, Matrix4x4 model);
 }

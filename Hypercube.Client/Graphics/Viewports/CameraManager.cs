@@ -12,8 +12,8 @@ public class CameraManager : ICameraManager
     
     public ICamera? MainCamera { get; private set; }
     
-    public Matrix4X4 Projection => MainCamera?.Projection ?? Matrix4X4.Identity;
-    public Matrix4X4 View => MainCamera?.View ?? Matrix4X4.Identity;
+    public Matrix4x4 Projection => MainCamera?.Projection ?? Matrix4x4.Identity;
+    public Matrix4x4 View => MainCamera?.View ?? Matrix4x4.Identity;
     
     public void UpdateInput(ICamera? camera, float delta)
     {
