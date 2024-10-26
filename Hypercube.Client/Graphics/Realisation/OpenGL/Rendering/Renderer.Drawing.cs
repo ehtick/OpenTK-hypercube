@@ -14,7 +14,7 @@ public sealed partial class Renderer
         DrawPoint(vector, color, Matrix4X4.Identity);
     }
 
-    public void DrawPoint(Vector2 vector, Color color, Matrix3X3 model)
+    public void DrawPoint(Vector2 vector, Color color, Matrix3x3 model)
     {
         DrawPoint(vector, color, Matrix4X4.CreateIdentity(model));
     }
@@ -31,7 +31,7 @@ public sealed partial class Renderer
         DrawLine(pointA, pointB, color, Matrix4X4.Identity);
     }
 
-    public void DrawLine(Vector2 pointA, Vector2 pointB, Color color, Matrix3X3 model)
+    public void DrawLine(Vector2 pointA, Vector2 pointB, Color color, Matrix3x3 model)
     {
         DrawLine(pointA, pointB, color, Matrix4X4.CreateIdentity(model));
     }
@@ -46,7 +46,7 @@ public sealed partial class Renderer
         DrawLine(box, color, Matrix4X4.Identity);
     }
 
-    public void DrawLine(Box2 box, Color color, Matrix3X3 model)
+    public void DrawLine(Box2 box, Color color, Matrix3x3 model)
     {
         DrawLine(box, color, Matrix4X4.CreateIdentity(model));
     }
@@ -62,7 +62,7 @@ public sealed partial class Renderer
         DrawCircle(circle, color, Matrix4X4.Identity);
     }
 
-    public void DrawCircle(Circle circle, Color color, Matrix3X3 model)
+    public void DrawCircle(Circle circle, Color color, Matrix3x3 model)
     {
         DrawCircle(circle, color, Matrix4X4.CreateIdentity(model));
     }
@@ -78,7 +78,7 @@ public sealed partial class Renderer
         DrawRectangle(box, color, Matrix4X4.Identity, outline);
     }
 
-    public void DrawRectangle(Box2 box, Color color, Matrix3X3 model, bool outline = false)
+    public void DrawRectangle(Box2 box, Color color, Matrix3x3 model, bool outline = false)
     {
         DrawRectangle(box, color, Matrix4X4.CreateIdentity(model), outline);
     }
@@ -94,7 +94,7 @@ public sealed partial class Renderer
         DrawPolygon(vertices, color, Matrix4X4.Identity, outline);
     }
 
-    public void DrawPolygon(Vector2[] vertices, Color color, Matrix3X3 model, bool outline = false)
+    public void DrawPolygon(Vector2[] vertices, Color color, Matrix3x3 model, bool outline = false)
     {
         DrawPolygon(vertices, color, Matrix4X4.CreateIdentity(model), outline);
     }
@@ -149,7 +149,7 @@ public sealed partial class Renderer
         DrawTexture(texture, quad, uv, color, Matrix4X4.Identity);
     }
 
-    public void DrawTexture(ITextureHandle texture, Box2 quad, Box2 uv, Color color, Matrix3X3 model)
+    public void DrawTexture(ITextureHandle texture, Box2 quad, Box2 uv, Color color, Matrix3x3 model)
     {
         DrawTexture(texture, quad, uv, color, Matrix4X4.CreateIdentity(model));
     }

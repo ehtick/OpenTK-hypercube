@@ -1,7 +1,7 @@
 ﻿using Hypercube.Mathematics;
 using Hypercube.Mathematics.Vectors;
 
-namespace Hypercube.UnitTests.Math;
+namespace Hypercube.UnitTests.Mathematics.Quaternions;
 
 public static class QuaternionTest
 {

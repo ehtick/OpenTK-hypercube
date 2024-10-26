@@ -272,7 +272,7 @@ public partial struct Matrix4X4 : IEquatable<Matrix4X4>
     {
     }
 
-    public Matrix4X4(Matrix3X3 matrix3X3)
+    public Matrix4X4(Matrix3x3 matrix3X3)
     {
         Row0 = new Vector4(matrix3X3.Row0, 0);
         Row1 = new Vector4(matrix3X3.Row1, 0);
@@ -360,7 +360,7 @@ public partial struct Matrix4X4 : IEquatable<Matrix4X4>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Matrix4X4 CreateIdentity(Matrix3X3 matrix3X3)
+    public static Matrix4X4 CreateIdentity(Matrix3x3 matrix3X3)
     {
         return new Matrix4X4(
             new Vector4(matrix3X3.Row0, 0),

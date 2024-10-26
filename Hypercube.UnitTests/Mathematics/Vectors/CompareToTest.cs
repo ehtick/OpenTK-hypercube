@@ -1,6 +1,6 @@
 ﻿using Hypercube.Mathematics.Vectors;
 
-namespace Hypercube.UnitTests.Math;
+namespace Hypercube.UnitTests.Mathematics.Vectors;
 
 [TestFixture]
 public sealed class CompareToTest

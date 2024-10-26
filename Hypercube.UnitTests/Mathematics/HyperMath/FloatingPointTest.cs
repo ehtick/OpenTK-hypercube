@@ -1,6 +1,6 @@
 ﻿using Hypercube.Mathematics.Extensions;
 
-namespace Hypercube.UnitTests.Math;
+namespace Hypercube.UnitTests.Mathematics.HyperMath;
 
 public static class FloatingPointTest
 {

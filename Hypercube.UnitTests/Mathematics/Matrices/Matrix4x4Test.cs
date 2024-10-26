@@ -1,9 +1,11 @@
-﻿using Hypercube.Mathematics.Matrices;
+﻿using System.Diagnostics.CodeAnalysis;
+using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Vectors;
 
-namespace Hypercube.UnitTests.Math;
+namespace Hypercube.UnitTests.Mathematics.Matrices;
 
-public static class Matrix4X4Test
+[SuppressMessage("ReSharper", "InconsistentNaming")]
+public static class Matrix4x4Test
 {
     [Test]
     public static void Multiplication()
