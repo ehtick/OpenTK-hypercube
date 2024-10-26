@@ -512,9 +512,9 @@ public readonly partial struct Vector3 : IEquatable<Vector3>, IComparable<Vector
     public static Vector3 MoveTowards(Vector3 current, Vector3 target, float distance)
     {
         return new Vector3(
-            HyperMathF.MoveTowards(current.X, target.X, distance),
-            HyperMathF.MoveTowards(current.Y, target.Y, distance),
-            HyperMathF.MoveTowards(current.Z, target.Z, distance));
+            HyperMath.MoveTowards(current.X, target.X, distance),
+            HyperMath.MoveTowards(current.Y, target.Y, distance),
+            HyperMath.MoveTowards(current.Z, target.Z, distance));
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

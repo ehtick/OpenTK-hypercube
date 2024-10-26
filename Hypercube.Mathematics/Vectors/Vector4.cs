@@ -553,10 +553,10 @@ public readonly partial struct Vector4 : IEquatable<Vector4>, IComparable<Vector
     public static Vector4 MoveTowards(Vector4 current, Vector4 target, float distance)
     {
         return new Vector4(
-            HyperMathF.MoveTowards(current.X, target.X, distance),
-            HyperMathF.MoveTowards(current.Y, target.Y, distance),
-            HyperMathF.MoveTowards(current.Z, target.Z, distance),
-            HyperMathF.MoveTowards(current.W, target.W, distance));
+            HyperMath.MoveTowards(current.X, target.X, distance),
+            HyperMath.MoveTowards(current.Y, target.Y, distance),
+            HyperMath.MoveTowards(current.Z, target.Z, distance),
+            HyperMath.MoveTowards(current.W, target.W, distance));
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -189,7 +189,7 @@ public sealed partial class Renderer
     
     private void AddCircleBatch(uint startIndex, Circle circle, Color color, int segments)
     {
-        var total = HyperMathF.TwoPI / segments;
+        var total = HyperMath.TwoPIf / segments;
         for (var i = 0; i < segments; i++)
         {
             var theta = total * i;

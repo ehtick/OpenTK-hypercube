@@ -75,7 +75,7 @@ public sealed partial class Renderer
         if (_cameraManager.MainCamera is not null)
         {
             cameraTitle =
-                $"| cPos: {_cameraManager.MainCamera.Position}| cRot: {_cameraManager.MainCamera.Rotation * HyperMathF.RadiansToDegrees} | cScale: {_cameraManager.MainCamera.Scale}";
+                $"| cPos: {_cameraManager.MainCamera.Position}| cRot: {_cameraManager.MainCamera.Rotation * HyperMath.RadiansToDegreesF} | cScale: {_cameraManager.MainCamera.Scale}";
         }
 
         _windowing.WindowSetTitle(MainWindow,
