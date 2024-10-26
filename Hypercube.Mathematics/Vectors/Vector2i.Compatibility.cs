@@ -69,36 +69,4 @@ public readonly partial struct Vector2i
     {
         return new System.Drawing.Size(vector2.X, vector2.Y);
     }
-    
-    /*
-     * OpenTK Compatibility
-     */
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Vector2i(OpenTK.Mathematics.Vector2i vector)
-    {
-        return new Vector2i(vector.X, vector.Y);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator OpenTK.Mathematics.Vector2i(Vector2i vector)
-    {
-        return new OpenTK.Mathematics.Vector2i(vector.X, vector.Y);
-    }
-    
-    /*
-     * OpenToolkit Compatibility
-     */
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Vector2i(OpenToolkit.Mathematics.Vector2i vector)
-    {
-        return new Vector2i(vector.X, vector.Y);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator OpenToolkit.Mathematics.Vector2i(Vector2i vector)
-    {
-        return new OpenToolkit.Mathematics.Vector2i(vector.X, vector.Y);
-    }
 } 

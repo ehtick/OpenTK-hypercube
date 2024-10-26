@@ -133,8 +133,8 @@ public partial struct Matrix3x2
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Matrix3x2 CreateRotation(double angle)
     {
-        var cos = (float)System.Math.Cos(angle);
-        var sin = (float)System.Math.Sin(angle);
+        var cos = (float)Math.Cos(angle);
+        var sin = (float)Math.Sin(angle);
 
         return new Matrix3x2(cos, sin, -sin, cos, 0, 0);
     }

@@ -47,36 +47,4 @@ public readonly partial struct Vector3i
     {
         return new System.Numerics.Vector3(value.X, value.Y, value.Z);
     }
-    
-    /*
-     * OpenTK Compatibility
-     */
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Vector3i(OpenTK.Mathematics.Vector3i value)
-    {
-        return new Vector3i(value.X, value.Y, value.Z);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator OpenTK.Mathematics.Vector3i(Vector3i value)
-    {
-        return new OpenTK.Mathematics.Vector3i(value.X, value.Y, value.Z);
-    }
-    
-    /*
-     * OpenToolkit Compatibility
-     */
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Vector3i(OpenToolkit.Mathematics.Vector3i vector)
-    {
-        return new Vector3i(vector.X, vector.Y, vector.Z);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator OpenToolkit.Mathematics.Vector3i(Vector3i vector)
-    {
-        return new OpenToolkit.Mathematics.Vector3i(vector.X, vector.Y, vector.Z);
-    }
 }

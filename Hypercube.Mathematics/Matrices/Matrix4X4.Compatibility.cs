@@ -27,36 +27,4 @@ public partial struct Matrix4X4
             matrix4X4.M31, matrix4X4.M32, matrix4X4.M33, matrix4X4.M34,
             matrix4X4.M41, matrix4X4.M42, matrix4X4.M43, matrix4X4.M44);
     }
-    
-    /*
-     * OpenTK Compatibility
-     */
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator OpenTK.Mathematics.Matrix4(Matrix4X4 matrix4X4)
-    {
-        return new OpenTK.Mathematics.Matrix4(matrix4X4.Row0, matrix4X4.Row1, matrix4X4.Row2, matrix4X4.Row3);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Matrix4X4(OpenTK.Mathematics.Matrix4 matrix4)
-    {
-        return new Matrix4X4(matrix4.Row0, matrix4.Row1, matrix4.Row2, matrix4.Row3);
-    }
-
-    /*
-     * Open Toolkit Compatibility
-     */
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator OpenToolkit.Mathematics.Matrix4(Matrix4X4 matrix4X4)
-    {
-        return new OpenToolkit.Mathematics.Matrix4(matrix4X4.Row0, matrix4X4.Row1, matrix4X4.Row2, matrix4X4.Row3);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Matrix4X4(OpenToolkit.Mathematics.Matrix4 matrix4)
-    {
-        return new Matrix4X4(matrix4.Row0, matrix4.Row1, matrix4.Row2, matrix4.Row3);
-    }
 }
