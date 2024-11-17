@@ -73,7 +73,8 @@ public sealed class GLFWativeGenerator : HeaderGenerator
         var functionName = match.Groups[3].Value;
         var parameters = match.Groups[4].Value;
         var parametersConverted = ConvertParametersToCSharp(parameters);
-            
+        
+        result.AppendLine();
         result.AppendLine($"    /// <remarks>");
         result.AppendLine($"    /// <c>");
         result.AppendLine($"    /// {line}");
@@ -81,6 +82,5 @@ public sealed class GLFWativeGenerator : HeaderGenerator
         result.AppendLine($"    /// </remarks>");
         result.AppendLine($"    [DllImport(\"{Dll}\")]");
         result.AppendLine($"    public static extern {HandlePointerTypes(returnType)} {functionName}({parametersConverted});");
-        result.AppendLine();
     }
 }
