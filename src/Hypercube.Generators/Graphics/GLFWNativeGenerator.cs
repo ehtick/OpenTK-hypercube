@@ -1,12 +1,13 @@
 ﻿using System.Collections.Frozen;
 using System.Text;
 using System.Text.RegularExpressions;
+using Hypercube.Generators.Class;
 using Microsoft.CodeAnalysis;
 
 namespace Hypercube.Generators.Graphics;
 
 [Generator]
-public sealed class GLFWativeGenerator : HeaderClassGenerator
+public sealed class GLFWativeGenerator : HeaderGenerator
 {
     protected override FrozenDictionary<string, string> KeywordMapping { get; set; } = new Dictionary<string, string>
     {
@@ -47,6 +48,7 @@ public sealed class GLFWativeGenerator : HeaderClassGenerator
     protected override string Path => "";
     protected override string Source => "glfw3.h";
     protected override string Modifiers => "public static unsafe";
+    protected override string Type => "class";
 
     protected override void GenerateContent(GeneratorExecutionContext context, StringBuilder result, string source)
     {

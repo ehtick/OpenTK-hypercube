@@ -2,10 +2,10 @@
 using System.Text;
 using JetBrains.Annotations;
 
-namespace Hypercube.Generators;
+namespace Hypercube.Generators.Class;
 
 [PublicAPI]
-public abstract class HeaderClassGenerator : ClassGenerator
+public abstract class HeaderGenerator : Generator
 {
     protected virtual FrozenDictionary<string, string> KeywordMapping { get; set; } = new Dictionary<string, string>().ToFrozenDictionary();
     protected virtual FrozenDictionary<string, string> TypeMapping { get; set; } = new Dictionary<string, string>().ToFrozenDictionary();

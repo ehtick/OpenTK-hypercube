@@ -3,10 +3,10 @@ using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Hypercube.Generators;
+namespace Hypercube.Generators.Class;
 
 [PublicAPI]
-public abstract class ClassGenerator : ISourceGenerator
+public abstract class Generator : ISourceGenerator
 {
     protected static readonly char[] NewLineSeparators = ['\n', '\r'];
     
@@ -17,8 +17,8 @@ public abstract class ClassGenerator : ISourceGenerator
     protected abstract string Path { get; }
     protected abstract string Source { get; }
     protected abstract string Modifiers { get; }
-
-
+    protected abstract string Type { get; }
+    
     public void Initialize(GeneratorInitializationContext context)
     {
     }
@@ -97,7 +97,7 @@ public abstract class ClassGenerator : ISourceGenerator
 
     private void GenerateBody(GeneratorExecutionContext context, StringBuilder result, string source)
     {
-        result.AppendLine($"{Modifiers} class {Name}");
+        result.AppendLine($"{Modifiers} {Type} {Name}");
         result.AppendLine("{");
 
         GenerateContent(context, result, source);
