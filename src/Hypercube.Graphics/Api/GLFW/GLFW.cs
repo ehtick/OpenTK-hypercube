@@ -43,7 +43,7 @@ public static unsafe class GLFW
         return new Version(major, minor, revision);
     }
 
-    
+    /*
     public static string GetVersionString()
     {
         return Marshal.PtrToStringUTF8((nint) GLFWNative.glfwGetVersionString()) ?? string.Empty;
@@ -948,4 +948,5 @@ public static unsafe class GLFW
     public static extern int glfwGetPhysicalDevicePresentationSupport(nint instance, nint device, nint queuefamily);
 
     public static extern int glfwCreateWindowSurface(nint instance, nint* window, nint* allocator, nint* surface);
+    */
 }
