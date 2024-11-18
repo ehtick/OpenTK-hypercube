@@ -6,18 +6,14 @@ using Microsoft.CodeAnalysis.Text;
 namespace Hypercube.Generators.Class;
 
 [PublicAPI]
-public abstract class Generator : ISourceGenerator
+public abstract class Generator : Generator<GeneratorOptions>;
+
+[PublicAPI]
+public abstract class Generator<T> : ISourceGenerator where T : GeneratorOptions
 {
     protected static readonly char[] NewLineSeparators = ['\n', '\r'];
     
-    protected abstract string[] Header { get; }
-    protected abstract string[] Usings { get; }
-    protected abstract string Namespace { get; }
-    protected abstract string Name { get; }
-    protected abstract string Path { get; }
-    protected abstract string Source { get; }
-    protected abstract string Modifiers { get; }
-    protected abstract string Type { get; }
+    protected virtual T[] Options { get; } = [];
     
     public void Initialize(GeneratorInitializationContext context)
     {
@@ -25,24 +21,33 @@ public abstract class Generator : ISourceGenerator
 
     public void Execute(GeneratorExecutionContext context)
     {
-        Setup(context);
-        
-        var source = GetSource(context, Source);
-        var content = new StringBuilder();
-        
-        GenerateHeader(context, content, source);
-        GenerateUsings(context, content, source);
-        GenerateNamespace(context, content, source);
-        GenerateBody(context, content, source);
-                
-        context.AddSource($"{Path}{Name}.g.cs", SourceText.From(content.ToString(), Encoding.UTF8));
+        foreach (var option in Options)
+        {
+            GenerateSource(context, option);
+        }
     }
 
-    protected virtual void Setup(GeneratorExecutionContext context)
+    /// <summary>
+    /// Creates one file with the specified settings and adds it to the sources.
+    /// </summary>
+    protected virtual void GenerateSource(GeneratorExecutionContext context, T options)
     {
+        var fileContent = GetSource(context, options.File);
+        var content = new StringBuilder();
+        
+        GenerateHeader(context, content, options, fileContent);
+        GenerateUsings(context, content, options, fileContent);
+        GenerateNamespace(context, content, options, fileContent);
+        GenerateBody(context, content, options, fileContent);
+                
+        context.AddSource(options.SourcePath, SourceText.From(content.ToString(), Encoding.UTF8));
     }
-    
-    protected abstract void GenerateContent(GeneratorExecutionContext context, StringBuilder result, string source);
+
+    protected virtual void GenerateContent(GeneratorExecutionContext context, StringBuilder result,
+        T options, string fileContent)
+    {
+        
+    }
 
     protected string GetSource(GeneratorExecutionContext context, string file)
     {
@@ -69,19 +74,23 @@ public abstract class Generator : ISourceGenerator
         return string.Empty;
     }
 
-    private void GenerateHeader(GeneratorExecutionContext context, StringBuilder result, string source)
+    private void GenerateHeader(GeneratorExecutionContext context, StringBuilder result, T options, string fileContent)
     {
-        foreach (var line in Header)
+        foreach (var line in options.Header)
         {
-            result.AppendLine($"// {line}");
+            var comment = line;
+            comment = comment.Replace("${file}", options.File);
+            comment = comment.Replace("${path}", options.SourcePath);
+            
+            result.AppendLine($"// {comment}");
         }
 
         result.AppendLine();
     }
 
-    private void GenerateUsings(GeneratorExecutionContext context, StringBuilder result, string source)
+    private void GenerateUsings(GeneratorExecutionContext context, StringBuilder result, T options, string fileContent)
     {
-        foreach (var line in Usings)
+        foreach (var line in options.Usings)
         {
             result.AppendLine($"using {line};");
         }
@@ -89,19 +98,33 @@ public abstract class Generator : ISourceGenerator
         result.AppendLine();
     }
 
-    private void GenerateNamespace(GeneratorExecutionContext context, StringBuilder result, string source)
+    private void GenerateNamespace(GeneratorExecutionContext context, StringBuilder result, T options, string fileContent)
     {
-        result.AppendLine($"namespace {Namespace};");
+        result.AppendLine($"namespace {options.Namespace};");
         result.AppendLine();
     }
 
-    private void GenerateBody(GeneratorExecutionContext context, StringBuilder result, string source)
+    private void GenerateBody(GeneratorExecutionContext context, StringBuilder result, T options, string fileContent)
     {
-        result.AppendLine($"{Modifiers} {Type} {Name}");
+        result.AppendLine($"{options.Modifiers} {options.Type} {options.Name}");
         result.AppendLine("{");
-
-        GenerateContent(context, result, source);
+        
+        GenerateContent(context, result, options, fileContent);
         
         result.AppendLine("}");
+    }
+
+    protected static string UpperSnakeCaseToPascalCase(string source)
+    {
+        if (string.IsNullOrWhiteSpace(source))
+            return string.Empty;
+        
+        var parts = source.Split('_', StringSplitOptions.RemoveEmptyEntries);
+        for (var i = 0; i < parts.Length; i++)
+        {
+            parts[i] = char.ToUpper(parts[i][0]) + parts[i][1..].ToLowerInvariant();
+        }
+        
+        return string.Concat(parts);
     }
 }

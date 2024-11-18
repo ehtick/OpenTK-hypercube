@@ -1,5 +1,6 @@
 ﻿using System.Collections.Frozen;
 using System.Text;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 
 namespace Hypercube.Generators.Class;
@@ -11,7 +12,7 @@ public abstract class HeaderGenerator : Generator
     protected virtual FrozenDictionary<string, string> TypeMapping { get; set; } = new Dictionary<string, string>().ToFrozenDictionary();
     protected abstract string Dll { get; }
 
-    protected string ConvertParametersToCSharp(string parameters)
+    protected string HandleParameters(string parameters)
     {
         if (string.IsNullOrWhiteSpace(parameters) || parameters.Trim() == "void")
             return string.Empty;
@@ -24,15 +25,23 @@ public abstract class HeaderGenerator : Generator
             var parts = param
                 .Replace("const", "")
                 .Trim()
-                .Split(' ');
+                .Split(' ').ToList();
             
             var type = parts[0];
-            var name = parts.Length > 1 ? parts[1] : "param";
 
-            if (name.Contains('*'))
+            // type like "unsigned int codepoint"
+            if (parts.Count > 2)
             {
-                name = name.Replace("*", "");
-                type += "*";
+                type += $" {parts[1]}";
+                parts.RemoveAt(1);
+            }
+            
+            var name = parts.Count > 1 ? parts[1] : "param";
+
+            if (Regex.IsMatch(name, @"\[\d*\]"))
+            {
+                type += "[]";
+                name = Regex.Replace(name, @"\[\d*\]", "");
             }
             
             var handledName = HandleReservedKeywords(name);
@@ -53,12 +62,22 @@ public abstract class HeaderGenerator : Generator
     protected virtual string HandlePointerTypes(string type)
     {
         var pointerLevel = type.Count(c => c == '*');
-        var baseType = HandleTypes(type.Replace("*", "").Trim());
+        if (pointerLevel > 0)
+            type = type.Replace("*", "");
+
+        var isArray = type.EndsWith("[]");
+        if (isArray)
+            type = type[..^2];
+        
+        var handledType = HandleTypes(type);
 
         if (pointerLevel != 0)
-            baseType += string.Concat(Enumerable.Repeat("*", pointerLevel));
+            handledType += string.Concat(Enumerable.Repeat("*", pointerLevel));
 
-        return baseType;
+        if (isArray)
+            handledType += "[]";
+        
+        return handledType;
     }
     
     protected virtual string HandleReservedKeywords(string name)

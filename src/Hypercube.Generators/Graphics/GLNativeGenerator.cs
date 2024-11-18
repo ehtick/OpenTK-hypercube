@@ -35,29 +35,29 @@ public sealed class GLNativeGenerator : HeaderGenerator
         { "GLsizeiptr", "nint" }
     }.ToFrozenDictionary();
     
-    protected override string[] Header =>
-    [
-        "This class is auto-generated",
-        "Source: glcorearb.h"
-    ];
-
-    protected override string[] Usings =>
-    [
-        "System",
-        "System.Runtime.InteropServices"   
-    ];
-
     protected override string Dll => "opengl32.dll";
-    protected override string Namespace => "Hypercube.Graphics.API";
-    protected override string Name => "GLNative";
-    protected override string Path => "";
-    protected override string Source => "glcorearb.h";
-    protected override string Modifiers => "public static unsafe";
-    protected override string Type => "class";
+
+    protected override GeneratorOptions[] Options =>
+    [
+        new GeneratorOptions
+        {
+            Usings = [
+                "System",
+                "System.Runtime.InteropServices"
+            ],
+            Namespace = "Hypercube.Graphics.API.GL",
+            Name = "GLNative",
+            FileName = "GLNative",
+            Path = "",
+            File = "glcorearb.h",
+            Modifiers = "public static unsafe",
+            Type = "class"
+        },
+    ];
     
-    protected override void GenerateContent(GeneratorExecutionContext context, StringBuilder result, string source)
+    protected override void GenerateContent(GeneratorExecutionContext context, StringBuilder result, GeneratorOptions options, string fileContent)
     {
-        var lines = source.Split(NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
+        var lines = fileContent.Split(NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
 
         foreach (var line in lines)
         {
@@ -74,7 +74,7 @@ public sealed class GLNativeGenerator : HeaderGenerator
         var returnType = match.Groups[2].Value;
         var functionName = match.Groups[3].Value;
         var parameters = match.Groups[4].Value;
-        var parametersConverted = ConvertParametersToCSharp(parameters);
+        var parametersConverted = HandleParameters(parameters);
         
         result.AppendLine($"    /// <remarks>");
         result.AppendLine($"    /// <c>");
