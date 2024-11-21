@@ -8,12 +8,11 @@ using Microsoft.CodeAnalysis;
 namespace Hypercube.Generators.Graphics.GLFW;
 
 [Generator]
-[SuppressMessage("ReSharper", "InconsistentNaming")]
-public class GLFWCallbacksGenerator : HeaderGenerator
+public class GlfwCallbacksGenerator : HeaderGenerator
 {
-    protected override FrozenDictionary<string, string> KeywordMapping { get; set; } = GLFWTypeMapping.KeywordMapping;
-    protected override FrozenDictionary<string, string> TypeMapping { get; set; } = GLFWTypeMapping.TypeMapping;
-    private FrozenDictionary<string, string> NameMapping { get; set; } = GLFWTypeMapping.NameMapping;
+    protected override FrozenDictionary<string, string> KeywordMapping { get; set; } = GlfwTypeMapping.KeywordMapping;
+    protected override FrozenDictionary<string, string> TypeMapping { get; set; } = GlfwTypeMapping.TypeMapping;
+    private FrozenDictionary<string, string> NameMapping { get; set; } = GlfwTypeMapping.NameMapping;
     
     protected override string Dll => "glfw3.dll";
 
@@ -25,7 +24,7 @@ public class GLFWCallbacksGenerator : HeaderGenerator
                 "System",
                 "System.Runtime.InteropServices"
             ],
-            Namespace = "Hypercube.Graphics.API.GLFW",
+            Namespace = "Hypercube.Graphics.Api.Glfw",
             Name = "GLFWCallbacks",
             FileName = "GLFWCallbacks",
             Path = "",

@@ -21,4 +21,16 @@ public interface IWindowing
     /// Automatically called when disposed.
     /// </summary>
     void Shutdown();
+    
+    bool TryWindowCreate(WindowSettings settings);
+
+    void WindowDestroy();
+    
+    void WindowSetTitle();
+    
+    void WindowSetMonitor();
+
+    void WindowSetOpacity();
+    
+    void WindowRequestAttention();
 }

@@ -9,10 +9,10 @@ namespace Hypercube.Generators.Graphics.GLFW;
 
 [Generator]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
-public sealed class GLFWNativeGenerator : HeaderGenerator
+public sealed class GlfwNativeGenerator : HeaderGenerator
 {
-    protected override FrozenDictionary<string, string> KeywordMapping { get; set; } = GLFWTypeMapping.KeywordMapping;
-    protected override FrozenDictionary<string, string> TypeMapping { get; set; } = GLFWTypeMapping.TypeMapping;
+    protected override FrozenDictionary<string, string> KeywordMapping { get; set; } = GlfwTypeMapping.KeywordMapping;
+    protected override FrozenDictionary<string, string> TypeMapping { get; set; } = GlfwTypeMapping.TypeMapping;
 
     protected override string Dll => "glfw3.dll";
 
@@ -24,9 +24,9 @@ public sealed class GLFWNativeGenerator : HeaderGenerator
               "System",
               "System.Runtime.InteropServices"
             ],
-            Namespace = "Hypercube.Graphics.API.GLFW",
-            Name = "GLFWNative",
-            FileName = "GLFWNative",
+            Namespace = "Hypercube.Graphics.Api.Glfw",
+            Name = "GlfwNative",
+            FileName = "GlfwNative",
             Path = "",
             File = "glfw3.h",
             Modifiers = "public static unsafe",

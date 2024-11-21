@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using Hypercube.Generators.Class;
 using Microsoft.CodeAnalysis;
@@ -7,52 +6,51 @@ using Microsoft.CodeAnalysis;
 namespace Hypercube.Generators.Graphics.GLFW.Enums;
 
 [Generator]
-[SuppressMessage("ReSharper", "InconsistentNaming")]
-public class GLFWGroupEnumsGenerator : Generator<GLFWGroupEnumGeneratorOptions>
+public class GlfwGroupEnumsGenerator : Generator<GlfwGroupEnumGeneratorOptions>
 {
-    protected override GLFWGroupEnumGeneratorOptions[] Options =>
+    protected override GlfwGroupEnumGeneratorOptions[] Options =>
     [
-        new GLFWGroupEnumGeneratorOptions
+        new GlfwGroupEnumGeneratorOptions
         {
             Name = "Key",
             FileName = "Key",
             Prefix = "GLFW_KEY_"
         },
-        new GLFWGroupEnumGeneratorOptions
+        new GlfwGroupEnumGeneratorOptions
         {
             Name = "KeyModifier",
             FileName = "KeyMod",
             Prefix = "GLFW_MOD_"
         },
-        new GLFWGroupEnumGeneratorOptions
+        new GlfwGroupEnumGeneratorOptions
         {
             Name = "MouseButton",
             FileName = "MouseButton",
             Prefix = "GLFW_MOUSE_BUTTON_",
             FallbackDigitPrefix = "Button"
         },
-        new GLFWGroupEnumGeneratorOptions
+        new GlfwGroupEnumGeneratorOptions
         {
             Name = "Joystick",
             FileName = "Joystick",
             Prefix = "GLFW_JOYSTICK_",
             FallbackDigitPrefix = "Joystick"
         },
-        new GLFWGroupEnumGeneratorOptions
+        new GlfwGroupEnumGeneratorOptions
         {
             Name = "JoystickHat",
             FileName = "JoystickHat",
             Prefix = "GLFW_JOYSTICK_",
             FallbackDigitPrefix = "Joystick"
         },
-        new GLFWGroupEnumGeneratorOptions
+        new GlfwGroupEnumGeneratorOptions
         {
             Name = "GamepadButton",
             FileName = "GamepadButton",
             Prefix = "GLFW_HAT_",
             FallbackDigitPrefix = "Hat"
         },
-        new GLFWGroupEnumGeneratorOptions
+        new GlfwGroupEnumGeneratorOptions
         {
             Name = "GamepadAxis",
             FileName = "GamepadAxis",
@@ -61,7 +59,7 @@ public class GLFWGroupEnumsGenerator : Generator<GLFWGroupEnumGeneratorOptions>
         },
     ];
     
-    protected override void GenerateContent(GeneratorExecutionContext context, StringBuilder result, GLFWGroupEnumGeneratorOptions options, string fileContent)
+    protected override void GenerateContent(GeneratorExecutionContext context, StringBuilder result, GlfwGroupEnumGeneratorOptions options, string fileContent)
     {
         var lines = fileContent.Split(NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
         var renames = new Dictionary<string, string>();
@@ -89,7 +87,7 @@ public class GLFWGroupEnumsGenerator : Generator<GLFWGroupEnumGeneratorOptions>
         }
     }
 
-    private string HandleName(GLFWGroupEnumGeneratorOptions options, string name)
+    private string HandleName(GlfwGroupEnumGeneratorOptions options, string name)
     {
         if (name.StartsWith(options.Prefix))
             name = name[options.Prefix.Length..];
@@ -105,15 +103,14 @@ public class GLFWGroupEnumsGenerator : Generator<GLFWGroupEnumGeneratorOptions>
     }
 }
 
-[SuppressMessage("ReSharper", "InconsistentNaming")]
-public sealed class GLFWGroupEnumGeneratorOptions : GeneratorOptions
+public sealed class GlfwGroupEnumGeneratorOptions : GeneratorOptions
 {
     public override string[] Usings { get; init; } = [
         "System",
         "System.Runtime.InteropServices"
     ];
         
-    public override string Namespace { get; init; } = "Hypercube.Graphics.API.GLFW.Enums";
+    public override string Namespace { get; init; } = "Hypercube.Graphics.Api.Glfw.Enums";
     public override string Path { get; init; } = "";
     public override string File { get; init; } = "glfw3.h";
     public override string Modifiers { get; init; } = "public";

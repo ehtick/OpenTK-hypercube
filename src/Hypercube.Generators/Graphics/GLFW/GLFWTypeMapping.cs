@@ -3,9 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Hypercube.Generators.Graphics.GLFW;
 
-[SuppressMessage("ReSharper", "InconsistentNaming")]
 [SuppressMessage("ReSharper", "StringLiteralTypo")]
-public class GLFWTypeMapping
+public class GlfwTypeMapping
 {
     public static readonly FrozenDictionary<string, string> NameMapping = new Dictionary<string, string>
     {
