@@ -28,5 +28,9 @@
       <ProjectReference Include="..\Hypercube.Generators\Hypercube.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\Hypercube.Mathematics\Hypercube.Mathematics.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="WindowManager\Sdl\" />
+    </ItemGroup>
     
 </Project>

@@ -13,47 +13,40 @@ public class GlfwGroupEnumsGenerator : Generator<GlfwGroupEnumGeneratorOptions>
         new GlfwGroupEnumGeneratorOptions
         {
             Name = "Key",
-            FileName = "Key",
             Prefix = "GLFW_KEY_"
         },
         new GlfwGroupEnumGeneratorOptions
         {
             Name = "KeyModifier",
-            FileName = "KeyMod",
             Prefix = "GLFW_MOD_"
         },
         new GlfwGroupEnumGeneratorOptions
         {
             Name = "MouseButton",
-            FileName = "MouseButton",
             Prefix = "GLFW_MOUSE_BUTTON_",
             FallbackDigitPrefix = "Button"
         },
         new GlfwGroupEnumGeneratorOptions
         {
             Name = "Joystick",
-            FileName = "Joystick",
             Prefix = "GLFW_JOYSTICK_",
             FallbackDigitPrefix = "Joystick"
         },
         new GlfwGroupEnumGeneratorOptions
         {
             Name = "JoystickHat",
-            FileName = "JoystickHat",
             Prefix = "GLFW_JOYSTICK_",
             FallbackDigitPrefix = "Joystick"
         },
         new GlfwGroupEnumGeneratorOptions
         {
             Name = "GamepadButton",
-            FileName = "GamepadButton",
             Prefix = "GLFW_HAT_",
             FallbackDigitPrefix = "Hat"
         },
         new GlfwGroupEnumGeneratorOptions
         {
             Name = "GamepadAxis",
-            FileName = "GamepadAxis",
             Prefix = "GLFW_GAMEPAD_AXIS_",
             FallbackDigitPrefix = "Axis"
         },

@@ -25,9 +25,7 @@ public class GlfwCallbacksGenerator : HeaderGenerator
                 "System.Runtime.InteropServices"
             ],
             Namespace = "Hypercube.Graphics.Api.Glfw",
-            Name = "GLFWCallbacks",
-            FileName = "GLFWCallbacks",
-            Path = "",
+            Name = "GlfwCallbacks",
             File = "glfw3.h",
             Modifiers = "public static unsafe",
             Type = "class"

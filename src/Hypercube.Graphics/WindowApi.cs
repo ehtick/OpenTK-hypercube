@@ -3,7 +3,7 @@
 namespace Hypercube.Graphics.Windowing;
 
 [PublicAPI]
-public enum WindowingApi
+public enum WindowApi
 {
     Glfw,
     Sdl

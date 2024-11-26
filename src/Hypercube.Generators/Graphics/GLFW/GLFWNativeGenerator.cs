@@ -26,8 +26,6 @@ public sealed class GlfwNativeGenerator : HeaderGenerator
             ],
             Namespace = "Hypercube.Graphics.Api.Glfw",
             Name = "GlfwNative",
-            FileName = "GlfwNative",
-            Path = "",
             File = "glfw3.h",
             Modifiers = "public static unsafe",
             Type = "class"
@@ -43,11 +41,11 @@ public sealed class GlfwNativeGenerator : HeaderGenerator
         
         foreach (var line in lines)
         {
-            TryGenerateFunction(context, result, line);
+            TryGenerateFunction(result, line);
         }
     }
 
-    private void TryGenerateFunction(GeneratorExecutionContext context, StringBuilder result, string line)
+    private void TryGenerateFunction(StringBuilder result, string line)
     {
         var match = Regex.Match(line, @"^(GLFWAPI|extern)\s+([\w\s\*]+)\s+(\w+)\s*\(([^)]*)\);");
         if (!match.Success)
@@ -64,7 +62,7 @@ public sealed class GlfwNativeGenerator : HeaderGenerator
         result.AppendLine($"    /// {line}");
         result.AppendLine($"    /// </c>");
         result.AppendLine($"    /// </remarks>");
-        result.AppendLine($"    [DllImport(\"{Dll}\")]");
+        result.AppendLine($"    [DllImport(\"{Dll}\", CallingConvention = CallingConvention.Cdecl)]");
         result.AppendLine($"    public static extern {HandlePointerTypes(returnType)} {functionName}({parametersConverted});");
     }
 }

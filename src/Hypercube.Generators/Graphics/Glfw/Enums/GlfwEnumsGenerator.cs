@@ -13,7 +13,6 @@ public class GlfwEnumsGenerator : Generator<GlfwEnumGeneratorOptions>
         new GlfwEnumGeneratorOptions
         {
             Name = "ErrorCode",
-            FileName = "ErrorCode",
             Names =
             {
                 "GLFW_NO_ERROR",
@@ -36,7 +35,6 @@ public class GlfwEnumsGenerator : Generator<GlfwEnumGeneratorOptions>
         new GlfwEnumGeneratorOptions
         {
             Name = "WindowHintInt",
-            FileName = "WindowHintInt",
             Names =
             {
                 "GLFW_POSITION_X",
@@ -61,7 +59,6 @@ public class GlfwEnumsGenerator : Generator<GlfwEnumGeneratorOptions>
         new GlfwEnumGeneratorOptions
         {
             Name = "WindowHintString",
-            FileName = "WindowHintString",
             Names =
             {
                 "GLFW_COCOA_FRAME_NAME",   
@@ -73,7 +70,6 @@ public class GlfwEnumsGenerator : Generator<GlfwEnumGeneratorOptions>
         new GlfwEnumGeneratorOptions
         {
             Name = "WindowHintClientApi",
-            FileName = "WindowHintClientApi",
             Names =
             {
                 "GLFW_CLIENT_API"
@@ -82,7 +78,6 @@ public class GlfwEnumsGenerator : Generator<GlfwEnumGeneratorOptions>
         new GlfwEnumGeneratorOptions
         {
             Name = "ClientApi",
-            FileName = "ClientApi",
             Names =
             {
                 "GLFW_NO_API",

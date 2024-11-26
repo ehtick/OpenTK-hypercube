@@ -4,10 +4,10 @@ using System.Text.RegularExpressions;
 using Hypercube.Generators.Class;
 using Microsoft.CodeAnalysis;
 
-namespace Hypercube.Generators.Graphics;
+namespace Hypercube.Generators.Graphics.Gl;
 
 [Generator]
-public sealed class GLNativeGenerator : HeaderGenerator
+public sealed class GlNativeGenerator : HeaderGenerator
 {
     protected override FrozenDictionary<string, string> KeywordMapping { get; set; } = new Dictionary<string, string>
     {
@@ -47,8 +47,6 @@ public sealed class GLNativeGenerator : HeaderGenerator
             ],
             Namespace = "Hypercube.Graphics.API.GL",
             Name = "GLNative",
-            FileName = "GLNative",
-            Path = "",
             File = "glcorearb.h",
             Modifiers = "public static unsafe",
             Type = "class"
