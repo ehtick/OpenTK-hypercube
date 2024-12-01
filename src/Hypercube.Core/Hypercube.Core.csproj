@@ -14,7 +14,10 @@
       <Folder Include="Networking\Client\" />
       <Folder Include="Networking\Server\" />
       <Folder Include="Physics\" />
-      <Folder Include="Rendering\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hypercube.Graphics\Hypercube.Graphics.csproj" />
     </ItemGroup>
 
 </Project>

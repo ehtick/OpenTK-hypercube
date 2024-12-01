@@ -1,11 +1,13 @@
 ﻿using System.Runtime.InteropServices;
 using Hypercube.Graphics.Api.Glfw;
+using Hypercube.Graphics.Api.Glfw.Enums;
 using Hypercube.Graphics.WindowManager;
 using Hypercube.Mathematics.Vectors;
+using JetBrains.Annotations;
 
 namespace Hypercube.Graphics.Window;
 
-/*
+[PublicAPI]
 public unsafe class Window : IWindow
 {
     private readonly IWindowManager _windowManager;
@@ -19,72 +21,87 @@ public unsafe class Window : IWindow
 
     public string Title
     {
-        get => Marshal.PtrToStringAnsi(GlfwNative.glfwGetWindowTitle((nint*) _windowHandle.Handle)) ?? string.Empty;
-        set => _windowManager.WindowSetTitle(_windowHandle, value);
+        get => Marshal.PtrToStringAnsi((nint) Glfw.GetWindowTitle(_windowHandle.Pointer)) ?? string.Empty;
+        set {}
     }
 
     public Vector2i Position
     {
         get
         {
-            int x, y;
-            GlfwNative.glfwGetWindowPos((nint*)_windowHandle.Handle, &x, &y);
-            return new Vector2i { X = x, Y = y };
+            var x = 0;
+            var y = 0;
+            Glfw.GetWindowPos(_windowHandle.Pointer, &x, &y);
+            return new Vector2i(x, y);
         }
-        set => _windowManager.WindowSetPosition(_windowHandle, value);
+        set => Glfw.SetWindowPos(_windowHandle.Pointer, value.X, value.Y);
     }
 
     public Vector2i Size
     {
         get
         {
-            int width, height;
-            GlfwNative.glfwGetWindowSize((nint*)_windowHandle.Handle, &width, &height);
-            return new Vector2i { X = width, Y = height };
+            var x = 0;
+            var y = 0;
+            Glfw.GetWindowSize(_windowHandle.Pointer, &x, &y);
+            return new Vector2i(x, y);
         }
-        set => _windowManager.WindowSetSize(_windowHandle, value);
+        set => Glfw.SetWindowSize(_windowHandle.Pointer, value.X, value.Y);
     }
 
     public float Opacity
     {
-        get => Glfw.GetWindowOpacity(_windowHandle);
-        set => Glfw.SetWindowOpacity(_windowHandle, value);
+        get => Glfw.GetWindowOpacity(_windowHandle.Pointer);
+        set => Glfw.SetWindowOpacity(_windowHandle.Pointer, value);
     }
 
-    public bool IsVisible
+    public bool Visibility
     {
-        get => GlfwNative.glfwGetWindowAttrib((nint*)_windowHandle.Handle, GlfwNative.GLFW_VISIBLE) == GlfwNative.True;
-        set => _windowManager.WindowSetVisible(_windowHandle, value);
+        get => Glfw.GetWindowAttrib(_windowHandle.Pointer, (int) WindowHintBool.Visible) == GlfwNative.True;
+        set => Glfw.SetWindowAttrib(_windowHandle.Pointer, (int) WindowHintBool.Visible,
+            value ? GlfwNative.True : GlfwNative.False);
+    }
+
+    public bool Focused
+    {
+        get => Glfw.GetWindowAttrib(_windowHandle.Pointer, (int) WindowHintBool.Focused) == GlfwNative.True;
+        set => Glfw.SetWindowAttrib(_windowHandle.Pointer, (int) WindowHintBool.Focused,
+            value ? GlfwNative.True : GlfwNative.False);
+    }
+    
+    public bool ShouldClosed
+    {
+        get => Glfw.WindowShouldClose(_windowHandle.Pointer) == GlfwNative.True;
+        set => Glfw.SetWindowShouldClose(_windowHandle.Pointer, value ? GlfwNative.True : GlfwNative.False);
     }
 
     public void Show()
     {
-        _windowManager.WindowSetVisible(_windowHandle, true);
+        Visibility = true;
     }
 
     public void Hide()
     {
-        _windowManager.WindowSetVisible(_windowHandle, false);
+        Visibility = false;
     }
 
     public void Focus()
     {
-        _windowManager.WindowFocus(_windowHandle);
+        Focused = true;
     }
 
     public void RequestAttention()
     {
-        _windowManager.WindowRequestAttention(_windowHandle);
+        Glfw.RequestWindowAttention(_windowHandle.Pointer);
     }
 
     public void SwapBuffers()
     {
-        _windowManager.WindowSwapBuffers(_windowHandle);
+        Glfw.SwapBuffers(_windowHandle.Pointer);
     }
 
     public void Close()
     {
-        _windowManager.WindowDestroy(_windowHandle);
+        ShouldClosed = true;
     }
 }
-*/

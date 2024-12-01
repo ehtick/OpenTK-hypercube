@@ -1,14 +1,12 @@
-﻿using System.Runtime.InteropServices;
-using Hypercube.Graphics.Api.Glfw;
-using Hypercube.Graphics.Texturing;
+﻿using Hypercube.Graphics.Api.Glfw;
 using Hypercube.Graphics.Window;
-using Hypercube.Graphics.Windowing;
-using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.WindowManager.Glfw;
 
-public sealed unsafe class GlfwWindowManager : IWindowManager
+public sealed class GlfwWindowManager : IWindowManager
 {
+    public event Action? OnWindowLoopUpdate;
+    
     private Thread? _thread;
 
     private bool Initialized => _thread is not null;
@@ -18,7 +16,7 @@ public sealed unsafe class GlfwWindowManager : IWindowManager
         if (Initialized)
             throw new Exception();
         
-        if (GlfwNative.glfwInit() == GlfwNative.False)
+        if (Api.Glfw.Glfw.Init() == GlfwNative.False)
             return false;
 
         _thread = Thread.CurrentThread;
@@ -30,13 +28,13 @@ public sealed unsafe class GlfwWindowManager : IWindowManager
         if (!Initialized)
             throw new Exception();
         
-        GlfwNative.glfwTerminate();
+        Api.Glfw.Glfw.Terminate();
         _thread = null;
     }
 
     public void PollEvents()
     {
-        GlfwNative.glfwPollEvents();
+        Api.Glfw.Glfw.PollEvents();
     }
 
     public void EnterWindowLoop()
@@ -44,10 +42,9 @@ public sealed unsafe class GlfwWindowManager : IWindowManager
         while (true)
         {
             GlfwNative.glfwPollEvents();
-            // Implement custom logic for breaking this loop as needed
+            OnWindowLoopUpdate?.Invoke();
         }
     }
-
 
     public bool WindowCreate(WindowCreateSettings settings, IWindow? window)
     {

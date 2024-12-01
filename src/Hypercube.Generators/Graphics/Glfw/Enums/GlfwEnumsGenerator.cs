@@ -69,6 +69,34 @@ public class GlfwEnumsGenerator : Generator<GlfwEnumGeneratorOptions>
         },
         new GlfwEnumGeneratorOptions
         {
+            Name = "WindowHintBool",
+            Names =
+            {
+                "GLFW_FOCUSED",   
+                "GLFW_ICONIFIED",   
+                "GLFW_RESIZABLE",
+                "GLFW_VISIBLE",
+                "GLFW_DECORATED",
+                "GLFW_AUTO_ICONIFY",
+                "GLFW_FLOATING",
+                "GLFW_MAXIMIZED",
+                "GLFW_CENTER_CURSOR",
+                "GLFW_TRANSPARENT_FRAME_BUFFER",
+                "GLFW_HOVERED",
+                "GLFW_FOCUS_ON_SHOW",
+                "GLFW_MOUSE_PASS_THROUGH",
+                "GLFW_OPENGL_FORWARD_COMPAT",
+                "GLFW_OPENGL_DEBUG_CONTEXT",
+                "GLFW_CONTEXT_NO_ERROR",
+                "GLFW_SCALE_TO_MONITOR",
+                "GLFW_SCALE_FRAMEBUFFER",
+                "GLFW_STEREO",
+                "GLFW_DOUBLE_BUFFER",
+                "GLFW_SRGB_CAPABLE"
+            }
+        },
+        new GlfwEnumGeneratorOptions
+        {
             Name = "WindowHintClientApi",
             Names =
             {

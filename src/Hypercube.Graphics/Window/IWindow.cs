@@ -10,7 +10,7 @@ public interface IWindow
     Vector2i Size { get; set; }
     
     float Opacity { get; set; }
-    bool IsVisible { get; set; }
+    bool Visibility { get; set; }
     
     void Show();
     void Hide();

@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Hypercube.Graphics.Texturing;
 using Hypercube.Graphics.Window;
-using Hypercube.Graphics.Windowing;
-using Hypercube.Mathematics.Vectors;
 using JetBrains.Annotations;
 
 namespace Hypercube.Graphics.WindowManager;
@@ -13,6 +10,8 @@ namespace Hypercube.Graphics.WindowManager;
 [PublicAPI]
 public interface IWindowManager : IDisposable
 {
+    public event Action? OnWindowLoopUpdate;
+    
     /// <summary>
     /// Initializes the library for window management.
     /// </summary>
