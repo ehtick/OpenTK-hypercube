@@ -4,10 +4,10 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Debugging\Logger\" />
       <Folder Include="Debugging\Profiler\" />
       <Folder Include="ECS\" />
       <Folder Include="IO\" />
@@ -17,7 +17,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hypercube.Graphics\Hypercube.Graphics.csproj" />
+        <None Include="$(SolutionDir)../libs/**" Link="%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Hypercube.Analyzers\Hypercube.Analyzers.csproj" />
+      <ProjectReference Include="..\Hypercube.Mathematics\Hypercube.Mathematics.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
     </ItemGroup>
 
 </Project>

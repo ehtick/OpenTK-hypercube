@@ -2,13 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Mathematics", "Hypercube.Mathematics\Hypercube.Mathematics.csproj", "{FFA0F013-D806-44DE-959D-861E335E0E16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Graphics", "Hypercube.Graphics\Hypercube.Graphics.csproj", "{90592858-14B2-47EC-A516-B259B0F410EE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{08807AF7-9A98-472C-8D2C-1306E88E9A32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Generators", "Hypercube.Generators\Hypercube.Generators.csproj", "{81F841C3-E636-42F6-B701-8785F779993E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Core", "Hypercube.Core\Hypercube.Core.csproj", "{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Analyzers", "Hypercube.Analyzers\Hypercube.Analyzers.csproj", "{57DA0507-160F-46C4-9F36-0171931FDC48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,21 +18,17 @@ Global
 		{FFA0F013-D806-44DE-959D-861E335E0E16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFA0F013-D806-44DE-959D-861E335E0E16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFA0F013-D806-44DE-959D-861E335E0E16}.Release|Any CPU.Build.0 = Release|Any CPU
-		{90592858-14B2-47EC-A516-B259B0F410EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{90592858-14B2-47EC-A516-B259B0F410EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{90592858-14B2-47EC-A516-B259B0F410EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90592858-14B2-47EC-A516-B259B0F410EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08807AF7-9A98-472C-8D2C-1306E88E9A32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08807AF7-9A98-472C-8D2C-1306E88E9A32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08807AF7-9A98-472C-8D2C-1306E88E9A32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08807AF7-9A98-472C-8D2C-1306E88E9A32}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81F841C3-E636-42F6-B701-8785F779993E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81F841C3-E636-42F6-B701-8785F779993E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81F841C3-E636-42F6-B701-8785F779993E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81F841C3-E636-42F6-B701-8785F779993E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57DA0507-160F-46C4-9F36-0171931FDC48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57DA0507-160F-46C4-9F36-0171931FDC48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57DA0507-160F-46C4-9F36-0171931FDC48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57DA0507-160F-46C4-9F36-0171931FDC48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

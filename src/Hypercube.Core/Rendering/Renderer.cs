@@ -1,19 +1,14 @@
-﻿using Hypercube.Graphics.WindowManager;
-using Hypercube.Graphics.WindowManager.Glfw;
+﻿namespace Hypercube.Core.Rendering;
 
-namespace Hypercube.Core.Rendering;
-
-public class Renderer
+public class Renderer : IRenderer
 {
-    private readonly IWindowManager _windowManager = new GlfwWindowManager();
-    
     public void Init()
     {
-        _windowManager.Init();
+        
     }
 
     public void Terminate()
     {
-        _windowManager.Terminate();
+
     }
 }

@@ -13,24 +13,13 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
     </ItemGroup>
-
-    <ItemGroup>
-        <AdditionalFiles Include="$(SolutionDir)../generator/**" Visible="false">
-            <BuildAction>None</BuildAction>
-        </AdditionalFiles>
-    </ItemGroup>
-
+    
     <ItemGroup>
         <None Include="$(SolutionDir)../libs/**" Link="%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hypercube.Generators\Hypercube.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\Hypercube.Mathematics\Hypercube.Mathematics.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="WindowManager\Sdl\" />
-    </ItemGroup>
-    
 </Project>
