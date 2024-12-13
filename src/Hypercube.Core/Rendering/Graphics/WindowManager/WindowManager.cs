@@ -1,5 +1,6 @@
 ﻿using Hypercube.Core.Debugging.Logger;
 using Hypercube.Core.Dependencies;
+using Hypercube.Core.Rendering.Graphics.Window;
 using Hypercube.Core.Rendering.Graphics.WindowApi;
 using Hypercube.Core.Rendering.Graphics.WindowApi.GlfwApi;
 
@@ -48,9 +49,14 @@ public class WindowManager : IWindowManager
         _logger.Debug("Unsuspend main thread");
     }
 
-    public void WindowCreate()
+    public WindowHandle WindowCreate()
     {
-        _windowApi.WindowCreate();
+        return new WindowHandle(_windowApi.WindowCreate());
+    }
+
+    public void WindowSetTitle(WindowHandle window, string title)
+    {
+        _windowApi.WindowSetTitle((nint) window, title);
     }
 
     public void Terminate()

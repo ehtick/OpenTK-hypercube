@@ -98,12 +98,7 @@ public unsafe partial class GlfwWindowingApi : IWindowingApi
     {
         if (_multiThread)
         {
-            foreach (var ev in _eventBridge.Process())
-            {
-                _logger.Trace($"Process event {ev.GetType().Name}");
-                Process(ev);
-            }
-            
+            ProcessEvents();
             return;
         }
         

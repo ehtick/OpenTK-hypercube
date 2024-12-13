@@ -1,4 +1,6 @@
-﻿namespace Hypercube.Core.Rendering.Graphics.WindowManager;
+﻿using Hypercube.Core.Rendering.Graphics.Window;
+
+namespace Hypercube.Core.Rendering.Graphics.WindowManager;
 
 public interface IWindowManager
 {
@@ -16,5 +18,7 @@ public interface IWindowManager
     /// <summary>
     /// Creates a new window with the default settings.
     /// </summary>
-    void WindowCreate();
+    WindowHandle WindowCreate();
+    
+    void WindowSetTitle(WindowHandle window, string title);
 }

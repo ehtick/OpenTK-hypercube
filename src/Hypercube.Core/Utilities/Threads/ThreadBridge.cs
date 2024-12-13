@@ -28,6 +28,11 @@ public class ThreadBridge<T> where T : notnull
         Reader = channel.Reader;
     }
 
+    public void Wait()
+    {
+        Reader.WaitToReadAsync().AsTask().Wait();
+    }
+
     /// <summary>
     /// Publishes an event to the bridge.
     /// </summary>

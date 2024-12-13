@@ -207,9 +207,24 @@ public static unsafe class Glfw
         return GlfwNative.glfwGetWindowTitle(window);
     }
 
-    public static void SetWindowTitle(nint* window, byte* title)
+    public static void SetWindowTitle(nint window, string title)
     {
-        GlfwNative.glfwSetWindowTitle(window, title);
+        SetWindowTitle((nint*) window, title);
+    }
+
+    public static void SetWindowTitle(nint* window, string title)
+    {
+        var byteString = Marshal.StringToCoTaskMemUTF8(title);
+        
+        try
+        {
+            GlfwNative.glfwSetWindowTitle(window, (byte*) byteString);
+        }
+        finally
+        {
+            if (byteString != nint.Zero)
+                Marshal.FreeCoTaskMem(byteString);
+        }
     }
 
     public static void SetWindowIcon(nint* window, int count, nint* images)

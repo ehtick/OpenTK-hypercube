@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Hypercube.Core.Rendering.Graphics.Api.GlfwApi;
-using Hypercube.Core.Rendering.Graphics.Api.GlfwApi.Enums;
-using Hypercube.Core.Rendering.Graphics.WindowApi;
+﻿using Hypercube.Core.Rendering.Graphics.WindowApi;
 using Hypercube.Mathematics.Vectors;
 using JetBrains.Annotations;
 
@@ -24,6 +21,7 @@ public unsafe class Window : IWindow
     public Vector2i Size { get; set; }
     public float Opacity { get; set; }
     public bool Visibility { get; set; }
+    
     public void Show()
     {
         throw new NotImplementedException();

@@ -20,10 +20,26 @@ public partial class GlfwWindowingApi
         
         Process(ev);
     }
+
+    private void ProcessEvents(bool single = false)
+    {
+        foreach (var ev in _eventBridge.Process())
+        {
+            Process(ev);
+            
+            if (single)
+                break;
+        }
+    }
     
     private void Process(Event command)
     {
-        
+        switch (command)
+        {
+            case EventWindowCreated windowCreated:
+                windowCreated.TaskCompletionSource?.TrySetResult(windowCreated.Window);
+                break;
+        }
     }
     
     private abstract record Event;
@@ -81,6 +97,12 @@ public partial class GlfwWindowingApi
         Vector2i Position
     ) : Event;
 
+    private record EventWindowCreated
+    (
+        nint Window,
+        TaskCompletionSource<nint>? TaskCompletionSource = null
+    ) : Event;
+    
     private record EventWindowContentScale
     (
         nint Window,

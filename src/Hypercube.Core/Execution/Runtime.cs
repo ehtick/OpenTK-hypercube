@@ -23,7 +23,9 @@ public sealed class Runtime
         _logger.Info("Runtime started");
         
         _windowManager.Init(true);
-        _windowManager.WindowCreate();
+        
+        var window = _windowManager.WindowCreate();
+        _windowManager.WindowSetTitle(window, "...");
         
         _runtimeLoop.Run();
     }

@@ -40,13 +40,19 @@ public interface IWindowingApi : IDisposable
     /// <summary>
     /// Creates a new window with the default settings.
     /// </summary>
-    void WindowCreate();
+    nint WindowCreate();
     
     /// <summary>
     /// Creates a new window with the specified settings.
     /// </summary>
     /// <param name="settings">The window creation settings.</param>
-    void WindowCreate(WindowCreateSettings settings);
+    nint WindowCreate(WindowCreateSettings settings);
+
+    Task<nint> WindowCreateAsync();
+    
+    Task<nint> WindowCreateAsync(WindowCreateSettings settings);
+    
+    void WindowSetTitle(nint window, string title);
 
     /// <summary>
     /// Makes the specified window's context current.

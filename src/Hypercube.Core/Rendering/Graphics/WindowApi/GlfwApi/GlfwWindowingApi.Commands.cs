@@ -35,6 +35,10 @@ public unsafe partial class GlfwWindowingApi
                 Console.WriteLine("Terminate");
                 break;
             
+            case CommandWindowSetTitle commandWindowSetTitle:
+                Glfw.SetWindowTitle(commandWindowSetTitle.Window, commandWindowSetTitle.Title);
+                break;
+            
             case CommandCreateWindow commandCreateWindow:
                 var size = commandCreateWindow.Settings.Size;
                 var title = commandCreateWindow.Settings.Title;
@@ -43,7 +47,10 @@ public unsafe partial class GlfwWindowingApi
                 
                 var window = Glfw.CreateWindow(size.X, size.Y, title, monitor is not null ? monitor.Handle : null, share is not null ? share.Handle : null);
                 if (window == null)
+                {
+                    Raise(new EventWindowCreated(nint.Zero, commandCreateWindow.TaskCompletionSource));
                     throw new InvalidOperationException($"Failed to create window '{title}' with size {size.X}x{size.Y}. Ensure that the system supports OpenGL and that a valid window context is provided.");
+                }
                 
                 Glfw.MakeContextCurrent(window);
                 
@@ -64,21 +71,57 @@ public unsafe partial class GlfwWindowingApi
                 Glfw.SetCharCallback(window, _charCallback);
                 Glfw.SetCharModsCallback(window, _charModificationCallback);
                 Glfw.SetDropCallback(window, _dropCallback);
+                
+                Raise(new EventWindowCreated((nint) window, commandCreateWindow.TaskCompletionSource));
                 break;
         }
     }
 
-    public void WindowCreate()
+    public nint WindowCreate()
     {
-        WindowCreate(new WindowCreateSettings());
+        return WindowCreate(new WindowCreateSettings());
     }
     
-    public void WindowCreate(WindowCreateSettings settings)
+    public nint WindowCreate(WindowCreateSettings settings)
     {
-        Raise(new CommandCreateWindow(settings));
+        var task = WindowCreateAsync(settings);
+        
+        // Since we are blocking the event stream,
+        // we need to process the events manually
+        while (!task.IsCompleted)
+        {
+            // For future me, probably doesn't work due to calling in the wrong thread KEKW
+            // Yes, it is
+            // WaitEvents();
+            
+            _eventBridge.Wait();
+            ProcessEvents(single: true);
+        }
+
+        return task.Result;
+    }
+
+    public Task<nint> WindowCreateAsync()
+    {
+        return WindowCreateAsync(new WindowCreateSettings());
+    }
+
+    public Task<nint> WindowCreateAsync(WindowCreateSettings settings)
+    {
+        var taskCompletionSource = new TaskCompletionSource<nint>();
+        Raise(new CommandCreateWindow(settings, taskCompletionSource));
+
+        return taskCompletionSource.Task;
+    }
+    
+    public void WindowSetTitle(nint window, string title)
+    {
+        Raise(new CommandWindowSetTitle(window, title));
     }
 
     private abstract record Command;
+    
     private record CommandTerminate : Command;
-    private record CommandCreateWindow(WindowCreateSettings Settings) : Command;
+    private record CommandWindowSetTitle(nint Window, string Title) : Command;
+    private record CommandCreateWindow(WindowCreateSettings Settings, TaskCompletionSource<nint>? TaskCompletionSource = null) : Command;
 }
