@@ -1,8 +1,11 @@
-﻿namespace Hypercube.Core.Graphics.Windowing.Api.Glfw;
+﻿using Hypercube.Core.Graphics.Api.GlfwApi;
+using Hypercube.Core.Graphics.Api.GlfwApi.Enums;
+
+namespace Hypercube.Core.Graphics.Windowing.Api.GlfwWindowing;
 
 public unsafe partial class GlfwWindowing
 {   
-    private void Raise(Command command)
+    private void Raise(ICommand command)
     {
         _logger.Trace($"Handled command {command.GetType().Name} (multiThread: {_multiThread})");
         
@@ -11,7 +14,7 @@ public unsafe partial class GlfwWindowing
             _commandBridge.Raise(command);
             
             if (_waitEventsTimeout == 0)
-                Graphics.Api.GlfwApi.Glfw.PostEmptyEvent();
+                Glfw.PostEmptyEvent();
             
             return;
         }
@@ -19,7 +22,7 @@ public unsafe partial class GlfwWindowing
         Process(command);
     }
     
-    private void Process(Command command)
+    private void Process(ICommand command)
     {
         switch (command)
         {
@@ -27,13 +30,13 @@ public unsafe partial class GlfwWindowing
                 _running = false;
                 _eventBridge.CompleteWrite();
                 
-                Graphics.Api.GlfwApi.Glfw.Terminate();
+                Glfw.Terminate();
                 
                 Console.WriteLine("Terminate");
                 break;
             
             case CommandWindowSetTitle commandWindowSetTitle:
-                Graphics.Api.GlfwApi.Glfw.SetWindowTitle(commandWindowSetTitle.Window, commandWindowSetTitle.Title);
+                Glfw.SetWindowTitle(commandWindowSetTitle.Window, commandWindowSetTitle.Title);
                 break;
             
             case CommandCreateWindow commandCreateWindow:
@@ -42,32 +45,34 @@ public unsafe partial class GlfwWindowing
                 var monitor = commandCreateWindow.Settings.MonitorShare;
                 var share = commandCreateWindow.Settings.ContextShare;
                 
-                var window = Graphics.Api.GlfwApi.Glfw.CreateWindow(size.X, size.Y, title, monitor is not null ? monitor.Handle : null, share is not null ? share.Handle : null);
+                Glfw.WindowHint(WindowHintClientApi.ClientApi, ClientApi.OpenglApi);
+                
+                var window = Glfw.CreateWindow(size.X, size.Y, title, monitor is not null ? monitor.Handle : null, share is not null ? share.Handle : null);
                 if (window == null)
                 {
                     Raise(new EventWindowCreated(nint.Zero, commandCreateWindow.TaskCompletionSource));
                     throw new InvalidOperationException($"Failed to create window '{title}' with size {size.X}x{size.Y}. Ensure that the system supports OpenGL and that a valid window context is provided.");
                 }
                 
-                Graphics.Api.GlfwApi.Glfw.MakeContextCurrent(window);
+                Glfw.MakeContextCurrent(window);
                 
-                Graphics.Api.GlfwApi.Glfw.SetWindowPositionCallback(window, _windowPositionCallback);
-                Graphics.Api.GlfwApi.Glfw.SetWindowSizeCallback(window, _windowSizeCallback);
-                Graphics.Api.GlfwApi.Glfw.SetWindowCloseCallback(window, _windowCloseCallback);
-                Graphics.Api.GlfwApi.Glfw.SetWindowRefreshCallback(window, _windowRefreshCallback);
-                Graphics.Api.GlfwApi.Glfw.SetWindowFocusCallback(window, _windowFocusCallback);
-                Graphics.Api.GlfwApi.Glfw.SetWindowIconifyCallback(window, _windowIconifyCallback);
-                Graphics.Api.GlfwApi.Glfw.SetWindowMaximizeCallback(window, _windowMaximizeCallback);
-                Graphics.Api.GlfwApi.Glfw.SetFramebufferSizeCallback(window, _frameBufferSizeCallback);
-                Graphics.Api.GlfwApi.Glfw.SetWindowContentScaleCallback(window, _windowContentScaleCallback);
-                Graphics.Api.GlfwApi.Glfw.SetMouseButtonCallback(window, _mouseButtonCallback);
-                Graphics.Api.GlfwApi.Glfw.SetCursorPositionCallback(window, _cursorPositionCallback);
-                Graphics.Api.GlfwApi.Glfw.SetCursorEnterCallback(window, _cursorEnterCallback);
-                Graphics.Api.GlfwApi.Glfw.SetScrollCallback(window, _scrollCallback);
-                Graphics.Api.GlfwApi.Glfw.SetKeyCallback(window, _keyCallback);
-                Graphics.Api.GlfwApi.Glfw.SetCharCallback(window, _charCallback);
-                Graphics.Api.GlfwApi.Glfw.SetCharModsCallback(window, _charModificationCallback);
-                Graphics.Api.GlfwApi.Glfw.SetDropCallback(window, _dropCallback);
+                Glfw.SetWindowPositionCallback(window, _windowPositionCallback);
+                Glfw.SetWindowSizeCallback(window, _windowSizeCallback);
+                Glfw.SetWindowCloseCallback(window, _windowCloseCallback);
+                Glfw.SetWindowRefreshCallback(window, _windowRefreshCallback);
+                Glfw.SetWindowFocusCallback(window, _windowFocusCallback);
+                Glfw.SetWindowIconifyCallback(window, _windowIconifyCallback);
+                Glfw.SetWindowMaximizeCallback(window, _windowMaximizeCallback);
+                Glfw.SetFramebufferSizeCallback(window, _frameBufferSizeCallback);
+                Glfw.SetWindowContentScaleCallback(window, _windowContentScaleCallback);
+                Glfw.SetMouseButtonCallback(window, _mouseButtonCallback);
+                Glfw.SetCursorPositionCallback(window, _cursorPositionCallback);
+                Glfw.SetCursorEnterCallback(window, _cursorEnterCallback);
+                Glfw.SetScrollCallback(window, _scrollCallback);
+                Glfw.SetKeyCallback(window, _keyCallback);
+                Glfw.SetCharCallback(window, _charCallback);
+                Glfw.SetCharModsCallback(window, _charModificationCallback);
+                Glfw.SetDropCallback(window, _dropCallback);
                 
                 Raise(new EventWindowCreated((nint) window, commandCreateWindow.TaskCompletionSource));
                 break;
@@ -116,9 +121,9 @@ public unsafe partial class GlfwWindowing
         Raise(new CommandWindowSetTitle(window, title));
     }
 
-    private abstract record Command;
+    private interface ICommand;
     
-    private record CommandTerminate : Command;
-    private record CommandWindowSetTitle(nint Window, string Title) : Command;
-    private record CommandCreateWindow(WindowCreateSettings Settings, TaskCompletionSource<nint>? TaskCompletionSource = null) : Command;
+    private record struct CommandTerminate : ICommand;
+    private record struct CommandWindowSetTitle(nint Window, string Title) : ICommand;
+    private record struct CommandCreateWindow(WindowCreateSettings Settings, TaskCompletionSource<nint>? TaskCompletionSource = null) : ICommand;
 }

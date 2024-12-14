@@ -1,6 +1,6 @@
 ﻿namespace Hypercube.Core.Graphics.Rendering.Api;
 
-public interface IRendering
+public interface IRendererApi
 {
-    
+    void Init();
 }

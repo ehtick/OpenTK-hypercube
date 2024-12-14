@@ -1,18 +1,19 @@
-﻿using Hypercube.Core.Graphics.Api.GlfwApi.Enums;
+﻿using Hypercube.Core.Graphics.Api.GlfwApi;
+using Hypercube.Core.Graphics.Api.GlfwApi.Enums;
 using Hypercube.Mathematics.Vectors;
 
-namespace Hypercube.Core.Graphics.Windowing.Api.Glfw;
+namespace Hypercube.Core.Graphics.Windowing.Api.GlfwWindowing;
 
 public partial class GlfwWindowing
 {
-    private void Raise(Event ev)
+    private void Raise(IEvent ev)
     {
         if (_multiThread)
         {
             _eventBridge.Raise(ev);
             
             if (_waitEventsTimeout == 0)
-                Graphics.Api.GlfwApi.Glfw.PostEmptyEvent();
+                Glfw.PostEmptyEvent();
             
             return;
         }
@@ -22,7 +23,7 @@ public partial class GlfwWindowing
 
     private void ProcessEvents(bool single = false)
     {
-        foreach (var ev in _eventBridge.Process())
+        while (_eventBridge.TryRead(out var ev))
         {
             Process(ev);
             
@@ -31,7 +32,7 @@ public partial class GlfwWindowing
         }
     }
     
-    private void Process(Event command)
+    private void Process(IEvent command)
     {
         switch (command)
         {
@@ -40,88 +41,88 @@ public partial class GlfwWindowing
                 break;
         }
     }
-    
-    private abstract record Event;
 
-    private record EventCursorPosition(
+    private interface IEvent;
+
+    private record struct EventCursorPosition(
         nint Window,
         Vector2d Position
-    ) : Event;
+    ) : IEvent;
 
-    private record EventCursorEnter(
+    private record struct EventCursorEnter(
         nint Window,
         bool Entered
-    ) : Event;
+    ) : IEvent;
 
-    private record EventScroll(
+    private record struct EventScroll(
         nint Window,
         Vector2d Offset
-    ) : Event;
+    ) : IEvent;
 
-    private record EventKey(
+    private record struct EventKey(
         nint Window,
         Key Key,
         int ScanCode,
         InputAction Action,
         KeyModifier Modifier
-    ) : Event;
+    ) : IEvent;
     
-    private record EventMouseButton(
+    private record struct EventMouseButton(
         nint Window,
         MouseButton Button,
         InputAction Action,
         KeyModifier Mods
-    ) : Event;
+    ) : IEvent;
     
-    private record EventChar
+    private record struct EventChar
     (
         nint Window,
         uint CodePoint
-    ) : Event;
+    ) : IEvent;
 
-    private record EventWindowClose
+    private record struct EventWindowClose
     (
         nint Window
-    ) : Event;
+    ) : IEvent;
 
-    private record EventWindowSize
+    private record struct EventWindowSize
     (
         nint Window,
         Vector2i Size
-    ) : Event;
+    ) : IEvent;
 
-    private record EventWindowPosition
+    private record struct EventWindowPosition
     (
         nint Window,
         Vector2i Position
-    ) : Event;
+    ) : IEvent;
 
-    private record EventWindowCreated
+    private record struct EventWindowCreated
     (
         nint Window,
         TaskCompletionSource<nint>? TaskCompletionSource = null
-    ) : Event;
+    ) : IEvent;
     
-    private record EventWindowContentScale
+    private record struct EventWindowContentScale
     (
         nint Window,
         Vector2 Scale
-    ) : Event;
+    ) : IEvent;
 
-    private record EventWindowIconify
+    private record struct EventWindowIconify
     (
         nint Window,
         bool Iconified
-    ) : Event;
+    ) : IEvent;
 
-    private record EventWindowFocus
+    private record struct EventWindowFocus
     (
         nint Window,
         bool Focused
-    ) : Event;
+    ) : IEvent;
 
-    private record EventMonitorDestroy
+    private record struct EventMonitorDestroy
     (
         int Id
-    ) : Event;
+    ) : IEvent;
 }

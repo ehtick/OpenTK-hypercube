@@ -166,6 +166,11 @@ public static unsafe class Glfw
     {
         GlfwNative.glfwWindowHint(hint, value);
     }
+    
+    public static void WindowHint(WindowHintClientApi hint, ClientApi value)
+    {
+        GlfwNative.glfwWindowHint((int) hint, (int) value);
+    }
 
     public static void WindowHintString(int hint, byte* value)
     {

@@ -3,7 +3,7 @@ using Hypercube.Core.Graphics.Api.GlfwApi;
 using Hypercube.Core.Graphics.Api.GlfwApi.Enums;
 using Hypercube.Mathematics.Vectors;
 
-namespace Hypercube.Core.Graphics.Windowing.Api.Glfw;
+namespace Hypercube.Core.Graphics.Windowing.Api.GlfwWindowing;
 
 public unsafe partial class GlfwWindowing
 {

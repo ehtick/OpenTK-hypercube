@@ -1,10 +1,12 @@
 ﻿using System.Threading.Channels;
 using Hypercube.Core.Debugging.Logger;
 using Hypercube.Core.Dependencies;
+using Hypercube.Core.Graphics.Api.GlfwApi;
+using Hypercube.Core.Graphics.Windowing.Api.Exceptions;
 using Hypercube.Core.Utilities.Threads;
 using JetBrains.Annotations;
 
-namespace Hypercube.Core.Graphics.Windowing.Api.Glfw;
+namespace Hypercube.Core.Graphics.Windowing.Api.GlfwWindowing;
 
 [PublicAPI]
 public unsafe partial class GlfwWindowing : IWindowingApi
@@ -13,8 +15,8 @@ public unsafe partial class GlfwWindowing : IWindowingApi
 
     [Dependency] private readonly ILogger _logger = default!;
     
-    private ThreadBridge<Command> _commandBridge = default!;
-    private ThreadBridge<Event> _eventBridge = default!;
+    private ThreadBridge<ICommand> _commandBridge = default!;
+    private ThreadBridge<IEvent> _eventBridge = default!;
 
     private Thread? _thread;
     private bool _multiThread;
@@ -28,13 +30,13 @@ public unsafe partial class GlfwWindowing : IWindowingApi
         _multiThread = multiThread;
         
         // Init channels
-        _commandBridge = new ThreadBridge<Command>(new UnboundedChannelOptions
+        _commandBridge = new ThreadBridge<ICommand>(new UnboundedChannelOptions
         {
             SingleReader = true,
             SingleWriter = false
         });
         
-        _eventBridge = new ThreadBridge<Event>(new BoundedChannelOptions(EventBridgeBufferSize)
+        _eventBridge = new ThreadBridge<IEvent>(new BoundedChannelOptions(EventBridgeBufferSize)
         {
             FullMode = BoundedChannelFullMode.Wait,
             SingleReader = true,
@@ -44,18 +46,18 @@ public unsafe partial class GlfwWindowing : IWindowingApi
         
         InitCallbacks();
 
-        Graphics.Api.GlfwApi.Glfw.SetErrorCallback(_errorCallback);
+        Glfw.SetErrorCallback(_errorCallback);
     
-        if (!Graphics.Api.GlfwApi.Glfw.Init())
+        if (!Glfw.Init())
         {
-            var errorCode = Graphics.Api.GlfwApi.Glfw.GetError(out var description);
-            throw new Exceptions.WindowManagerInitException($"Failed to init Glfw ({errorCode}) {description}");
+            var errorCode = Glfw.GetError(out var description);
+            throw new WindowManagerInitException($"Failed to init Glfw ({errorCode}) {description}");
         }
         
         _thread = Thread.CurrentThread;
         
-        Graphics.Api.GlfwApi.Glfw.SetMonitorCallback(_monitorCallback);
-        Graphics.Api.GlfwApi.Glfw.SetJoystickCallback(_joystickCallback);
+        Glfw.SetMonitorCallback(_monitorCallback);
+        Glfw.SetJoystickCallback(_joystickCallback);
 
     }
 
@@ -74,8 +76,8 @@ public unsafe partial class GlfwWindowing : IWindowingApi
         while (_running)
         {
             WaitEvents();
-            
-            foreach (var command in _commandBridge.Process())
+
+            while (_commandBridge.TryRead(out var command))
             {
                 _logger.Trace($"Process command {command.GetType().Name}");
                 Process(command);
@@ -101,18 +103,18 @@ public unsafe partial class GlfwWindowing : IWindowingApi
             return;
         }
         
-        Graphics.Api.GlfwApi.Glfw.PollEvents();
+        Glfw.PollEvents();
     }
 
     private void WaitEvents()
     {
         if (_waitEventsTimeout == 0)
         {
-            Graphics.Api.GlfwApi.Glfw.WaitEvents();
+            Glfw.WaitEvents();
             return;
         }
 
-        Graphics.Api.GlfwApi.Glfw.WaitEventsTimeout(_waitEventsTimeout);
+        Glfw.WaitEventsTimeout(_waitEventsTimeout);
     }
 
     public void Dispose()

@@ -1,7 +1,7 @@
 ﻿using Hypercube.Core.Debugging.Logger;
 using Hypercube.Core.Dependencies;
 using Hypercube.Core.Graphics.Windowing.Api;
-using Hypercube.Core.Graphics.Windowing.Api.Glfw;
+using Hypercube.Core.Graphics.Windowing.Api.GlfwWindowing;
 
 namespace Hypercube.Core.Graphics.Windowing.Manager;
 

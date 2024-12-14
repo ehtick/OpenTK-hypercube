@@ -333,6 +333,14 @@ public static unsafe partial class GlNative
 
     /// <remarks>
     /// <c>
+    /// GLAPI const GLubyte *APIENTRY glGetString (GLenum name);
+    /// </c>
+    /// </remarks>
+    [LibraryImport("opengl32.dll")]
+    public static partial byte* glGetString(uint name);
+
+    /// <remarks>
+    /// <c>
     /// GLAPI void APIENTRY glGetTexImage (GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
     /// </c>
     /// </remarks>
