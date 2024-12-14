@@ -10,6 +10,7 @@
     <ItemGroup>
       <Folder Include="Debugging\Profiler\" />
       <Folder Include="ECS\" />
+      <Folder Include="Graphics\Rendering\Api\Exceptions\" />
       <Folder Include="IO\" />
       <Folder Include="Networking\Client\" />
       <Folder Include="Networking\Server\" />
