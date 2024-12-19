@@ -2,11 +2,15 @@
 
 public interface IWindowManager
 {
+    bool Ready { get; }
+    
     /// <summary>
     /// Initializes the library for window management.
     /// </summary>
     /// <returns>True if initialization is successful; otherwise, False.</returns>
     void Init(bool multiThread = false);
+
+    void EnterLoop();
     
     /// <summary>
     /// Processes window events.
@@ -17,6 +21,8 @@ public interface IWindowManager
     /// Creates a new window with the default settings.
     /// </summary>
     WindowHandle WindowCreate();
+
+    Task<WindowHandle> WindowCreateAsync();
     
     void WindowSetTitle(WindowHandle window, string title);
 }

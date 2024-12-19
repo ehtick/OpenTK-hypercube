@@ -21,9 +21,23 @@ public unsafe partial class GlfwWindowing
         
         Process(command);
     }
+
+    private void ProcessCommands(bool single = false)
+    {
+        while (_commandBridge.TryRead(out var command))
+        {
+            _logger.Trace($"Read command {command.GetType().Name} (multiThread: {_multiThread})");
+            Process(command);
+            
+            if (single)
+                break;
+        }
+    }
     
     private void Process(ICommand command)
     {
+        _logger.Trace($"Processed command {command.GetType().Name} (multiThread: {_multiThread})");
+        
         switch (command)
         {
             case CommandTerminate:
@@ -96,7 +110,10 @@ public unsafe partial class GlfwWindowing
             // Yes, it is
             // WaitEvents();
             
+            ProcessCommands(single: true);
+            
             _eventBridge.Wait();
+            
             ProcessEvents(single: true);
         }
 
@@ -108,6 +125,7 @@ public unsafe partial class GlfwWindowing
         return WindowCreateAsync(new WindowCreateSettings());
     }
 
+    // TODO: It's fucking shit don't update and broke evrything
     public Task<nint> WindowCreateAsync(WindowCreateSettings settings)
     {
         var taskCompletionSource = new TaskCompletionSource<nint>();

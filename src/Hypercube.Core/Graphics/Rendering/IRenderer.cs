@@ -2,6 +2,8 @@
 
 public interface IRenderer
 {
-    void Init();
+    void Init(bool multiThread = false);
+    Task InitAsync(bool multiThread = false);
+    
     void Terminate();
 }

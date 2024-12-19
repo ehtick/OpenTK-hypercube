@@ -65,6 +65,55 @@ public unsafe partial class GlfwWindowing
         _joystickCallback = OnJoystick;
     }
 
+    // These methods, they seem VERY useless to me
+    private void OnGlProcess()
+    {
+        
+    }
+    
+    // These methods, they seem VERY useless to me
+    private void OnVkProcess()
+    {
+
+    }
+    
+    /// <summary>
+    /// Allocates a block of memory with the specified size.
+    /// </summary>
+    /// <param name="size">The size of the memory block to allocate, in bytes.</param>
+    /// <param name="user">Additional user context, if needed.</param>
+    /// <returns>A pointer to the allocated memory block.</returns>
+    private void* OnAllocate(nuint size, void* user)
+    {
+        return (void*) Marshal.AllocHGlobal((int) size);
+    }
+    
+    /// <summary>
+    /// Reallocates a previously allocated block of memory to a new size.
+    /// </summary>
+    /// <param name="block">A pointer to the previously allocated memory block.</param>
+    /// <param name="size">The new size of the memory block, in bytes.</param>
+    /// <param name="user">Additional user context, if needed.</param>
+    /// <returns>A pointer to the reallocated memory block.</returns>
+    private void* OnReallocate(void* block, nuint size, void* user)
+    {
+        return (void*) Marshal.ReAllocHGlobal((nint) block, (nint) size);
+    }
+
+    /// <summary>
+    /// Frees a previously allocated block of memory.
+    /// </summary>
+    /// <param name="block">A pointer to the memory block to free.</param>
+    /// <param name="user">Additional user context, if needed.</param>
+    private void OnDeallocate(void* block, void* user)
+    {
+        if (block is not null)
+            Marshal.FreeHGlobal((nint) block);
+        
+        if (user is not null)
+            Marshal.FreeHGlobal((nint) user);
+    }
+    
     private void OnJoystick(int jid, int @event)
     {
 
@@ -91,31 +140,6 @@ public unsafe partial class GlfwWindowing
     }
 
     private void OnWindowRefresh(IntPtr* window)
-    {
-
-    }
-
-    private void OnGlProcess()
-    {
-
-    }
-    
-    private void OnVkProcess()
-    {
-
-    }
-
-    private void* OnAllocate(nuint size, void* user)
-    {
-        return (void*) Marshal.AllocHGlobal((int) size);
-    }
-    
-    private void* OnReallocate(void* block, nuint size, void* user)
-    {
-        return (void*) Marshal.ReAllocHGlobal((nint) block, (nint) size);
-    }
-
-    private void OnDeallocate(void* block, void* user)
     {
 
     }

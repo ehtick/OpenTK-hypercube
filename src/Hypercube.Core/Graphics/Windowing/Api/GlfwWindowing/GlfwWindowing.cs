@@ -54,11 +54,11 @@ public unsafe partial class GlfwWindowing : IWindowingApi
             throw new WindowManagerInitException($"Failed to init Glfw ({errorCode}) {description}");
         }
         
+        _logger.Trace("GLFW initialized");
         _thread = Thread.CurrentThread;
         
         Glfw.SetMonitorCallback(_monitorCallback);
         Glfw.SetJoystickCallback(_joystickCallback);
-
     }
 
     public void Terminate()
@@ -76,12 +76,7 @@ public unsafe partial class GlfwWindowing : IWindowingApi
         while (_running)
         {
             WaitEvents();
-
-            while (_commandBridge.TryRead(out var command))
-            {
-                _logger.Trace($"Process command {command.GetType().Name}");
-                Process(command);
-            }
+            ProcessCommands();
         }
         
         _logger.Debug("Shutdown event loop, unsuspend window thread");
@@ -92,6 +87,7 @@ public unsafe partial class GlfwWindowing : IWindowingApi
         Raise(new CommandTerminate());
         
         // That's last command whose need send 
+        _logger.Trace($"Terminated");
         _commandBridge.CompleteWrite();
     }
 

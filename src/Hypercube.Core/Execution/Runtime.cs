@@ -20,7 +20,7 @@ public sealed class Runtime
         
         _logger.Info("Runtime started");
         
-        _renderer.Init();
+        _renderer.Init(multiThread: true);
         _runtimeLoop.Run();
     }
     
