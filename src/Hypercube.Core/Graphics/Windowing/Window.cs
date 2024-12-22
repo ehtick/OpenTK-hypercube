@@ -1,4 +1,4 @@
-﻿using Hypercube.Core.Graphics.Windowing.Api;
+﻿using Hypercube.Core.Graphics.Windowing.Core;
 using Hypercube.Mathematics.Vectors;
 using JetBrains.Annotations;
 

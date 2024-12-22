@@ -1,7 +1,7 @@
 ﻿using Hypercube.Core.Debugging.Logger;
 using Hypercube.Core.Dependencies;
-using Hypercube.Core.Graphics.Windowing.Api;
-using Hypercube.Core.Graphics.Windowing.Api.GlfwWindowing;
+using Hypercube.Core.Graphics.Windowing.Core;
+using Hypercube.Core.Graphics.Windowing.Core.GlfwWindowing;
 
 namespace Hypercube.Core.Graphics.Windowing.Manager;
 
@@ -21,6 +21,14 @@ public class WindowManager : IWindowManager
         _windowApi.Init(multiThread);
     }
 
+    public void WaitInit(int sleepDelay)
+    {
+        while (!Ready)
+        {
+            Thread.Sleep(sleepDelay);
+        }
+    }
+
     public void EnterLoop()
     {
         _windowApi.EnterLoop();
@@ -29,6 +37,11 @@ public class WindowManager : IWindowManager
     public WindowHandle WindowCreate()
     {
         return new WindowHandle(_windowApi.WindowCreate());
+    }
+    
+    public WindowHandle WindowCreate(WindowCreateSettings settings)
+    {
+        return new WindowHandle(_windowApi.WindowCreate(settings));
     }
 
     public async Task<WindowHandle> WindowCreateAsync()

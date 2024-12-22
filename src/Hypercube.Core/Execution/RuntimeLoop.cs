@@ -1,5 +1,6 @@
 ﻿using Hypercube.Core.Debugging.Logger;
 using Hypercube.Core.Dependencies;
+using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Windowing.Manager;
 
 namespace Hypercube.Core.Execution;
@@ -7,7 +8,7 @@ namespace Hypercube.Core.Execution;
 public sealed class RuntimeLoop : IRuntimeLoop
 {
     [Dependency] private readonly ILogger _logger = default!;
-    [Dependency] private readonly IWindowManager _windowManager = default!;
+    [Dependency] private readonly IRenderer _renderer = default!;
 
     public bool Running { get; private set; }
 
@@ -34,6 +35,7 @@ public sealed class RuntimeLoop : IRuntimeLoop
 
     private void OnRun()
     {
-        _windowManager.PollEvents();
+        _renderer.Update();
+        _renderer.Render();
     }
 }

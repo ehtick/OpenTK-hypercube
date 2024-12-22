@@ -2,6 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        <AssemblyTitle>HypercubeEngine</AssemblyTitle>
+        <Version>1.0.1.0</Version>
+        <FileVersion>1.0.1.0</FileVersion>
+        
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -9,7 +13,9 @@
 
     <ItemGroup>
       <Folder Include="Debugging\Profiler\" />
-      <Folder Include="ECS\" />
+      <Folder Include="Ecs\Component\" />
+      <Folder Include="Ecs\Event\" />
+      <Folder Include="Ecs\System\" />
       <Folder Include="Graphics\Rendering\Api\Exceptions\" />
       <Folder Include="IO\" />
       <Folder Include="Networking\Client\" />

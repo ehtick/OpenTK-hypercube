@@ -10,6 +10,8 @@ public interface IWindowManager
     /// <returns>True if initialization is successful; otherwise, False.</returns>
     void Init(bool multiThread = false);
 
+    void WaitInit(int sleepDelay);
+    
     void EnterLoop();
     
     /// <summary>
@@ -22,6 +24,8 @@ public interface IWindowManager
     /// </summary>
     WindowHandle WindowCreate();
 
+    WindowHandle WindowCreate(WindowCreateSettings settings);
+    
     Task<WindowHandle> WindowCreateAsync();
     
     void WindowSetTitle(WindowHandle window, string title);

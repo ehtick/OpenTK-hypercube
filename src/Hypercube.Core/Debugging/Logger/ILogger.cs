@@ -34,6 +34,8 @@ public interface ILogger
     /// <param name="message">Optional additional message.</param>
     void Log(LogLevel level, Exception exception, string message = "");
 
+    void Echo(string message);
+    
     /// <summary>
     /// Logs a trace-level message.
     /// </summary>

@@ -1,8 +1,10 @@
 ﻿using Hypercube.Core.Debugging.Logger;
 using Hypercube.Core.Dependencies;
-using Hypercube.Core.Graphics.Api.GlApi;
-using Hypercube.Core.Graphics.Api.GlApi.Enum;
+using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering.Manager;
+using Hypercube.Core.Graphics.Windowing;
+using Hypercube.Core.Graphics.Windowing.Api.GlApi;
+using Hypercube.Core.Graphics.Windowing.Api.GlApi.Enum;
 using Hypercube.Core.Graphics.Windowing.Manager;
 using Hypercube.Core.Utilities.Extensions;
 
@@ -12,6 +14,7 @@ public class Renderer : IRenderer
 {
     [Dependency] private readonly IWindowManager _windowManager = default!;
     [Dependency] private readonly IRendererManager _rendererManager = default!;
+    [Dependency] private readonly IPatchManager _patchManager = default!;
     [Dependency] private readonly ILogger _logger = default!;
     
     private const ThreadPriority ThreadPriority = System.Threading.ThreadPriority.AboveNormal;
@@ -29,42 +32,18 @@ public class Renderer : IRenderer
 
     public async Task InitAsync(bool multiThread = false)
     {
-        if (multiThread)
+        if (!multiThread)
+            throw new NotImplementedException();
+        
+        _thread = new Thread(OnThreadStart, ThreadStackSize)
         {
-            _thread = new Thread(() =>
-            {
-                _windowManager.Init(multiThread);
-                
-                while (!_windowManager.Ready)
-                {
-                    Thread.Sleep(ThreadReadySleepDelay);
-                }
-                
-                var window = _windowManager.WindowCreate();
-                
-                _readyEvent.Set();
-                
-                _windowManager.WindowSetTitle(window, "...");
+            IsBackground = false,
+            Priority = ThreadPriority,
+            Name = ThreadName
+        };
             
-                _logger.Info(Gl.GetString(StringName.Extensions));
-                _logger.Info(Gl.GetString(StringName.Vendor));
-                _logger.Info(Gl.GetString(StringName.Version));
-                _logger.Info(Gl.GetString(StringName.ShadingLanguageVersion));
-            
-                _rendererManager.Init();
-
-                _windowManager.EnterLoop();
-            }, ThreadStackSize)
-            {
-                IsBackground = false,
-                Priority = ThreadPriority,
-                Name = ThreadName
-            };
-            
-            _thread.Start();
-            await _readyEvent.AsTask();
-            return;
-        }
+        _thread.Start();
+        await _readyEvent.AsTask();
     }
 
     public void Update()
@@ -72,8 +51,35 @@ public class Renderer : IRenderer
         _windowManager.PollEvents();
     }
 
+    public void Render()
+    {
+        foreach (var patch in _patchManager.Patches)
+        {
+            patch.Draw(this);
+        }   
+    }
+
     public void Terminate()
     {
 
+    }
+
+    private void OnThreadStart()
+    {
+        _windowManager.Init(true);
+        _windowManager.WaitInit(ThreadReadySleepDelay);
+
+        var window = _windowManager.WindowCreate(new WindowCreateSettings
+        {
+            Title = "Mainframe",
+            TransparentFramebuffer = true,
+            Decorated = false,
+            Floating = true
+        });
+        
+        _rendererManager.Init();
+        
+        _readyEvent.Set();
+        _windowManager.EnterLoop();
     }
 }

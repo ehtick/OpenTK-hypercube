@@ -14,7 +14,7 @@ public class RendererManager : IRendererManager
     
     public void Init()
     {
-        _rendererApi = new GlRendererApi();
+        _rendererApi = new GlApiRendering();
         _container.Inject(_rendererApi);
         
         _rendererApi.Init();

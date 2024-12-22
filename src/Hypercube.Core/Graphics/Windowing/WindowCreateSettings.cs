@@ -3,7 +3,7 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Graphics.Windowing;
 
-public unsafe class WindowCreateSettings
+public struct WindowCreateSettings
 {
     /// <summary>
     /// The title of the window.
@@ -23,17 +23,23 @@ public unsafe class WindowCreateSettings
     /// <summary>
     /// Flag indicating whether the window should be in fullscreen mode.
     /// </summary>
-    public bool IsFullScreen { get; init; } = false;
+    public bool FullScreen { get; init; } = false;
 
     /// <summary>
     /// Flag indicating whether the window should be resizable.
     /// </summary>
-    public bool IsResizable { get; init; } = true;
+    public bool Resizable { get; init; } = true;
 
     /// <summary>
     /// Flag indicating whether the window should be visible immediately upon creation.
     /// </summary>
-    public bool IsVisible { get; init; } = true;
+    public bool Visible { get; init; } = true;
+
+    public bool Decorated { get; init; } = true;
+
+    public bool TransparentFramebuffer { get; init; } = false;
+    
+    public bool Floating { get; init; } = false;
 
     /// <summary>
     /// Optional context information for initializing the window's rendering context (e.g., OpenGL or Vulkan).
@@ -46,4 +52,8 @@ public unsafe class WindowCreateSettings
     public WindowHandle? ContextShare { get; init; } = null;
     
     public MonitorHandle? MonitorShare { get; init; } = null;
+    
+    public WindowCreateSettings()
+    {
+    }
 }

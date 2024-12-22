@@ -11,7 +11,7 @@ public class ConsoleLogger : ILogger
         if (level < LogLevel)
             return;
         
-        Console.WriteLine($"{GetColor(level)}[{level}] {message}{AnsiColors.Reset}");
+        Console.WriteLine($"{GetColor(level)}[{level}] {message}{Ansi.Reset}");
     }
 
     public void Log(LogLevel level, string template, params object[] args)
@@ -21,7 +21,7 @@ public class ConsoleLogger : ILogger
         
         var formattedMessage = string.Format(template, args);
         
-        Console.WriteLine($"{GetColor(level)}[{level}] {formattedMessage}{AnsiColors.Reset}");
+        Console.WriteLine($"{GetColor(level)}[{level}] {formattedMessage}{Ansi.Reset}");
     }
 
     public void Log(LogLevel level, Exception exception, string message = "")
@@ -33,7 +33,12 @@ public class ConsoleLogger : ILogger
             ? $"{message}\nException: {exception}"
             : $"Exception: {exception}";
         
-        Console.WriteLine($"{GetColor(level)}[{level}] {fullMessage}{AnsiColors.Reset}");
+        Console.WriteLine($"{GetColor(level)}[{level}] {fullMessage}{Ansi.Reset}");
+    }
+
+    public void Echo(string message)
+    {
+        Console.WriteLine(message);
     }
 
     public void Trace(string message)
@@ -70,13 +75,13 @@ public class ConsoleLogger : ILogger
     {
         return level switch
         {
-            LogLevel.Trace => AnsiColors.BrightBlack,
-            LogLevel.Debug => AnsiColors.Cyan,
-            LogLevel.Info => AnsiColors.White,
-            LogLevel.Warning => AnsiColors.Yellow,
-            LogLevel.Error => AnsiColors.Red,
-            LogLevel.Critical => $"{AnsiColors.BackgroundRed}{AnsiColors.Black}",
-            _ => AnsiColors.Reset
+            LogLevel.Trace => Ansi.BrightBlack,
+            LogLevel.Debug => Ansi.Cyan,
+            LogLevel.Info => Ansi.White,
+            LogLevel.Warning => Ansi.Yellow,
+            LogLevel.Error => Ansi.Red,
+            LogLevel.Critical => $"{Ansi.BackgroundRed}{Ansi.Black}",
+            _ => Ansi.Reset
         };
     }
 }
