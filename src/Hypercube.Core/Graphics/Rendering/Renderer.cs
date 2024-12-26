@@ -17,12 +17,9 @@ public class Renderer : IRenderer
     [Dependency] private readonly IPatchManager _patchManager = default!;
     [Dependency] private readonly ILogger _logger = default!;
     
-    private const ThreadPriority ThreadPriority = System.Threading.ThreadPriority.AboveNormal;
-    private const int ThreadStackSize = 8 * 1024 * 1024;
-    private const string ThreadName = "Renderer thread";
-    private const int ThreadReadySleepDelay = 10;
-    
     private readonly ManualResetEvent _readyEvent = new(false);
+
+    private WindowHandle? _mainWindow;
     private Thread? _thread;
     
     public void Init(bool multiThread = false)
@@ -35,14 +32,15 @@ public class Renderer : IRenderer
         if (!multiThread)
             throw new NotImplementedException();
         
-        _thread = new Thread(OnThreadStart, ThreadStackSize)
+        _thread = new Thread(OnThreadStart, Config.RenderThreadStackSize)
         {
             IsBackground = false,
-            Priority = ThreadPriority,
-            Name = ThreadName
+            Priority = Config.RenderThreadPriority,
+            Name = Config.RenderThreadName
         };
             
         _thread.Start();
+        
         await _readyEvent.AsTask();
     }
 
@@ -67,14 +65,15 @@ public class Renderer : IRenderer
     private void OnThreadStart()
     {
         _windowManager.Init(true);
-        _windowManager.WaitInit(ThreadReadySleepDelay);
-
-        var window = _windowManager.WindowCreate(new WindowCreateSettings
+        _windowManager.WaitInit(Config.RenderThreadReadySleepDelay);
+        
+        _mainWindow = _windowManager.WindowCreate(new WindowCreateSettings
         {
-            Title = "Mainframe",
-            TransparentFramebuffer = true,
-            Decorated = false,
-            Floating = true
+            Title = Config.MainWindowTitle,
+            // Size = Config.MainWindowSize,
+            TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
+            Decorated = Config.MainWindowDecorated,
+            Floating = Config.MainWindowFloating
         });
         
         _rendererManager.Init();

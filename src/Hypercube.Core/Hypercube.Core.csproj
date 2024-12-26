@@ -5,7 +5,8 @@
         <AssemblyTitle>HypercubeEngine</AssemblyTitle>
         <Version>1.0.1.0</Version>
         <FileVersion>1.0.1.0</FileVersion>
-        
+
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -17,7 +18,6 @@
       <Folder Include="Ecs\Event\" />
       <Folder Include="Ecs\System\" />
       <Folder Include="Graphics\Rendering\Api\Exceptions\" />
-      <Folder Include="IO\" />
       <Folder Include="Networking\Client\" />
       <Folder Include="Networking\Server\" />
       <Folder Include="Physics\" />

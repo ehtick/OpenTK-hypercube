@@ -7,6 +7,25 @@ namespace Hypercube.Core.Utilities.Helpers;
 [PublicAPI]
 public static class ReflectionHelper
 {
+    public static Dictionary<Type, T> GetAllTypesWithAttribute<T>() where T : Attribute
+    {
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var result = new Dictionary<Type, T>();
+        
+        foreach (var assembly in assemblies)
+        {
+            var types = assembly.GetTypes();
+            foreach (var type in types)
+            {
+                var attribute = type.GetCustomAttribute<T>();
+                if (attribute is not null)
+                    result.Add(type, attribute);
+            }
+        }
+
+        return result;
+    }
+    
     /// <summary>
     /// Sets the value of a field in the given object using reflection, based on the provided field name.
     /// </summary>

@@ -1,6 +1,8 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Hypercube.Core.Dependencies.Exceptions;
 using Hypercube.Core.Utilities.Extensions;
+using JetBrains.Annotations;
 
 namespace Hypercube.Core.Dependencies;
 
@@ -14,6 +16,7 @@ namespace Hypercube.Core.Dependencies;
 /// </para>
 /// </remarks>
 /// <seealso cref="DependencyAttribute"/>
+[PublicAPI]
 public class DependenciesContainer
 {
     /// <summary>
@@ -110,25 +113,21 @@ public class DependenciesContainer
     /// <summary>
     /// Registers a specific instance of a type for dependency injection.
     /// </summary>
-    /// <typeparam name="T">The type to register.</typeparam>
-    /// <param name="instance">The instance to register.</param>
-    /// <exception cref="ArgumentNullException">Thrown if the instance is null.</exception>
-    public void Register<T>([System.Diagnostics.CodeAnalysis.NotNull] T instance)
-    {
-        if (instance is null)
-            throw new ArgumentNullException(nameof(instance), "Instance cannot be null.");
-
-        Register<T>(_ => instance);
-    }
-
-    /// <summary>
-    /// Registers a specific instance of a type for dependency injection.
-    /// </summary>
     /// <param name="type">The type to register.</param>
     /// <param name="instance">The instance to register.</param>
     public void Register(Type type, object instance)
     {
         Register(type, _ => instance);
+    }
+    
+    /// <summary>
+    /// Registers a specific instance of a type for dependency injection.
+    /// </summary>
+    /// <typeparam name="T">The type to register.</typeparam>
+    /// <param name="instance">The instance to register.</param>
+    public void Register<T>(object instance)
+    {
+        Register(typeof(T), _ => instance);
     }
 
     /// <summary>

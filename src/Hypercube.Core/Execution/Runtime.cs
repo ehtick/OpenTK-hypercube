@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Hypercube.Core.Configuration;
 using Hypercube.Core.Debugging.Logger;
 using Hypercube.Core.Dependencies;
 using Hypercube.Core.Execution.Attributes;
@@ -17,6 +18,7 @@ public sealed class Runtime
     private readonly DependenciesContainer _dependencies = new();
 
     [Dependency] private readonly ILogger _logger = default!;
+    [Dependency] private readonly IConfigManager _configManager = default!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
     [Dependency] private readonly IRenderer _renderer = default!;
 
@@ -30,6 +32,8 @@ public sealed class Runtime
         _logger.Info("Dependency initialization...");
         
         InitDependencies();
+
+        _configManager.Init();
         
         _logger.Info("Dependency initialization is complete!");
         _logger.Info("Preparing for the execution of entry points...");
@@ -40,7 +44,7 @@ public sealed class Runtime
         _logger.Info("The entry points are called!");
         _logger.Info("Initialization of internal modules...");
         
-        _renderer.Init(multiThread: true);
+        _renderer.Init(Config.RenderThreading);
         
         _logger.Info("Preparation is complete, start the main application cycle");
         EntryPointsExecute(EntryPointLevel.AfterInit);
@@ -54,12 +58,13 @@ public sealed class Runtime
         // I'll fucking do it
         ReflectionHelper.SetField(this, nameof(_logger), new ConsoleLogger());
         
-        _dependencies.Register(_logger);
+        _dependencies.Register<ILogger>(_logger);
     }
     
     private void InitDependencies()
     {
-        _dependencies.Register<ILogger, ConsoleLogger>();
+        _dependencies.Register<IConfigManager, ConfigManager>();
+        
         _dependencies.Register<IRuntimeLoop, RuntimeLoop>();
         
         _dependencies.Register<IWindowManager, WindowManager>();
