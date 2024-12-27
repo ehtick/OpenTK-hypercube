@@ -16,7 +16,7 @@ public class WindowManager : IWindowManager
 
     public void Init(bool multiThread = false)
     {
-        _windowApi = new GlfwWindowing();
+        _windowApi = ApiFactory.GetApi(Config.Windowing);
         _container.Inject(_windowApi);
         _windowApi.Init(multiThread);
     }

@@ -3,14 +3,12 @@ using Hypercube.Core.Dependencies;
 using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Windowing;
-using Hypercube.Core.Graphics.Windowing.Api.GlApi;
-using Hypercube.Core.Graphics.Windowing.Api.GlApi.Enum;
 using Hypercube.Core.Graphics.Windowing.Manager;
-using Hypercube.Core.Utilities.Extensions;
+using Hypercube.Utilities.Extensions;
 
 namespace Hypercube.Core.Graphics.Rendering;
 
-public class Renderer : IRenderer
+public partial class Renderer : IRenderer
 {
     [Dependency] private readonly IWindowManager _windowManager = default!;
     [Dependency] private readonly IRendererManager _rendererManager = default!;

@@ -1,5 +1,5 @@
-﻿using Hypercube.Core.Graphics.Windowing.Api.GlfwApi;
-using Hypercube.Core.Graphics.Windowing.Api.GlfwApi.Enums;
+﻿using Hypercube.GraphicsApi.GlfwApi;
+using Hypercube.GraphicsApi.GlfwApi.Enums;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Graphics.Windowing.Core.GlfwWindowing;

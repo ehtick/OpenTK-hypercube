@@ -1,4 +1,4 @@
-﻿using Hypercube.Core.Utilities.Constants;
+﻿using Hypercube.Utilities.Constants;
 
 namespace Hypercube.Core.Debugging.Logger;
 

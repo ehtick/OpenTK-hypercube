@@ -8,8 +8,8 @@ using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Windowing.Manager;
-using Hypercube.Core.Utilities.Extensions;
-using Hypercube.Core.Utilities.Helpers;
+using Hypercube.Utilities.Extensions;
+using Hypercube.Utilities.Helpers;
 
 namespace Hypercube.Core.Execution;
 

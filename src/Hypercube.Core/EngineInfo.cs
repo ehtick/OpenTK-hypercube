@@ -1,6 +1,5 @@
-﻿using Hypercube.Core.Utilities;
-using Hypercube.Core.Utilities.Constants;
-using Hypercube.Core.Utilities.Helpers;
+﻿using Hypercube.Utilities.Constants;
+using Hypercube.Utilities.Helpers;
 using JetBrains.Annotations;
 
 namespace Hypercube.Core;

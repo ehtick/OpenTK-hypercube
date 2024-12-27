@@ -2,7 +2,7 @@
 using System.Text.Json;
 using Hypercube.Core.Debugging.Logger;
 using Hypercube.Core.Dependencies;
-using Hypercube.Core.Utilities.Helpers;
+using Hypercube.Utilities.Helpers;
 using JetBrains.Annotations;
 
 namespace Hypercube.Core.Configuration;
@@ -77,7 +77,11 @@ public class ConfigManager : IConfigManager
         foreach (var (configName, fieldsDict) in Fields)
         {
             var path = $"{configName}";
-            var configJson = JsonSerializer.Serialize(ReadFromFieldsToDict(fieldsDict));
+            var configJson = JsonSerializer.Serialize(ReadFromFieldsToDict(fieldsDict), new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+            
             File.WriteAllText(path, configJson);
         }
     }

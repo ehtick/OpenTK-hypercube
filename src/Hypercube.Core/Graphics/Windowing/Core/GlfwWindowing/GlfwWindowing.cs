@@ -1,9 +1,9 @@
 ﻿using System.Threading.Channels;
 using Hypercube.Core.Debugging.Logger;
 using Hypercube.Core.Dependencies;
-using Hypercube.Core.Graphics.Windowing.Api.GlfwApi;
 using Hypercube.Core.Graphics.Windowing.Core.Exceptions;
-using Hypercube.Core.Utilities.Threads;
+using Hypercube.GraphicsApi.GlfwApi;
+using Hypercube.Utilities.Threads;
 using JetBrains.Annotations;
 
 namespace Hypercube.Core.Graphics.Windowing.Core.GlfwWindowing;

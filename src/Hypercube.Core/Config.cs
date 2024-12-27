@@ -1,11 +1,21 @@
 ﻿using Hypercube.Core.Configuration;
-using Hypercube.Core.Utilities.Helpers;
+using Hypercube.GraphicsApi;
 
 namespace Hypercube.Core;
 
 [Config("engine.json")]
 public static class Config
 {
+    /** 
+     * API
+     */
+    
+    public static readonly ConfigField<WindowingApi> Windowing =
+        new("Windowing", WindowingApi.Glfw);
+    
+    public static readonly ConfigField<RenderingApi> Rendering =
+        new("Rendering", RenderingApi.OpenGl);
+    
     /**
      * Render threading
      */
@@ -22,8 +32,18 @@ public static class Config
     public static readonly ConfigField<int> RenderThreadStackSize =
         new("RenderThreadStackSize", 8 * 1024 * 1024); // 8MByte
     
-        public static readonly ConfigField<int> RenderThreadReadySleepDelay =
+    public static readonly ConfigField<int> RenderThreadReadySleepDelay =
         new("RenderThreadReadySleepDelay", 10);
+ 
+    /**
+     *  Render batching
+     */
+   
+    public static readonly ConfigField<int> RenderBatchingMaxVertices =
+        new("RenderBatchingMaxVertices", 65532);
+    
+    public static readonly ConfigField<int> RenderBatchingIndicesPerVertex =
+        new("RenderBatchingIndicesPerVertex", 6);
     
     /**
      * Main window
