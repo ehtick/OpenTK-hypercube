@@ -21,7 +21,6 @@
       <Folder Include="Networking\Client\" />
       <Folder Include="Networking\Server\" />
       <Folder Include="Physics\" />
-      <Folder Include="Utilities\" />
     </ItemGroup>
 
     <ItemGroup>
