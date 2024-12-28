@@ -1,4 +1,4 @@
-﻿namespace Hypercube.Core.Debugging.Logger;
+﻿namespace Hypercube.Utilities.Debugging.Logger;
 
 /// <summary>
 /// Interface for an advanced logger.

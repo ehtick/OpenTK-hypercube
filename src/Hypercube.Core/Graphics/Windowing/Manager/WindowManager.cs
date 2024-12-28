@@ -1,8 +1,8 @@
-﻿using Hypercube.Core.Debugging.Logger;
-using Hypercube.Core.Dependencies;
-using Hypercube.Graphics;
+﻿using Hypercube.Graphics;
 using Hypercube.Graphics.Windowing;
 using Hypercube.Graphics.Windowing.Api;
+using Hypercube.Utilities.Debugging.Logger;
+using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Graphics.Windowing.Manager;
 

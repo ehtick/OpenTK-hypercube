@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using System.Text.Json;
-using Hypercube.Core.Debugging.Logger;
-using Hypercube.Core.Dependencies;
+using Hypercube.Utilities.Debugging.Logger;
+using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Helpers;
 using JetBrains.Annotations;
 
-namespace Hypercube.Core.Configuration;
+namespace Hypercube.Utilities.Configuration;
 
 public class ConfigManager : IConfigManager
 {

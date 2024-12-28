@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Hypercube.Core.Dependencies;
+namespace Hypercube.Utilities.Dependencies;
 
 [PublicAPI]
 public interface IPostInject

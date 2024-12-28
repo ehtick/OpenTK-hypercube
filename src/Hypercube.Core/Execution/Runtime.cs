@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
-using Hypercube.Core.Configuration;
-using Hypercube.Core.Debugging.Logger;
-using Hypercube.Core.Dependencies;
 using Hypercube.Core.Execution.Attributes;
 using Hypercube.Core.Execution.Enums;
 using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Windowing.Manager;
+using Hypercube.Utilities.Configuration;
+using Hypercube.Utilities.Debugging.Logger;
+using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;
 using Hypercube.Utilities.Helpers;
 

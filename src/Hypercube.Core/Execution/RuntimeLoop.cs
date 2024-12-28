@@ -1,6 +1,6 @@
-﻿using Hypercube.Core.Debugging.Logger;
-using Hypercube.Core.Dependencies;
-using Hypercube.Core.Graphics.Rendering;
+﻿using Hypercube.Core.Graphics.Rendering;
+using Hypercube.Utilities.Debugging.Logger;
+using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Execution;
 

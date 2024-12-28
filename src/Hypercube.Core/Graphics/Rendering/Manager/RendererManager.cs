@@ -1,11 +1,11 @@
-﻿using Hypercube.Core.Dependencies;
-using Hypercube.Graphics;
+﻿using Hypercube.Graphics;
 using Hypercube.Graphics.Enums;
 using Hypercube.Graphics.Rendering.Api;
 using Hypercube.Graphics.Rendering.Batching;
 using Hypercube.Graphics.Windowing;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
+using Hypercube.Utilities.Dependencies;
 using JetBrains.Annotations;
 
 namespace Hypercube.Core.Graphics.Rendering.Manager;

@@ -1,4 +1,4 @@
-﻿namespace Hypercube.Core.Configuration;
+﻿namespace Hypercube.Utilities.Configuration;
 
 public class ConfigField<T>
 {

@@ -1,4 +1,4 @@
-﻿namespace Hypercube.Core.Configuration;
+﻿namespace Hypercube.Utilities.Configuration;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class ConfigAttribute : Attribute

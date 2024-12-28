@@ -1,5 +1,5 @@
-﻿using Hypercube.Core.Configuration;
-using Hypercube.GraphicsApi;
+﻿using Hypercube.GraphicsApi;
+using Hypercube.Utilities.Configuration;
 
 namespace Hypercube.Core;
 

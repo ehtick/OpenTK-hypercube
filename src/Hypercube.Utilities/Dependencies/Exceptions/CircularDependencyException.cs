@@ -1,4 +1,4 @@
-﻿namespace Hypercube.Core.Dependencies.Exceptions;
+﻿namespace Hypercube.Utilities.Dependencies.Exceptions;
 
 /// <summary>
 /// Represents errors related to circular dependencies in the container.

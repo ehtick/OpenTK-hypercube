@@ -1,4 +1,4 @@
-﻿namespace Hypercube.Core.Debugging.Logger;
+﻿namespace Hypercube.Utilities.Debugging.Logger;
 
 /// <summary>
 /// Represents the available log levels for logging messages.

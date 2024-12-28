@@ -1,6 +1,6 @@
 ﻿using Hypercube.Utilities.Constants;
 
-namespace Hypercube.Core.Debugging.Logger;
+namespace Hypercube.Utilities.Debugging.Logger;
 
 public class ConsoleLogger : ILogger
 {

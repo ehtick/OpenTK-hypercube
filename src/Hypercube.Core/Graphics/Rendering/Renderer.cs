@@ -1,9 +1,9 @@
-﻿using Hypercube.Core.Debugging.Logger;
-using Hypercube.Core.Dependencies;
-using Hypercube.Core.Graphics.Patching;
+﻿using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Windowing.Manager;
 using Hypercube.Graphics.Windowing;
+using Hypercube.Utilities.Debugging.Logger;
+using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;
 
 namespace Hypercube.Core.Graphics.Rendering;

@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using Hypercube.Core.Dependencies.Exceptions;
+using Hypercube.Utilities.Dependencies.Exceptions;
 using Hypercube.Utilities.Extensions;
 using JetBrains.Annotations;
 
-namespace Hypercube.Core.Dependencies;
+namespace Hypercube.Utilities.Dependencies;
 
 /// <summary>
 /// Implements an IoC (Inversion of Control) container for dependency injection.
