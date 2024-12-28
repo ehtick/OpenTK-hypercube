@@ -49,13 +49,16 @@ public readonly struct Box2i
         get => MathF.Sqrt(LengthSquared);
     }
 
-    public Vector2i[] Vertices
+    public IEnumerable<Vector2i> Vertices
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get =>
-        [
-            TopLeft, TopRight, BottomRight, BottomLeft
-        ];
+        get
+        {
+            yield return TopLeft;
+            yield return TopRight;
+            yield return BottomRight;
+            yield return BottomLeft;
+        }
     }
     
     public Box2i(Vector2i point0, Vector2i point1)
