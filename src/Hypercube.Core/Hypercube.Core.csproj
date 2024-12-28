@@ -17,7 +17,6 @@
       <Folder Include="Ecs\Component\" />
       <Folder Include="Ecs\Event\" />
       <Folder Include="Ecs\System\" />
-      <Folder Include="Graphics\Rendering\Api\Exceptions\" />
       <Folder Include="Networking\Client\" />
       <Folder Include="Networking\Server\" />
       <Folder Include="Physics\" />
@@ -30,6 +29,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Hypercube.Analyzers\Hypercube.Analyzers.csproj" />
       <ProjectReference Include="..\Hypercube.GraphicsApi\Hypercube.GraphicsApi.csproj" />
+      <ProjectReference Include="..\Hypercube.Graphics\Hypercube.Graphics.csproj" />
       <ProjectReference Include="..\Hypercube.Mathematics\Hypercube.Mathematics.csproj" />
     </ItemGroup>
     

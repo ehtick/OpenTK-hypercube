@@ -2,8 +2,8 @@
 using Hypercube.Core.Dependencies;
 using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering.Manager;
-using Hypercube.Core.Graphics.Windowing;
 using Hypercube.Core.Graphics.Windowing.Manager;
+using Hypercube.Graphics.Windowing;
 using Hypercube.Utilities.Extensions;
 
 namespace Hypercube.Core.Graphics.Rendering;

@@ -1,7 +1,8 @@
 ﻿using Hypercube.Core.Debugging.Logger;
 using Hypercube.Core.Dependencies;
-using Hypercube.Core.Graphics.Windowing.Core;
-using Hypercube.Core.Graphics.Windowing.Core.GlfwWindowing;
+using Hypercube.Graphics;
+using Hypercube.Graphics.Windowing;
+using Hypercube.Graphics.Windowing.Api;
 
 namespace Hypercube.Core.Graphics.Windowing.Manager;
 
@@ -16,7 +17,7 @@ public class WindowManager : IWindowManager
 
     public void Init(bool multiThread = false)
     {
-        _windowApi = ApiFactory.GetApi(Config.Windowing);
+        _windowApi = ApiFactory.CreateApi(Config.Windowing);
         _container.Inject(_windowApi);
         _windowApi.Init(multiThread);
     }

@@ -1,4 +1,6 @@
-﻿namespace Hypercube.Core.Graphics.Windowing.Manager;
+﻿using Hypercube.Graphics.Windowing;
+
+namespace Hypercube.Core.Graphics.Windowing.Manager;
 
 public interface IWindowManager
 {
