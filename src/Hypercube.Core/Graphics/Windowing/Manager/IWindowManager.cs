@@ -1,8 +1,9 @@
 ﻿using Hypercube.Graphics.Windowing;
+using Hypercube.GraphicsApi.GlApi;
 
 namespace Hypercube.Core.Graphics.Windowing.Manager;
 
-public interface IWindowManager
+public interface IWindowManager : IBindingsContext
 {
     bool Ready { get; }
     

@@ -19,6 +19,15 @@ public static unsafe partial class GlNative
     public const int True = 1;
     public const int False = 0;
     
+    public static void LoadBindings(IBindingsContext context)
+    {
+        var procAddress = context.GetProcAddress("glGenVertexArrays");
+        if (procAddress == IntPtr.Zero)
+            throw new Exception("Function glGenVertexArrays not found.");
+        
+        _glGenVertexArrays = Marshal.GetDelegateForFunctionPointer<glGenVertexArraysDelegate>(procAddress);
+    }
+    
     /// <remarks>
     /// <c>
     /// GLAPI void APIENTRY glCullFace (GLenum mode);
@@ -2267,13 +2276,34 @@ public static unsafe partial class GlNative
     [LibraryImport("opengl32.dll")]
     public static partial void glDeleteVertexArrays(int n, uint* arrays);
 
+    private delegate void glGenVertexArraysDelegate(int n, uint* arrays);
+    private static glGenVertexArraysDelegate _glGenVertexArrays;
+
     /// <remarks>
-    /// <c>
-    /// GLAPI void APIENTRY glGenVertexArrays (GLsizei n, GLuint *arrays);
-    /// </c>
+    /// <c>GLAPI void APIENTRY glGenVertexArrays(GLsizei n, GLuint *arrays);</c>
+    /// <list type="table">
+    /// <listheader>
+    /// <term>OpenGL Version</term>
+    /// <description>Supported</description>
+    /// </listheader>
+    /// <item>
+    /// <term>2.0</term>
+    /// <description>Not Supported</description>
+    /// </item>
+    /// <item>
+    /// <term>2.1</term>
+    /// <description>Not Supported</description>
+    /// </item>
+    /// <item>
+    /// <term>3.0+</term>
+    /// <description>Supported</description>
+    /// </item>
+    /// </list>
     /// </remarks>
-    [LibraryImport("opengl32.dll")]
-    public static partial void glGenVertexArrays(int n, uint* arrays);
+    public static void glGenVertexArrays(int n, uint* arrays)
+    {
+        _glGenVertexArrays(n, arrays);
+    }
 
     /// <remarks>
     /// <c>

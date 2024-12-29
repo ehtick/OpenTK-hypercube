@@ -1,9 +1,8 @@
-﻿namespace Hypercube.Graphics;
+﻿namespace Hypercube.GraphicsApi.Objects;
 
 public interface IArrayObject : IDisposable
 {
     int Handle { get; }
-    
     void Bind();
     void Unbind();
     void Delete();

@@ -23,7 +23,7 @@ public static class ApiFactory
         return renderingApi switch
         {
             RenderingApi.OpenGl => new GlApiRendering(),
-            RenderingApi.Vulkan => new VulkanApiRendering(),
+            // RenderingApi.Vulkan => new VulkanApiRendering(),
             _ => throw new NotImplementedException()
         };
     }

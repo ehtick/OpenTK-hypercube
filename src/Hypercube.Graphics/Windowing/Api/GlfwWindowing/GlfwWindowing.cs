@@ -103,6 +103,11 @@ public unsafe partial class GlfwWindowing : IWindowingApi
         Glfw.WaitEventsTimeout(_waitEventsTimeout);
     }
 
+    public nint GetProcAddress(string procName)
+    {
+        return Glfw.GetProcAddress(procName);
+    }
+
     public void Dispose()
     {
         // TODO release managed resources here

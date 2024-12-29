@@ -172,6 +172,11 @@ public static unsafe class Glfw
         GlfwNative.glfwWindowHint((int) hint, (int) value);
     }
     
+    public static void WindowHint(WindowHintInt hint, int value)
+    {
+        GlfwNative.glfwWindowHint((int) hint, value);
+    }
+    
     public static void WindowHint(WindowHintBool hint, bool value)
     {
         GlfwNative.glfwWindowHint((int) hint, value ? GlfwNative.True : GlfwNative.False);
@@ -652,10 +657,18 @@ public static unsafe class Glfw
         return GlfwNative.glfwExtensionSupported(extension);
     }
 
-    public static nint GetProcAddress(byte* procname)
+    public static nint GetProcAddress(string procName)
     {
-        return Marshal.GetDelegateForFunctionPointer<nint>(
-            GlfwNative.glfwGetProcAddress(procname));
+        var ptr = Marshal.StringToCoTaskMemUTF8(procName);
+        
+        try
+        {
+            return GlfwNative.glfwGetProcAddress((byte*) ptr);
+        }
+        finally
+        {
+            Marshal.FreeCoTaskMem(ptr);
+        }
     }
 
     public static int VulkanSupported()

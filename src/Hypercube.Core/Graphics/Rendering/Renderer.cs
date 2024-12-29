@@ -74,7 +74,7 @@ public partial class Renderer : IRenderer
             Floating = Config.MainWindowFloating
         });
         
-        _rendererManager.Init();
+        _rendererManager.Init(_windowManager);
         
         _readyEvent.Set();
         _windowManager.EnterLoop();

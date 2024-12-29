@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
-using Hypercube.GraphicsApi.GlApi;
+using Hypercube.GraphicsApi.GlApi.Enum;
+using Hypercube.GraphicsApi.Objects;
 
-namespace Hypercube.Graphics.Rendering.Api.GlRenderer.Objects;
+namespace Hypercube.GraphicsApi.GlApi.Objects;
 
 [DebuggerDisplay("{Handle}")]
 public class ArrayObject : IArrayObject
@@ -35,12 +36,12 @@ public class ArrayObject : IArrayObject
     public void Label(string name)
     {
         Bind();
-        Gl.LabelVertexArray(Handle, name);
+        Gl.ObjectLabel(LabelIdentifier.VertexArray, Handle, name);
     }
 
-    public void DrawElements(int start, int count)
+    public void DrawElements(int count, int start)
     {
-        Gl.DrawElements(start, count);
+        Gl.DrawElements(count, start);
     }
 
     public void Dispose()

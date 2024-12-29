@@ -55,6 +55,9 @@ public unsafe partial class GlfwWindowing
                 var share = commandCreateWindow.Settings.ContextShare;
                 
                 Glfw.WindowHint(WindowHintClientApi.ClientApi, ClientApi.OpenglApi);
+                Glfw.WindowHint(WindowHintInt.ContextVersionMajor, 4);
+                Glfw.WindowHint(WindowHintInt.ContextVersionMinor, 6);
+                Glfw.WindowHint(WindowHintBool.OpenglForwardCompat, false);
                 
                 Glfw.WindowHint(WindowHintBool.Resizable, commandCreateWindow.Settings.Resizable);
                 Glfw.WindowHint(WindowHintBool.Visible, commandCreateWindow.Settings.Visible);

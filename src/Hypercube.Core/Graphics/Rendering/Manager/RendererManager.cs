@@ -1,10 +1,15 @@
-﻿using Hypercube.Graphics;
+﻿using Hypercube.Core.Graphics.Windowing.Manager;
+using Hypercube.Graphics;
 using Hypercube.Graphics.Enums;
 using Hypercube.Graphics.Rendering.Api;
 using Hypercube.Graphics.Rendering.Batching;
 using Hypercube.Graphics.Windowing;
+using Hypercube.GraphicsApi;
+using Hypercube.GraphicsApi.GlApi;
+using Hypercube.GraphicsApi.Objects;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
+using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using JetBrains.Annotations;
 
@@ -14,6 +19,7 @@ namespace Hypercube.Core.Graphics.Rendering.Manager;
 public class RendererManager : IRendererManager
 {
     [Dependency] private readonly DependenciesContainer _container = default!;
+    [Dependency] private readonly ILogger _logger = default!;
 
     private IRendererApi _rendererApi = default!;
 
@@ -25,20 +31,29 @@ public class RendererManager : IRendererManager
     private uint[] _batchIndices;
     private int _batchIndexIndex;
 
+    private IArrayObject _vao;
+    
     /// <summary>
     /// Contains info about currently running batch.
     /// </summary>
     private BatchData? _currentBatchData;
 
-    public void Init()
+    public void Init(IBindingsContext context)
     {
+        InitRenderApi(context);
+        
         _batchVertices = new Vertex[Config.RenderBatchingMaxVertices];
         _batchIndices = new uint[Config.RenderBatchingMaxVertices * Config.RenderBatchingIndicesPerVertex];
 
+        _vao = _rendererApi.GenArrayObject();
+    }
+
+    private void InitRenderApi(IBindingsContext context)
+    {
         _rendererApi = ApiFactory.CreateApi(Config.Rendering);
         _container.Inject(_rendererApi);
-
-        _rendererApi.Init();
+        _rendererApi.Init(context);
+        _logger.Info($"Render API info:\n\r{_rendererApi.Info}");
     }
 
     private void SetupRender()
@@ -75,7 +90,7 @@ public class RendererManager : IRendererManager
         BreakCurrentBatch();
         SetupRender();
 
-        // _vao.Bind();
+        _vao.Bind();
         // _vbo.SetData(_batchVertices);
         // _ebo.SetData(_batchIndices);
 
@@ -84,7 +99,7 @@ public class RendererManager : IRendererManager
             Render(batch);
         }
 
-        // _vao.Unbind();
+        _vao.Unbind();
         // _vbo.Unbind();
         // _ebo.Unbind();
         
@@ -110,8 +125,8 @@ public class RendererManager : IRendererManager
         // shader.SetUniform("view", _cameraManager.View);
         // shader.SetUniform("projection", _cameraManager.Projection);
 
-        // GL.DrawElements(batch.PrimitiveType, batch.Size, DrawElementsType.UnsignedInt, batch.Start * sizeof(uint));
-
+        _vao.DrawElements(batch.Start * sizeof(uint), batch.Size);
+        
         // shader.Stop();
         // GLHelper.UnbindTexture(TextureTarget.Texture2D);
     }

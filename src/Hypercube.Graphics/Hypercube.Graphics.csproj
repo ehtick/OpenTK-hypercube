@@ -12,4 +12,8 @@
       <ProjectReference Include="..\Hypercube.Mathematics\Hypercube.Mathematics.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Rendering\Api\GlRenderer\Objects\" />
+    </ItemGroup>
+
 </Project>

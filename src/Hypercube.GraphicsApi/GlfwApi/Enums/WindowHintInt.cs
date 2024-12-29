@@ -8,6 +8,9 @@ namespace Hypercube.GraphicsApi.GlfwApi.Enums;
 
 public enum WindowHintInt
 {
+    ContextVersionMajor = 0x00022002,
+    ContextVersionMinor = 0x00022003,
+    ContextRevision = 0x00022004,
     PositionX = 0x0002000E,
     PositionY = 0x0002000F,
     RedBits = 0x00021001,

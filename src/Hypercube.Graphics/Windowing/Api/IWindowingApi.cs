@@ -64,5 +64,5 @@ public interface IWindowingApi : IDisposable
     /// </summary>
     /// <param name="procName">The name of the function.</param>
     /// <returns>The address of the function.</returns>
-    // nint GetProcAddress(string procName);
+    nint GetProcAddress(string procName);
 }

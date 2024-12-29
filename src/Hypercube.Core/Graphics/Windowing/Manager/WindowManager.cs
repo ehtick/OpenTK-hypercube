@@ -65,4 +65,9 @@ public class WindowManager : IWindowManager
     {
         _windowApi.PollEvents();
     }
+
+    public nint GetProcAddress(string procName)
+    {
+        return _windowApi.GetProcAddress(procName);
+    }
 }
