@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Hypercube.GraphicsApi.GlApi.Enum;
+using Hypercube.GraphicsApi.Objects;
 
 namespace Hypercube.GraphicsApi.GlApi.Objects;
 
 [DebuggerDisplay("{Handle} ({BufferTargetName})")]
-public class BufferObject : IDisposable
+public class BufferObject : IBufferObject
 {
     public int Handle { get; } = Gl.GenBuffer();
     private readonly BufferTarget _bufferTarget;

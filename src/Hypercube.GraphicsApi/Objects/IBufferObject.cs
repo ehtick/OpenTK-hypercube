@@ -1,6 +1,8 @@
-﻿namespace Hypercube.GraphicsApi.Objects;
+﻿using Hypercube.GraphicsApi.GlApi.Enum;
 
-public interface IBufferObject
+namespace Hypercube.GraphicsApi.Objects;
+
+public interface IBufferObject : IDisposable
 {
     int Handle { get; }
     void Bind();
@@ -9,11 +11,11 @@ public interface IBufferObject
     void Label(string name);
     
     // TODO: Fuck me pls
-    // public void SetData(int size, nint data, BufferUsageHint hint = BufferUsageHint.StaticDraw);
-    // public void SetData<T>(T[] data, BufferUsageHint hint = BufferUsageHint.StaticDraw)
-    //    where T : struct;
+    public void SetData(int size, nint data, BufferUsageHint hint = BufferUsageHint.StaticDraw);
+    public void SetData<T>(T[] data, BufferUsageHint hint = BufferUsageHint.StaticDraw)
+        where T : unmanaged;
     
     public void SetSubData(int size, nint data);
     public void SetSubData<T>(T[] data)
-        where T : struct;
+        where T : unmanaged;
 }

@@ -679,14 +679,14 @@ public static unsafe class Gl
         GlNative.glCompileShader(shader);
     }
 
-    public static uint CreateProgram()
+    public static int CreateProgram()
     {
-        return GlNative.glCreateProgram();
+        return (int) GlNative.glCreateProgram();
     }
 
-    public static uint CreateShader(uint type)
+    public static int CreateShader(ShaderType type)
     {
-        return GlNative.glCreateShader(type);
+        return (int) GlNative.glCreateShader((uint) type);
     }
 
     public static void DeleteProgram(uint program)

@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Hypercube.Graphics.Enums;
-using Hypercube.GraphicsApi;
 using Hypercube.GraphicsApi.GlApi;
 using Hypercube.GraphicsApi.GlApi.Enum;
 using Hypercube.GraphicsApi.GlApi.Objects;
@@ -69,6 +68,11 @@ public class GlApiRendering : IRendererApi
     public IArrayObject GenArrayObject()
     {
         return new ArrayObject();
+    }
+
+    public IBufferObject GenBufferObject(BufferTarget target)
+    {
+        return new BufferObject(target);
     }
 
     public void Clear(ClearBufferMask mask)

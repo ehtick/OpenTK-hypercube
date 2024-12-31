@@ -6,12 +6,15 @@ using Hypercube.Graphics.Rendering.Batching;
 using Hypercube.Graphics.Windowing;
 using Hypercube.GraphicsApi;
 using Hypercube.GraphicsApi.GlApi;
+using Hypercube.GraphicsApi.GlApi.Enum;
 using Hypercube.GraphicsApi.Objects;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using JetBrains.Annotations;
+using PolygonFace = Hypercube.Graphics.Enums.PolygonFace;
+using PolygonMode = Hypercube.Graphics.Enums.PolygonMode;
 
 namespace Hypercube.Core.Graphics.Rendering.Manager;
 
@@ -25,13 +28,15 @@ public class RendererManager : IRendererManager
 
     private readonly List<Batch> _batches = [];
 
-    private Vertex[] _batchVertices;
+    private Vertex[] _batchVertices = default!;
     private int _batchVertexIndex;
 
-    private uint[] _batchIndices;
+    private uint[] _batchIndices = default!;
     private int _batchIndexIndex;
 
-    private IArrayObject _vao;
+    private IArrayObject _vao = default!;
+    private IBufferObject _vbo = default!;
+    private IBufferObject _ebo = default!;
     
     /// <summary>
     /// Contains info about currently running batch.
@@ -46,6 +51,8 @@ public class RendererManager : IRendererManager
         _batchIndices = new uint[Config.RenderBatchingMaxVertices * Config.RenderBatchingIndicesPerVertex];
 
         _vao = _rendererApi.GenArrayObject();
+        _vbo = _rendererApi.GenBufferObject(BufferTarget.ArrayBuffer);
+        _ebo = _rendererApi.GenBufferObject(BufferTarget.ElementArrayBuffer);
     }
 
     private void InitRenderApi(IBindingsContext context)
@@ -85,14 +92,14 @@ public class RendererManager : IRendererManager
         Clear();
 
         // GL.Viewport(window.Size);
-        // GL.Clear(ClearBufferMask.ColorBufferBit);
-
+        _rendererApi.Clear(ClearBufferMask.ColorBufferBit);
+        
         BreakCurrentBatch();
         SetupRender();
 
         _vao.Bind();
-        // _vbo.SetData(_batchVertices);
-        // _ebo.SetData(_batchIndices);
+        _vbo.SetData(_batchVertices);
+        _ebo.SetData(_batchIndices);
 
         foreach (var batch in _batches)
         {
@@ -100,14 +107,13 @@ public class RendererManager : IRendererManager
         }
 
         _vao.Unbind();
-        // _vbo.Unbind();
-        // _ebo.Unbind();
+        _vbo.Unbind();
+        _ebo.Unbind();
         
         // var evUI = new RenderAfterDrawingEvent();
         // _eventBus.Raise(ref evUI);
         
         // _windowing.WindowSwapBuffers(window);
-
     }
 
     private void Render(Batch batch)

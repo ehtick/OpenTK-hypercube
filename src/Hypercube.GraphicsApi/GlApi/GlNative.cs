@@ -21,11 +21,17 @@ public static unsafe partial class GlNative
     
     public static void LoadBindings(IBindingsContext context)
     {
-        var procAddress = context.GetProcAddress("glGenVertexArrays");
+        _glGenVertexArrays = LoadBinding<glGenVertexArraysDelegate>(context, "glGenVertexArrays");
+        _glGenBuffers = LoadBinding<glGenBuffersDelegate>(context, "glGenBuffers");
+    }
+
+    private static T LoadBinding<T>(IBindingsContext context, string name)
+    {
+        var procAddress = context.GetProcAddress(name);
         if (procAddress == IntPtr.Zero)
-            throw new Exception("Function glGenVertexArrays not found.");
+            throw new Exception($"Function {name} not found.");
         
-        _glGenVertexArrays = Marshal.GetDelegateForFunctionPointer<glGenVertexArraysDelegate>(procAddress);
+        return Marshal.GetDelegateForFunctionPointer<T>(procAddress);
     }
     
     /// <remarks>
@@ -780,13 +786,27 @@ public static unsafe partial class GlNative
     [LibraryImport("opengl32.dll")]
     public static partial void glDeleteBuffers(int n, uint* buffers);
 
+    private delegate void glGenBuffersDelegate(int n, uint* buffers);
+
+    private static glGenBuffersDelegate _glGenBuffers;
+
     /// <remarks>
-    /// <c>
-    /// GLAPI void APIENTRY glGenBuffers (GLsizei n, GLuint *buffers);
-    /// </c>
+    /// <c>GLAPI void APIENTRY glGenBuffers (GLsizei n, GLuint *buffers);</c>
+    /// <list type="table">
+    /// <listheader>
+    /// <term>OpenGL Version</term>
+    /// <description>Supported</description>
+    /// </listheader>
+    /// <item>
+    /// <term>2.0+</term>
+    /// <description>Supported</description>
+    /// </item>
+    /// </list>
     /// </remarks>
-    [LibraryImport("opengl32.dll")]
-    public static partial void glGenBuffers(int n, uint* buffers);
+    public static void glGenBuffers(int n, uint* buffers)
+    {
+        _glGenBuffers(n, buffers);
+    }
 
     /// <remarks>
     /// <c>
