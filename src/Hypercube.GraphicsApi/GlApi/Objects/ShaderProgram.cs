@@ -16,7 +16,7 @@ public class ShaderProgram : IShaderProgram
 
     public ShaderProgram(string vertSource, string fragSource)
     {
-        var shaders = new HashSet<IShader>
+        var shaders = new[]
         {
             CreateShader(vertSource, ShaderType.VertexShader),
             CreateShader(fragSource, ShaderType.FragmentShader)
@@ -43,7 +43,7 @@ public class ShaderProgram : IShaderProgram
 
     public ShaderProgram(IEnumerable<KeyValuePair<ShaderType, string>> sources)
     {
-        var shaders = new HashSet<IShader>();
+        var shaders = new List<IShader>();
         foreach (var (type, shader) in sources)
         {
             shaders.Add(CreateShader(shader, type));
@@ -93,56 +93,41 @@ public class ShaderProgram : IShaderProgram
     {
         Gl.DetachShader(Handle, shader.Handle);
     }
-
-    public void SetUniform(string name, byte value)
-    {
-        Gl.Uniform1(_uniformLocations[name], value);
-    }
-
-    public void SetUniform(string name, short value)
-    {
-        Gl.Uniform1(_uniformLocations[name], value);
-    }
-
+    
     public void SetUniform(string name, int value)
     {
-        Gl.Uniform1(_uniformLocations[name], value);
-    }
-
-    public void SetUniform(string name, long value)
-    {
-        Gl.Uniform1(_uniformLocations[name], value);
+        Gl.Uniform1i(_uniformLocations[name], value);
     }
 
     public void SetUniform(string name, float value)
     {
-        Gl.Uniform1(_uniformLocations[name], value);
+        Gl.Uniform1f(_uniformLocations[name], value);
     }
 
     public void SetUniform(string name, double value)
     {
-        Gl.Uniform1(_uniformLocations[name], value);
+        Gl.Uniform1d(_uniformLocations[name], value);
     }
 
     public void SetUniform(string name, Vector2 value)
     {
-        Gl.Uniform2(_uniformLocations[name], value.X, value.Y);
+        Gl.Uniform2f(_uniformLocations[name], value.X, value.Y);
     }
 
     public void SetUniform(string name, Vector2i value)
     {
-        Gl.Uniform2(_uniformLocations[name], value.X, value.Y);
+        Gl.Uniform2i(_uniformLocations[name], value.X, value.Y);
     }
 
     public void SetUniform(string name, Vector3 value)
     {
-        Gl.Uniform3(_uniformLocations[name], value.X, value.Y, value.Z);
+        Gl.Uniform3f(_uniformLocations[name], value.X, value.Y, value.Z);
     }
 
     public unsafe void SetUniform(string name, Matrix3x3 value, bool transpose = false)
     {
         var matrix = transpose ? Matrix3x3.Transpose(value) : new Matrix3x3(value);
-        Gl.UniformMatrix3(Gl.GetUniformLocation(Handle, name), 1, false, (float*)&matrix);
+        Gl.UniformMatrix3(Gl.GetUniformLocation(Handle, name), 1, false, (float*) &matrix);
     }
 
     public unsafe void SetUniform(string name, Matrix4x4 value, bool transpose = false)
@@ -153,7 +138,7 @@ public class ShaderProgram : IShaderProgram
 
     public void Label(string name)
     {
-        GLHelper.LabelObject(ObjectLabelIdentifier.Program, Handle, name);    
+        Gl.ObjectLabel(LabelIdentifier.Program, Handle, name);    
     }
 
     public void Dispose()
@@ -163,12 +148,13 @@ public class ShaderProgram : IShaderProgram
 
     private FrozenDictionary<string, int> GetUniformLocations()
     {
-        Gl.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out var uniforms);
+        var uniforms = Gl.GetProgram(Handle, ProgramParameter.ActiveUniforms);
        
         var uniformLocations = new Dictionary<string, int>();
         for (var i = 0; i < uniforms; i++)
         {
-            var key = Gl.GetActiveUniform(Handle, i, out _, out _);
+            Gl.GetActiveUniform(Handle, i, out _, out _, out _, out var key);
+            
             var location = Gl.GetUniformLocation(Handle, key);
             uniformLocations.Add(key, location);
         }
@@ -179,8 +165,9 @@ public class ShaderProgram : IShaderProgram
     private void LinkProgram()
     {
         Gl.LinkProgram(Handle);
-        Gl.GetProgram(Handle, GetProgramParameterName.LinkStatus, out var code);
-        if (code == (int)All.True)
+        
+        var code = Gl.GetProgram(Handle, ProgramParameter.LinkStatus);
+        if (code == GlNative.True)
             return;
         
         throw new Exception($"Error occurred whilst linking Program({Handle})");

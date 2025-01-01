@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Hypercube.GraphicsApi.GlApi.Enum;
 using Hypercube.Mathematics;
+using Hypercube.Mathematics.Vectors;
 using Hypercube.Utilities.Extensions;
 using JetBrains.Annotations;
 
@@ -664,6 +665,11 @@ public static unsafe class Gl
         GlNative.glStencilMaskSeparate(face, mask);
     }
 
+    public static void AttachShader(int program, int shader)
+    {
+        GlNative.glAttachShader((uint) program, (uint) shader);
+    }
+    
     public static void AttachShader(uint program, uint shader)
     {
         GlNative.glAttachShader(program, shader);
@@ -674,9 +680,9 @@ public static unsafe class Gl
         GlNative.glBindAttribLocation(program, index, name);
     }
 
-    public static void CompileShader(uint shader)
+    public static void CompileShader(int shader)
     {
-        GlNative.glCompileShader(shader);
+        GlNative.glCompileShader((uint) shader);
     }
 
     public static int CreateProgram()
@@ -689,14 +695,29 @@ public static unsafe class Gl
         return (int) GlNative.glCreateShader((uint) type);
     }
 
+    public static void DeleteProgram(int program)
+    {
+        GlNative.glDeleteProgram((uint) program);
+    }
+    
     public static void DeleteProgram(uint program)
     {
         GlNative.glDeleteProgram(program);
     }
 
+    public static void DeleteShader(int shader)
+    {
+        GlNative.glDeleteShader((uint) shader);
+    }
+    
     public static void DeleteShader(uint shader)
     {
         GlNative.glDeleteShader(shader);
+    }
+    
+    public static void DetachShader(int program, int shader)
+    {
+        GlNative.glDetachShader((uint) program, (uint) shader);
     }
 
     public static void DetachShader(uint program, uint shader)
@@ -719,6 +740,23 @@ public static unsafe class Gl
         GlNative.glGetActiveAttrib(program, index, bufSize, length, size, type, name);
     }
 
+    public static void GetActiveUniform(int program, int uniformIndex, out int length, out int size, out ActiveUniform type, out string name)
+    {
+        var maxLength = GetProgram(program, ProgramParameter.ActiveUniformMaxLength);
+        var nameLength = maxLength == 0 ? 1 : maxLength;
+
+        var lengthPointer = 0;
+        var sizePointer = 0;
+        var typePointer = 0u;
+        var namePointer = (byte) 0;
+        GlNative.glGetActiveUniform((uint) program, (uint) uniformIndex, nameLength, &lengthPointer, &sizePointer, &typePointer, &namePointer);
+
+        length = lengthPointer;
+        size = sizePointer;
+        type = (ActiveUniform) typePointer;
+        name = Marshal.PtrToStringUTF8(namePointer) ?? string.Empty;
+    }
+    
     public static void GetActiveUniform(uint program, uint index, int bufSize, int* length, int* size, uint* type, byte* name)
     {
         GlNative.glGetActiveUniform(program, index, bufSize, length, size, type, name);
@@ -734,24 +772,59 @@ public static unsafe class Gl
         return GlNative.glGetAttribLocation(program, name);
     }
 
-    public static void GetProgramiv(uint program, uint pname, int* prms)
+    public static int GetProgram(int program, ProgramParameter parameter)
     {
-        GlNative.glGetProgramiv(program, pname, prms);
+        var parametrs = 0;
+        GlNative.glGetProgramiv((uint) program, (uint) parameter, &parametrs);
+        return parametrs;
     }
 
+    public static void GetProgram(uint program, uint name, int* parametrs)
+    {
+        GlNative.glGetProgramiv(program, name, parametrs);
+    }
+    
     public static void GetProgramInfoLog(uint program, int bufSize, int* length, byte* infoLog)
     {
         GlNative.glGetProgramInfoLog(program, bufSize, length, infoLog);
     }
-
-    public static void GetShaderiv(uint shader, uint pname, int* prms)
+    
+    public static int GetShader(int shader, ShaderParameter parameter)
     {
-        GlNative.glGetShaderiv(shader, pname, prms);
+        var parametrs = 0;
+        GlNative.glGetShaderiv((uint) shader, (uint) parameter, &parametrs);
+        return parametrs;
     }
 
-    public static void GetShaderInfoLog(uint shader, int bufSize, int* length, byte* infoLog)
+    public static void GetShader(uint shader, uint name, int* parametrs)
     {
-        GlNative.glGetShaderInfoLog(shader, bufSize, length, infoLog);
+        GlNative.glGetShaderiv(shader, name, parametrs);
+    }
+
+    public static string GetShaderInfoLog(int shader)
+    {
+        var parametrs = GetShader(shader, ShaderParameter.InfoLogLength);
+        if (parametrs == 0)
+            return string.Empty;
+        
+        GetShaderInfoLog((uint) shader, parametrs * 2, out _, out var info);
+        return info;
+    }
+
+    public static void GetShaderInfoLog(uint shader, int bufferSize, out int length, out string info)
+    {
+        fixed (int* lengthPtr = &length)
+        {
+            var pointer = Marshal.AllocHGlobal((nint) (bufferSize + 1));
+            GlNative.glGetShaderInfoLog(shader, bufferSize, lengthPtr, (byte*) pointer);
+            info = Marshal.PtrToStringUTF8(pointer) ?? string.Empty;
+            Marshal.FreeHGlobal(pointer);
+        }
+    }
+
+    public static void GetShaderInfoLog(uint shader, int bufferSize, int* length, byte* infoLog)
+    {
+        GlNative.glGetShaderInfoLog(shader, bufferSize, length, infoLog);
     }
 
     public static void GetShaderSource(uint shader, int bufSize, int* length, byte* source)
@@ -759,6 +832,21 @@ public static unsafe class Gl
         GlNative.glGetShaderSource(shader, bufSize, length, source);
     }
 
+    public static int GetUniformLocation(int program, string name)
+    {
+        var pointer = Marshal.StringToHGlobalAnsi(name);
+        
+        try
+        {
+            return GlNative.glGetUniformLocation((uint) program,  (byte*) pointer);
+        }
+        finally
+        {
+            if (pointer != nint.Zero)
+                Marshal.FreeHGlobal(pointer);
+        }
+    }
+    
     public static int GetUniformLocation(uint program, byte* name)
     {
         return GlNative.glGetUniformLocation(program, name);
@@ -804,21 +892,42 @@ public static unsafe class Gl
         return GlNative.glIsShader(shader);
     }
 
+    public static void LinkProgram(int program)
+    {
+        GlNative.glLinkProgram((uint) program);
+    }
+    
     public static void LinkProgram(uint program)
     {
         GlNative.glLinkProgram(program);
     }
-
+    
+    public static void ShaderSource(int shader, string source)
+    {
+        var pointer = Marshal.StringToHGlobalAnsi(source);
+        var length = source.Length;
+        
+        GlNative.glShaderSource((uint) shader, 1, (byte**) pointer, &length);
+        
+        if (pointer != nint.Zero)
+            Marshal.FreeHGlobal(pointer);
+    }
+    
     public static void ShaderSource(uint shader, int count, byte** str, int* length)
     {
         GlNative.glShaderSource(shader, count, str, length);
     }
 
+    public static void UseProgram(int program)
+    {
+        GlNative.glUseProgram((uint) program);
+    }
+    
     public static void UseProgram(uint program)
     {
         GlNative.glUseProgram(program);
     }
-
+    
     public static void Uniform1f(int location, float v0)
     {
         GlNative.glUniform1f(location, v0);
@@ -2330,15 +2439,25 @@ public static unsafe class Gl
     {
         GlNative.glProgramUniform4uiv(program, location, count, value);
     }
-
+    
     public static void ProgramUniformMatrix2fv(uint program, int location, int count, int transpose, float* value)
     {
         GlNative.glProgramUniformMatrix2fv(program, location, count, transpose, value);
     }
-
+    
+    public static void UniformMatrix3(int program, int location, bool transpose, float* value)
+    {
+        GlNative.glProgramUniformMatrix3fv((uint) program, location, 1, transpose ? GlNative.True : GlNative.False, value);
+    }
+    
     public static void ProgramUniformMatrix3fv(uint program, int location, int count, int transpose, float* value)
     {
         GlNative.glProgramUniformMatrix3fv(program, location, count, transpose, value);
+    }
+    
+    public static void UniformMatrix4(int program, int location, bool transpose, float* value)
+    {
+        GlNative.glProgramUniformMatrix4fv((uint) program, location, 1, transpose ? GlNative.True : GlNative.False, value);
     }
 
     public static void ProgramUniformMatrix4fv(uint program, int location, int count, int transpose, float* value)

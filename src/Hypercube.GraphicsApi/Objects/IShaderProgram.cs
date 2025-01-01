@@ -18,11 +18,8 @@ public interface IShaderProgram : IDisposable
 
     void Attach(IShader shader);
     void Detach(IShader shader);
-        
-    void SetUniform(string name, byte value);
-    void SetUniform(string name, short value);
+    
     void SetUniform(string name, int value);
-    void SetUniform(string name, long value);
     void SetUniform(string name, float value);
     void SetUniform(string name, double value);
     

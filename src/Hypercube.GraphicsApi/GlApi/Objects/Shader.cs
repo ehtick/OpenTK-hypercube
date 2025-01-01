@@ -28,9 +28,9 @@ public class Shader : IShader
     private void Compile()
     {
         Gl.CompileShader(Handle);
-        Gl.GetShader(Handle, ShaderParameter.CompileStatus, out var code);
         
-        if (code == (int) All.True)
+        var code = Gl.GetShader(Handle, ShaderParameter.CompileStatus);
+        if (code == GlNative.True)
             return;
         
         var infoLog = Gl.GetShaderInfoLog(Handle);
