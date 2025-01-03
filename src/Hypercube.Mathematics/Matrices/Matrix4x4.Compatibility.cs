@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 namespace Hypercube.Mathematics.Matrices;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
-public partial struct Matrix4x4
+public readonly partial struct Matrix4x4
 {
     /*
      * System.Numerics Compatibility

@@ -1,5 +1,5 @@
-﻿using System.Numerics;
-using Hypercube.Graphics.Enums;
+﻿using Hypercube.Graphics.Enums;
+using Hypercube.Mathematics.Matrices;
 
 namespace Hypercube.Graphics.Rendering.Batching;
 

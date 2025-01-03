@@ -10,7 +10,7 @@ namespace Hypercube.Mathematics.Matrices;
 
 [PublicAPI, StructLayout(LayoutKind.Sequential)]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
-public partial struct Matrix4x4 : IEquatable<Matrix4x4>
+public readonly partial struct Matrix4x4 : IEquatable<Matrix4x4>
 {
     /// <summary>
     /// <code>
@@ -20,7 +20,7 @@ public partial struct Matrix4x4 : IEquatable<Matrix4x4>
     ///   0  |  0  |  0  |  0
     /// </code>
     /// </summary>
-    public static Matrix4x4 Zero => new(Vector4.Zero);
+    public static readonly Matrix4x4 Zero = new(Vector4.Zero);
     
     /// <summary>
     /// <code>
@@ -30,7 +30,7 @@ public partial struct Matrix4x4 : IEquatable<Matrix4x4>
     ///   1  |  1  |  1  |  1
     /// </code>
     /// </summary>
-    public static Matrix4x4 One => new(Vector4.One);
+    public static readonly Matrix4x4 One = new(Vector4.One);
     
     /// <summary>
     /// <code>
@@ -40,7 +40,7 @@ public partial struct Matrix4x4 : IEquatable<Matrix4x4>
     ///   0  |  0  |  0  |  1
     /// </code>
     /// </summary>
-    public static Matrix4x4 Identity => new(Vector4.UnitX, Vector4.UnitY, Vector4.UnitZ, Vector4.UnitW);
+    public static readonly Matrix4x4 Identity = new(Vector4.UnitX, Vector4.UnitY, Vector4.UnitZ, Vector4.UnitW);
 
     public readonly Vector4 Row0;
     public readonly Vector4 Row1;

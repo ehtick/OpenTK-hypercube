@@ -1,6 +1,13 @@
-﻿namespace Hypercube.Graphics.Texturing;
+﻿using JetBrains.Annotations;
 
-public interface ITexture
+namespace Hypercube.Graphics.Texturing;
+
+[PublicAPI]
+public interface ITexture : IDisposable
 {
-    
+    int Handle { get; }
+    IImage Image { get; }
+
+    // void Bind(TextureTarget target);
+    // void Unbind(TextureTarget target);
 }

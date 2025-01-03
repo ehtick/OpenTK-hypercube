@@ -10,10 +10,10 @@ namespace Hypercube.Core.Graphics.Rendering;
 
 public partial class Renderer : IRenderer
 {
+    [Dependency] private readonly DependenciesContainer _dependenciesContainer = default!;
     [Dependency] private readonly IWindowManager _windowManager = default!;
     [Dependency] private readonly IRendererManager _rendererManager = default!;
     [Dependency] private readonly IPatchManager _patchManager = default!;
-    [Dependency] private readonly ILogger _logger = default!;
     
     private readonly ManualResetEvent _readyEvent = new(false);
 
@@ -75,6 +75,11 @@ public partial class Renderer : IRenderer
         });
         
         _rendererManager.Init(_windowManager);
+
+        var preloader = new GraphicsPreloader();
+        _dependenciesContainer.Inject(preloader);
+        
+        preloader.PreloadShaders();
         
         _readyEvent.Set();
         _windowManager.EnterLoop();

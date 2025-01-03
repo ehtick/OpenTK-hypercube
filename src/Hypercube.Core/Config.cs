@@ -6,6 +6,20 @@ namespace Hypercube.Core;
 [Config("engine.json")]
 public static class Config
 {
+    /**
+     * Mounting
+     */
+
+    public static readonly ConfigField<Dictionary<string, string>> MountFolders =
+        new("MountFolders", new Dictionary<string, string> 
+        {
+            { ".", "/" },
+            { "resources", "/" },
+            { "resources/audio", "/" },
+            { "resources/textures", "/" },
+            { "resources/shaders", "/" },
+        });
+    
     /** 
      * API
      */

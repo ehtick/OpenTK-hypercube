@@ -5,6 +5,8 @@ using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Windowing.Manager;
+using Hypercube.Core.Resources.Loader;
+using Hypercube.Core.Resources.Storage;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
@@ -20,6 +22,7 @@ public sealed class Runtime
     [Dependency] private readonly ILogger _logger = default!;
     [Dependency] private readonly IConfigManager _configManager = default!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
+    [Dependency] private readonly IResourceLoader _resourceLoader = default!;
     [Dependency] private readonly IRenderer _renderer = default!;
 
     private readonly Dictionary<EntryPointLevel, List<MethodInfo>> _entryPoints = [];
@@ -40,6 +43,11 @@ public sealed class Runtime
 
         EntryPointsLoad();
         EntryPointsExecute(EntryPointLevel.BeforeInit);
+
+        foreach (var (file, prefix) in Config.MountFolders.Value)
+        {
+            _resourceLoader.MountContentFolder(file, prefix);
+        }
         
         _logger.Info("The entry points are called!");
         _logger.Info("Initialization of internal modules...");
@@ -66,6 +74,9 @@ public sealed class Runtime
         _dependencies.Register<IConfigManager, ConfigManager>();
         
         _dependencies.Register<IRuntimeLoop, RuntimeLoop>();
+        
+        _dependencies.Register<IResourceLoader, ResourceLoader>();
+        _dependencies.Register<IResourceStorage, ResourceStorage>();
         
         _dependencies.Register<IWindowManager, WindowManager>();
         _dependencies.Register<IRendererManager, RendererManager>();
