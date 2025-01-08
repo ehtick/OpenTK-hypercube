@@ -1,14 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Mathematics", "Hypercube.Mathematics\Hypercube.Mathematics.csproj", "{FFA0F013-D806-44DE-959D-861E335E0E16}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Core", "Hypercube.Core\Hypercube.Core.csproj", "{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Analyzers", "Hypercube.Analyzers\Hypercube.Analyzers.csproj", "{57DA0507-160F-46C4-9F36-0171931FDC48}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.GraphicsApi", "Hypercube.GraphicsApi\Hypercube.GraphicsApi.csproj", "{8AF5C444-E7AF-4D42-94D1-CBE9DCDA1153}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Utilities", "Hypercube.Utilities\Hypercube.Utilities.csproj", "{6B66D18A-F173-470D-A876-7D89F5477E33}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Graphics", "Hypercube.Graphics\Hypercube.Graphics.csproj", "{35E973E0-51C3-4398-906A-17D5D08E3589}"
 EndProject
@@ -18,26 +12,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FFA0F013-D806-44DE-959D-861E335E0E16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFA0F013-D806-44DE-959D-861E335E0E16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FFA0F013-D806-44DE-959D-861E335E0E16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFA0F013-D806-44DE-959D-861E335E0E16}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57DA0507-160F-46C4-9F36-0171931FDC48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57DA0507-160F-46C4-9F36-0171931FDC48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57DA0507-160F-46C4-9F36-0171931FDC48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57DA0507-160F-46C4-9F36-0171931FDC48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8AF5C444-E7AF-4D42-94D1-CBE9DCDA1153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8AF5C444-E7AF-4D42-94D1-CBE9DCDA1153}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AF5C444-E7AF-4D42-94D1-CBE9DCDA1153}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AF5C444-E7AF-4D42-94D1-CBE9DCDA1153}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B66D18A-F173-470D-A876-7D89F5477E33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B66D18A-F173-470D-A876-7D89F5477E33}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B66D18A-F173-470D-A876-7D89F5477E33}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B66D18A-F173-470D-A876-7D89F5477E33}.Release|Any CPU.Build.0 = Release|Any CPU
 		{35E973E0-51C3-4398-906A-17D5D08E3589}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{35E973E0-51C3-4398-906A-17D5D08E3589}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35E973E0-51C3-4398-906A-17D5D08E3589}.Release|Any CPU.ActiveCfg = Release|Any CPU

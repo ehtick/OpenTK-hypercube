@@ -8,12 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hypercube.Mathematics\Hypercube.Mathematics.csproj" />
-      <ProjectReference Include="..\Hypercube.Utilities\Hypercube.Utilities.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Enums\" />
+        <PackageReference Include="Hypercube.Mathematics" Version="1.0.2" />
+        <PackageReference Include="Hypercube.Utilities" Version="1.0.1" />
+        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
     </ItemGroup>
 
 </Project>

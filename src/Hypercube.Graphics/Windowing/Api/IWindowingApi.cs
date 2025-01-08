@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using Hypercube.Graphics.Windowing.Settings;
+using Hypercube.Mathematics.Vectors;
+using JetBrains.Annotations;
 
 namespace Hypercube.Graphics.Windowing.Api;
 
@@ -8,61 +10,15 @@ namespace Hypercube.Graphics.Windowing.Api;
 [PublicAPI]
 public interface IWindowingApi : IDisposable
 {
+    event ErrorHandler? OnError; 
     bool Ready { get; }
-    
-    /// <summary>
-    /// Initializes the library for window management.
-    /// </summary>
-    /// <returns>True if initialization is successful; otherwise, False.</returns>
-    void Init(bool multiThread = false);
-
-    /// <summary>
-    /// Terminates the library and releases all associated resources.
-    /// </summary>
-    void Terminate();
-
-    /// <summary>
-    /// Enters the main event processing loop.
-    /// </summary>
+    void Init(WindowingApiSettings settings);
     void EnterLoop();
-
-    /// <summary>
-    /// Terminates the main event processing loop.
-    /// </summary>
-    void TerminateLoop();
-    
-    /// <summary>
-    /// Processes window events.
-    /// </summary>
     void PollEvents();
-
-    /// <summary>
-    /// Creates a new window with the default settings.
-    /// </summary>
-    nint WindowCreate();
-    
-    /// <summary>
-    /// Creates a new window with the specified settings.
-    /// </summary>
-    /// <param name="settings">The window creation settings.</param>
-    nint WindowCreate(WindowCreateSettings settings);
-
-    Task<nint> WindowCreateAsync();
-    
-    Task<nint> WindowCreateAsync(WindowCreateSettings settings);
-    
+    void Terminate();
     void WindowSetTitle(nint window, string title);
-
-    /// <summary>
-    /// Makes the specified window's context current.
-    /// </summary>
-    /// <param name="window">The window handle.</param>
-    // void MakeContextCurrent(WindowHandle? window);
-
-    /// <summary>
-    /// Retrieves the address of the specified function.
-    /// </summary>
-    /// <param name="procName">The name of the function.</param>
-    /// <returns>The address of the function.</returns>
-    nint GetProcAddress(string procName);
+    void WindowSetPosition(nint window, Vector2i position);
+    void WindowSetSize(nint window, Vector2i size);
+    void WindowCreate(WindowCreateSettings settings);
+    nint WindowCreateSync(WindowCreateSettings settings);
 }

@@ -1,7 +1,9 @@
 ﻿using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Windowing.Manager;
+using Hypercube.Graphics;
 using Hypercube.Graphics.Windowing;
+using Hypercube.Graphics.Windowing.Settings;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;
@@ -10,19 +12,36 @@ namespace Hypercube.Core.Graphics.Rendering;
 
 public partial class Renderer : IRenderer
 {
-    [Dependency] private readonly DependenciesContainer _dependenciesContainer = default!;
     [Dependency] private readonly IWindowManager _windowManager = default!;
-    [Dependency] private readonly IRendererManager _rendererManager = default!;
     [Dependency] private readonly IPatchManager _patchManager = default!;
     
     private readonly ManualResetEvent _readyEvent = new(false);
-
-    private WindowHandle? _mainWindow;
+    
     private Thread? _thread;
     
     public void Init(bool multiThread = false)
     {
         InitAsync(multiThread).Wait();
+    }
+
+    public void CreateMainWindow()
+    {
+        _windowManager.Create(new WindowCreateSettings
+        {
+            Api = new ApiSettings
+            {
+                Api = ContextApi.OpenGl,
+                Flags = ContextFlags.Debug,
+                Profile = ContextProfile.Core,
+                Version = new Version(4, 6)
+            },
+            Title = Config.MainWindowTitle,
+            Resizable = Config.MainWindowResizable,
+            Visible = Config.MainWindowVisible,
+            Decorated = Config.MainWindowDecorated,
+            TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
+            Floating = Config.MainWindowFloating
+        });
     }
 
     public async Task InitAsync(bool multiThread = false)
@@ -63,25 +82,11 @@ public partial class Renderer : IRenderer
     private void OnThreadStart()
     {
         _windowManager.Init(true);
+        
         _windowManager.WaitInit(Config.RenderThreadReadySleepDelay);
         
-        _mainWindow = _windowManager.WindowCreate(new WindowCreateSettings
-        {
-            Title = Config.MainWindowTitle,
-            // Size = Config.MainWindowSize,
-            TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
-            Decorated = Config.MainWindowDecorated,
-            Floating = Config.MainWindowFloating
-        });
-        
-        _rendererManager.Init(_windowManager);
-
-        var preloader = new GraphicsPreloader();
-        _dependenciesContainer.Inject(preloader);
-        
-        preloader.PreloadShaders();
-        
         _readyEvent.Set();
+        
         _windowManager.EnterLoop();
     }
 }

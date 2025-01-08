@@ -57,7 +57,7 @@ public class RendererManager : IRendererManager
 
     private void InitRenderApi(IBindingsContext context)
     {
-        _rendererApi = ApiFactory.CreateApi(Config.Rendering);
+        _rendererApi = Api.Get(Config.Rendering);
         _container.Inject(_rendererApi);
         _rendererApi.Init(context);
         _logger.Info($"Render API info:\n\r{_rendererApi.Info}");
@@ -87,7 +87,7 @@ public class RendererManager : IRendererManager
         _batches.Clear();
     }
 
-    private void Render(WindowHandle window)
+    private void Render(nint window)
     {
         Clear();
 

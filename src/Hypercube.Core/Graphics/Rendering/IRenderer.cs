@@ -3,7 +3,7 @@
 public interface IRenderer
 {
     void Init(bool multiThread = false);
-    Task InitAsync(bool multiThread = false);
+    void CreateMainWindow();
 
     void Update();
     void Render();

@@ -53,6 +53,7 @@ public sealed class Runtime
         _logger.Info("Initialization of internal modules...");
         
         _renderer.Init(Config.RenderThreading);
+        _renderer.CreateMainWindow();
         
         _logger.Info("Preparation is complete, start the main application cycle");
         EntryPointsExecute(EntryPointLevel.AfterInit);
