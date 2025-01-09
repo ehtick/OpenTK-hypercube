@@ -1,4 +1,5 @@
-﻿using Hypercube.GraphicsApi.GlfwApi.Enums;
+﻿using Hypercube.Graphics.Windowing.Api.Enums;
+using Hypercube.GraphicsApi.GlfwApi.Enums;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Windowing.Api;
@@ -7,8 +8,22 @@ public abstract unsafe partial class WindowingApi
 {
     protected interface IEvent;
 
-    protected readonly record struct EventError(string Description)
+    protected readonly record struct EventSync<TResult>(TaskCompletionSource<TResult> Command, TResult Result)
         : IEvent;
+    
+    protected readonly record struct EventError(
+        string Description
+    ) : IEvent;
+    
+    protected readonly record struct EventMonitor(
+        nint Monitor,
+        ConnectedState State
+    ) : IEvent;
+    
+    protected readonly record struct EventJoystick(
+        int Joystick,
+        ConnectedState State
+    ) : IEvent;
     
     protected record struct EventCursorPosition(
         nint Window,
@@ -61,12 +76,6 @@ public abstract unsafe partial class WindowingApi
     (
         nint Window,
         Vector2i Position
-    ) : IEvent;
-
-    protected record struct EventWindowCreated
-    (
-        nint Window,
-        TaskCompletionSource<nint>? TaskCompletionSource = null
     ) : IEvent;
     
     protected record struct EventWindowContentScale

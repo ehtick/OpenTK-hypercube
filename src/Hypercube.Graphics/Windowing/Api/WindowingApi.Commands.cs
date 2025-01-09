@@ -8,15 +8,16 @@ public abstract unsafe partial class WindowingApi
     /// <summary>
     /// Basic form of the command for accessing the API internals.
     /// </summary>
-    private interface ICommand;
+    protected interface ICommand;
 
     /// <summary>
     /// A variation of the <see cref="ICommand"/>
     /// for synchronized access to the API internals.
     /// </summary>
-    private interface ICommandSync : ICommand
+    protected interface ICommandSync : ICommand
     {
         TaskCompletionSource Task { get; }
+        Thread Thread { get; }
     }
 
     /// <summary>
@@ -24,9 +25,10 @@ public abstract unsafe partial class WindowingApi
     /// for synchronized access to the API internals,
     /// with a certain result.
     /// </summary>
-    private interface ICommandSync<TResult> : ICommand
+    protected interface ICommandSync<TResult> : ICommand
     {
         TaskCompletionSource<TResult> Task { get; }
+        Thread Thread { get; }
     }
 
     private readonly record struct CommandTerminate
@@ -43,10 +45,10 @@ public abstract unsafe partial class WindowingApi
 
     private readonly record struct CommandWindowCreate(WindowCreateSettings Settings)
         : ICommand;
-    
-    private readonly record struct CommandWindowCreateSync(WindowCreateSettings Settings, TaskCompletionSource<nint> Tcs)
-        : ICommandSync<nint>
-    {
-        public TaskCompletionSource<nint> Task => Tcs;
-    }
+
+    private readonly record struct CommandWindowCreateSync(
+        WindowCreateSettings Settings,
+        TaskCompletionSource<nint> Task,
+        Thread Thread)
+        : ICommandSync<nint>;
 }

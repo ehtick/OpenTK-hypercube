@@ -1,10 +1,7 @@
 ﻿using Hypercube.Core.Graphics.Patching;
-using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Windowing.Manager;
-using Hypercube.Graphics;
-using Hypercube.Graphics.Windowing;
+using Hypercube.Graphics.Windowing.Api;
 using Hypercube.Graphics.Windowing.Settings;
-using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;
 
@@ -81,10 +78,9 @@ public partial class Renderer : IRenderer
 
     private void OnThreadStart()
     {
-        _windowManager.Init(true);
-        
+        _windowManager.Init(WindowingApiSettings.Default);
         _windowManager.WaitInit(Config.RenderThreadReadySleepDelay);
-        
+
         _readyEvent.Set();
         
         _windowManager.EnterLoop();

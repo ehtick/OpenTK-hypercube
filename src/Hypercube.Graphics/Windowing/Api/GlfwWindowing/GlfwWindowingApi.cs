@@ -72,6 +72,9 @@ public sealed unsafe partial class GlfwWindowingApi : WindowingApi
         var windowHandle = Glfw.CreateWindow(size.X, size.Y, title, null, null);
 
         Glfw.SetWindowCloseCallback(windowHandle, OnWindowCloseCallback);
+        Glfw.SetWindowSizeCallback(windowHandle, OnWindowSizeCallback);
+        Glfw.SetWindowPosCallback(windowHandle, OnWindowPositionCallback);
+        Glfw.SetWindowFocusCallback(windowHandle, OnWindowFocusCallback);
         
         return (nint) windowHandle;
     }

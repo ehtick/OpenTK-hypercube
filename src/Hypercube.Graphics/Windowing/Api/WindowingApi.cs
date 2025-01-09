@@ -6,24 +6,28 @@ using Hypercube.Utilities.Threads;
 
 namespace Hypercube.Graphics.Windowing.Api;
 
-public abstract unsafe partial class WindowingApi : IWindowingApi, IWindowingApiInternal
+public abstract partial class WindowingApi : IWindowingApi, IWindowingApiInternal
 {
     public event ErrorHandler? OnError;
+    public event MonitorHandler? OnMonitor;
+    public event JoystickHandler? OnJoystick;
+    public event WindowCloseHandler? OnWindowClose;
+    public event WindowPositionHandler? OnWindowPosition;
+    public event WindowSizeHandler? OnWindowSize;
+    public event WindowFocusHandler? OnWindowFocus;
     
     private ThreadBridge<ICommand>? _commandBridge;
     private ThreadBridge<IEvent>? _eventBridge;
 
     private Thread? _thread;
     private bool _running;
-
-    private bool _multiThread;
+    
     private float _waitEventsTimeout;
 
     public bool Ready => _thread is not null;
 
     public void Init(WindowingApiSettings settings)
     {
-        _multiThread = settings.MultiThread;
         _waitEventsTimeout = settings.WaitEventsTimeout;
         
         _commandBridge = new ThreadBridge<ICommand>(new UnboundedChannelOptions
@@ -59,13 +63,8 @@ public abstract unsafe partial class WindowingApi : IWindowingApi, IWindowingApi
     
     public void PollEvents()
     {
-        if (_multiThread)
-        {
-            ProcessEvents();
-            return;
-        }
-        
         InternalPollEvents();
+        ProcessEvents();
     }
     
     public void Terminate()
@@ -102,17 +101,11 @@ public abstract unsafe partial class WindowingApi : IWindowingApi, IWindowingApi
 
     public nint WindowCreateSync(WindowCreateSettings settings)
     {
-        // Calling this function in the current thread will freeze it,
-        // which will not allow the command to be processed
-        // and the application will hang
-        if (Thread.CurrentThread == _thread)
-            throw new WindowingApiInvalidThreadException(nameof(WindowCreateSync));
-
         var tcs = new TaskCompletionSource<nint>();
-        var command = new CommandWindowCreateSync(settings, tcs);
+        var command = new CommandWindowCreateSync(settings, tcs, Thread.CurrentThread);
         
         Execute(command);
-        
+
         return WaitCommand(tcs);
     }
 

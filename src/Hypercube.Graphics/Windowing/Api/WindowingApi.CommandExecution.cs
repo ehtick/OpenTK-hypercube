@@ -37,7 +37,7 @@ public abstract unsafe partial class WindowingApi
                 break;
             
             case CommandWindowCreateSync windowCreateSync:
-                windowCreateSync.Task.TrySetResult(InternalWindowCreate(windowCreateSync.Settings));
+                Raise(new EventSync<nint>(windowCreateSync.Task, InternalWindowCreate(windowCreateSync.Settings)), windowCreateSync.Thread != _thread);
                 break;
         }
     }
@@ -66,25 +66,25 @@ public abstract unsafe partial class WindowingApi
         if (_commandBridge is null)
             throw new WindowingApiNotInitializedException();
         
-        if (_multiThread)
-        {
-            // For multithreaded mode,
-            // we need to send the command through the bridge,
-            // to be processed in another thread,
-            // because the Raise method assumes external access
-            // to the internal API
-            _commandBridge.Raise(command);
-            
-            // Since Api expects real commands,
-            // and we feed it a virtual one,
-            // we need to wake it up to initialize the processing 
-            InternalPostEmptyEvent();
-            return;
-        }
-        
         // For single-threaded system operation,
         // we don't need to pass the command through the bridge,
         // which is much more logical
-        Process(command);
+        if (Thread.CurrentThread == _thread)
+        {
+            Process(command);
+            return;
+        }
+
+        // For multithreaded mode,
+        // we need to send the command through the bridge,
+        // to be processed in another thread,
+        // because the Raise method assumes external access
+        // to the internal API
+        _commandBridge.Raise(command);
+        
+        // Since Api expects real commands,
+        // and we feed it a virtual one,
+        // we need to wake it up to initialize the processing 
+        InternalPostEmptyEvent();
     }
 }

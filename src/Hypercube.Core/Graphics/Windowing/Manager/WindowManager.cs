@@ -14,15 +14,16 @@ public class WindowManager : IWindowManager
 
     public bool Ready => _windowApi.Ready;
 
-    public void Init(bool multiThread = false)
+    public void Init(WindowingApiSettings settings)
     {
         _windowApi = Api.Get(Config.Windowing);
-        _windowApi.Init(new WindowingApiSettings
-        {
-            MultiThread = multiThread
-        });
-
+        _windowApi.Init(settings);
+        
         _windowApi.OnError += OnError;
+        _windowApi.OnWindowPosition += (window, position) =>
+        {
+            _windowApi.WindowSetTitle(window, $"{window} - {position}");
+        };
     }
 
     public void Terminate()

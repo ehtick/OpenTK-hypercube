@@ -11,11 +11,20 @@ namespace Hypercube.Graphics.Windowing.Api;
 public interface IWindowingApi : IDisposable
 {
     event ErrorHandler? OnError; 
+    event MonitorHandler? OnMonitor;
+    event JoystickHandler? OnJoystick;
+    event WindowCloseHandler? OnWindowClose;
+    event WindowPositionHandler? OnWindowPosition; 
+    event WindowSizeHandler? OnWindowSize; 
+    event WindowFocusHandler? OnWindowFocus; 
+    
     bool Ready { get; }
+    
     void Init(WindowingApiSettings settings);
     void EnterLoop();
     void PollEvents();
     void Terminate();
+    
     void WindowSetTitle(nint window, string title);
     void WindowSetPosition(nint window, Vector2i position);
     void WindowSetSize(nint window, Vector2i size);

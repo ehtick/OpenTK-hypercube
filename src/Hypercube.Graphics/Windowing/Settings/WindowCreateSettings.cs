@@ -13,11 +13,6 @@ public struct WindowCreateSettings
     public string Title { get; init; } = "Default Window";
 
     /// <summary>
-    /// The position of the window on the screen.
-    /// </summary>
-    public Vector2i Position { get; init; } = Vector2i.Zero;
-
-    /// <summary>
     /// The initial size of the window (width and height).
     /// </summary>
     public Vector2i Size { get; init; } = new(800, 600);
