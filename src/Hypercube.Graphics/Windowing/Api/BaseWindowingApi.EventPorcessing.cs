@@ -2,7 +2,7 @@
 
 namespace Hypercube.Graphics.Windowing.Api;
 
-public abstract partial class WindowingApi
+public abstract partial class BaseWindowingApi
 {
     private void Process(IEvent ev)
     {

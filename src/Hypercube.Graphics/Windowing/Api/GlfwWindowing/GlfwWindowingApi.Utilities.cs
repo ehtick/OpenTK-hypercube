@@ -6,7 +6,7 @@ using ContextApi = Hypercube.Graphics.Windowing.Settings.ContextApi;
 
 namespace Hypercube.Graphics.Windowing.Api.GlfwWindowing;
 
-public sealed partial class GlfwWindowingApi
+public sealed partial class GlfwBaseWindowingApi
 {
     private static ClientApi ToClientApi(ContextApi api)
     {

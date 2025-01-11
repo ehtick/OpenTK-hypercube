@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Hypercube.Core.Execution.Attributes;
 using Hypercube.Core.Execution.Enums;
+using Hypercube.Graphics;
 using Hypercube.Graphics.Rendering;
 using Hypercube.Graphics.Rendering.Api;
 using Hypercube.Graphics.Windowing.Api;
@@ -12,7 +13,6 @@ using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;
 using Hypercube.Utilities.Helpers;
-using WindowingApi = Hypercube.Graphics.WindowingApi;
 
 namespace Hypercube.Core.Execution;
 

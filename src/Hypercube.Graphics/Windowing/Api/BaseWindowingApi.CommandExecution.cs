@@ -3,7 +3,7 @@ using Hypercube.Utilities.Threads;
 
 namespace Hypercube.Graphics.Windowing.Api;
 
-public abstract unsafe partial class WindowingApi
+public abstract unsafe partial class BaseWindowingApi
 {
     // TODO: I can't definitively say by how much (or whether)
     //       switch-case will run faster than overload.

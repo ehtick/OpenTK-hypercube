@@ -6,7 +6,7 @@ using SilkWindowHandle = Silk.NET.GLFW.WindowHandle;
 
 namespace Hypercube.Graphics.Windowing.Api.GlfwWindowing;
 
-public sealed unsafe partial class GlfwWindowingApi : WindowingApi
+public sealed unsafe partial class GlfwBaseWindowingApi : BaseWindowingApi
 {
     private static readonly Glfw Glfw = Glfw.GetApi();
     

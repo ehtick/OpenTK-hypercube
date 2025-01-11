@@ -12,7 +12,7 @@ public static class ApiFactory
     {
         return windowingApi switch
         {
-            WindowingApi.Glfw => new GlfwWindowingApi(),
+            WindowingApi.Glfw => new GlfwBaseWindowingApi(),
             WindowingApi.Sdl => throw new NotImplementedException(),
             _ => throw new NotImplementedException()
         };

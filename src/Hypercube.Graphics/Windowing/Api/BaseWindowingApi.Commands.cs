@@ -3,7 +3,7 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Windowing.Api;
 
-public abstract unsafe partial class WindowingApi
+public abstract unsafe partial class BaseWindowingApi
 {
     /// <summary>
     /// Basic form of the command for accessing the API internals.

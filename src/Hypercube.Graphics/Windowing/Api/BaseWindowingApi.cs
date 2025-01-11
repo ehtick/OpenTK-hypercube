@@ -6,7 +6,7 @@ using Hypercube.Utilities.Threads;
 
 namespace Hypercube.Graphics.Windowing.Api;
 
-public abstract partial class WindowingApi : IWindowingApi, IWindowingApiInternal
+public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInternal
 {
     public event ErrorHandler? OnError;
     public event MonitorHandler? OnMonitor;

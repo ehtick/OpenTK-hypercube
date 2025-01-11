@@ -3,7 +3,7 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Windowing.Api;
 
-public abstract unsafe partial class WindowingApi : IWindowingApiInternal
+public abstract unsafe partial class BaseWindowingApi : IWindowingApiInternal
 {
     public abstract bool InternalInit();
     public abstract void InternalTerminate();
