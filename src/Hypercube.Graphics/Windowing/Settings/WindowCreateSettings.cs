@@ -1,5 +1,4 @@
-﻿using Hypercube.Graphics.Monitors;
-using Hypercube.Mathematics.Vectors;
+﻿using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Windowing.Settings;
 

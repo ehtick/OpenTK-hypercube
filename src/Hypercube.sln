@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.GraphicsApi", "Hy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Graphics", "Hypercube.Graphics\Hypercube.Graphics.csproj", "{35E973E0-51C3-4398-906A-17D5D08E3589}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Resources", "Hypercube.Resources\Hypercube.Resources.csproj", "{564D7290-9873-4403-AFFF-F6DB29EE93AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{35E973E0-51C3-4398-906A-17D5D08E3589}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35E973E0-51C3-4398-906A-17D5D08E3589}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35E973E0-51C3-4398-906A-17D5D08E3589}.Release|Any CPU.Build.0 = Release|Any CPU
+		{564D7290-9873-4403-AFFF-F6DB29EE93AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{564D7290-9873-4403-AFFF-F6DB29EE93AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{564D7290-9873-4403-AFFF-F6DB29EE93AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{564D7290-9873-4403-AFFF-F6DB29EE93AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

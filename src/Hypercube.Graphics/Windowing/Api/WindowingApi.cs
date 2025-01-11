@@ -105,8 +105,17 @@ public abstract partial class WindowingApi : IWindowingApi, IWindowingApiInterna
         var command = new CommandWindowCreateSync(settings, tcs, Thread.CurrentThread);
         
         Execute(command);
-
         return WaitCommand(tcs);
+    }
+
+    public void WindowSwapBuffers(nint window)
+    {
+        Execute(new CommandWindowSwapBuffers(window));   
+    }
+
+    public void MakeContextCurrent(nint window)
+    {
+        InternalMakeContextCurrent(window);
     }
 
     public nint GetProcAddress(string name)

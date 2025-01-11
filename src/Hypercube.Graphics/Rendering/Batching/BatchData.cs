@@ -1,6 +1,4 @@
-﻿using Hypercube.Graphics.Enums;
-
-namespace Hypercube.Graphics.Rendering.Batching;
+﻿namespace Hypercube.Graphics.Rendering.Batching;
 
 public readonly struct BatchData : IEquatable<BatchData>
 {

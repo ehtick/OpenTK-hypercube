@@ -30,4 +30,9 @@ public interface IWindowingApi : IDisposable
     void WindowSetSize(nint window, Vector2i size);
     void WindowCreate(WindowCreateSettings settings);
     nint WindowCreateSync(WindowCreateSettings settings);
+    void WindowSwapBuffers(nint window);
+    
+    void MakeContextCurrent(nint window);
+
+    nint GetProcAddress(string name);
 }

@@ -1,5 +1,4 @@
-﻿using Hypercube.Graphics.Enums;
-using Hypercube.Mathematics.Matrices;
+﻿using Hypercube.Mathematics.Matrices;
 
 namespace Hypercube.Graphics.Rendering.Batching;
 

@@ -1,4 +1,4 @@
-﻿using Hypercube.Core.Graphics.Rendering;
+﻿using Hypercube.Graphics.Rendering;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 

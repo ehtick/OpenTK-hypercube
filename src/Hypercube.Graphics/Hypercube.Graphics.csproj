@@ -9,10 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Hypercube.GraphicsApi\Hypercube.GraphicsApi.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Rendering\Api\GlRenderer\Objects\" />
+      <ProjectReference Include="..\Hypercube.Resources\Hypercube.Resources.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,7 +17,9 @@
         <PackageReference Include="Hypercube.Utilities" Version="1.0.1" />
         <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
         <PackageReference Include="Silk.NET.GLFW" Version="2.22.0" />
+        <PackageReference Include="Silk.NET.OpenGL" Version="2.22.0" />
         <PackageReference Include="Silk.NET.SDL" Version="2.22.0" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
     </ItemGroup>
     
 </Project>

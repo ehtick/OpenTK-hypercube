@@ -51,4 +51,7 @@ public abstract unsafe partial class WindowingApi
         TaskCompletionSource<nint> Task,
         Thread Thread)
         : ICommandSync<nint>;
+
+    private readonly record struct CommandWindowSwapBuffers(nint Window)
+        : ICommand;
 }

@@ -8,9 +8,11 @@ public interface IWindowingApiInternal : IContextInfo
     bool InternalInit();
     void InternalTerminate();
     void InternalPostEmptyEvent();
+    void InternalMakeContextCurrent(nint window);
     nint InternalWindowCreate(WindowCreateSettings settings);
     void InternalWindowSetTitle(nint window, string title);
     void InternalWindowSetPosition(nint window, Vector2i position);
     void InternalWindowSetSize(nint window, Vector2i size);
     nint InternalGetProcAddress(string name);
+    void InternalSwapBuffers(nint window);
 }

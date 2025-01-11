@@ -1,17 +1,18 @@
 ﻿using System.Reflection;
 using Hypercube.Core.Execution.Attributes;
 using Hypercube.Core.Execution.Enums;
-using Hypercube.Core.Graphics.Patching;
-using Hypercube.Core.Graphics.Rendering;
-using Hypercube.Core.Graphics.Rendering.Manager;
-using Hypercube.Core.Graphics.Windowing.Manager;
-using Hypercube.Core.Resources.Loader;
-using Hypercube.Core.Resources.Storage;
+using Hypercube.Graphics.Rendering;
+using Hypercube.Graphics.Rendering.Api;
+using Hypercube.Graphics.Windowing.Api;
+using Hypercube.Graphics.Windowing.Settings;
+using Hypercube.GraphicsApi;
+using Hypercube.Resources.Loader;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;
 using Hypercube.Utilities.Helpers;
+using WindowingApi = Hypercube.Graphics.WindowingApi;
 
 namespace Hypercube.Core.Execution;
 
@@ -19,12 +20,12 @@ public sealed class Runtime
 {
     private readonly DependenciesContainer _dependencies = new();
 
-    [Dependency] private readonly ILogger _logger = default!;
     [Dependency] private readonly IConfigManager _configManager = default!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
     [Dependency] private readonly IResourceLoader _resourceLoader = default!;
     [Dependency] private readonly IRenderer _renderer = default!;
 
+    private readonly ILogger _logger = new ConsoleLogger();
     private readonly Dictionary<EntryPointLevel, List<MethodInfo>> _entryPoints = [];
     
     public void Start()
@@ -52,8 +53,46 @@ public sealed class Runtime
         _logger.Info("The entry points are called!");
         _logger.Info("Initialization of internal modules...");
         
-        _renderer.Init(Config.RenderThreading);
-        _renderer.CreateMainWindow();
+        _renderer.Init(new RendererSettings
+        {
+            Thread = Config.RenderThreading ? new RendererThreadSettings
+            {
+                Name = Config.RenderThreadName,
+                StackSize = Config.RenderThreadStackSize,
+                Priority = Config.RenderThreadPriority,
+                ReadySleepDelay = Config.RenderThreadReadySleepDelay
+            } : null,
+            WindowingApi = new WindowingApiSettings
+            {
+                Api = WindowingApi.Glfw,
+                EventBridgeBufferSize = 32,
+                WaitEventsTimeout = 10
+            },
+            RenderingApi = new RenderingApiSettings
+            {
+                Api = RenderingApi.OpenGl,
+                IndicesPerVertex = 6,
+                MaxVertices = 65532
+            }
+        });
+        
+        _renderer.CreateMainWindow(new WindowCreateSettings
+        {
+            Api = new ApiSettings
+            {
+                Api = ContextApi.OpenGl,
+                Flags = ContextFlags.Debug,
+                Profile = ContextProfile.Core,
+                Version = new Version(4, 6)
+            },
+            Title = Config.MainWindowTitle,
+            Resizable = Config.MainWindowResizable,
+            Decorated = Config.MainWindowDecorated,
+            Floating = Config.MainWindowFloating,
+            TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
+        });
+
+        _renderer.Setup();
         
         _logger.Info("Preparation is complete, start the main application cycle");
         EntryPointsExecute(EntryPointLevel.AfterInit);
@@ -62,27 +101,16 @@ public sealed class Runtime
 
     private void InitPrimaryDependencies()
     {
-        // I don't care about the fucking rules,
-        // I want to put a value in the readonly field,
-        // I'll fucking do it
-        ReflectionHelper.SetField(this, nameof(_logger), new ConsoleLogger());
-        
         _dependencies.Register<ILogger>(_logger);
     }
     
     private void InitDependencies()
     {
         _dependencies.Register<IConfigManager, ConfigManager>();
-        
         _dependencies.Register<IRuntimeLoop, RuntimeLoop>();
         
-        _dependencies.Register<IResourceLoader, ResourceLoader>();
-        _dependencies.Register<IResourceStorage, ResourceStorage>();
-        
-        _dependencies.Register<IWindowManager, WindowManager>();
-        _dependencies.Register<IRendererManager, RendererManager>();
-        _dependencies.Register<IPatchManager, PatchManager>();
-        _dependencies.Register<IRenderer, Renderer>();
+        Resources.Dependencies.Register(_dependencies);
+        Graphics.Dependencies.Register(_dependencies);
         
         _dependencies.InstantiateAll();
         _dependencies.Inject(this);

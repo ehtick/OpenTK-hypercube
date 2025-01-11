@@ -38,6 +38,11 @@ public sealed unsafe partial class GlfwWindowingApi : WindowingApi
         Glfw.PostEmptyEvent();
     }
 
+    public override void InternalMakeContextCurrent(nint window)
+    {
+        Glfw.MakeContextCurrent((SilkWindowHandle*) window);
+    }
+
     public override void InternalWaitEvents()
     {
         Glfw.WaitEvents();
@@ -97,5 +102,10 @@ public sealed unsafe partial class GlfwWindowingApi : WindowingApi
     public override nint InternalGetProcAddress(string name)
     {
         return Glfw.GetProcAddress(name);
+    }
+
+    public override void InternalSwapBuffers(nint window)
+    {
+        Glfw.SwapBuffers((SilkWindowHandle*) window);
     }
 }

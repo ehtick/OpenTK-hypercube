@@ -8,6 +8,9 @@ public abstract unsafe partial class WindowingApi
 {
     protected interface IEvent;
 
+    protected readonly record struct EventSync(TaskCompletionSource Command)
+        : IEvent;
+    
     protected readonly record struct EventSync<TResult>(TaskCompletionSource<TResult> Command, TResult Result)
         : IEvent;
     

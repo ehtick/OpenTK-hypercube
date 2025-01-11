@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using Hypercube.Core.Graphics.Resources;
-using Hypercube.Core.Resources.Loader;
-using Hypercube.Core.Resources.Storage;
+using Hypercube.Graphics.Rendering.Resources;
+using Hypercube.Resources.Loader;
+using Hypercube.Resources.Storage;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 

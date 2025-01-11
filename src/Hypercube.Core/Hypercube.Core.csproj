@@ -16,6 +16,7 @@
       <Folder Include="Ecs\Component\" />
       <Folder Include="Ecs\Event\" />
       <Folder Include="Ecs\System\" />
+      <Folder Include="IO\" />
       <Folder Include="Networking\Client\" />
       <Folder Include="Networking\Server\" />
       <Folder Include="Physics\" />
@@ -29,6 +30,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Hypercube.GraphicsApi\Hypercube.GraphicsApi.csproj" />
       <ProjectReference Include="..\Hypercube.Graphics\Hypercube.Graphics.csproj" />
+      <ProjectReference Include="..\Hypercube.Resources\Hypercube.Resources.csproj" />
     </ItemGroup>
     
     <ItemGroup>

@@ -1,7 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Hypercube.GraphicsApi.GlApi.Enum;
 using Hypercube.Mathematics;
-using Hypercube.Mathematics.Vectors;
 using Hypercube.Utilities.Extensions;
 using JetBrains.Annotations;
 

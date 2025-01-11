@@ -8,6 +8,10 @@ public abstract partial class WindowingApi
     {
         switch (ev)
         {
+            case EventSync evSync:
+                evSync.Command.TrySetResult();
+                break;
+            
             case EventSync<nint> evSync:
                 evSync.Command.TrySetResult(evSync.Result);
                 break;
