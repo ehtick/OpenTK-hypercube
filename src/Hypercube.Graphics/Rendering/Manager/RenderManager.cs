@@ -20,7 +20,7 @@ public class RenderManager : IRenderManager
     public void Init(IContextInfo context, RenderingApiSettings settings)
     {
         Api = ApiFactory.Get(settings.Api);
-        Api.OnInit += info => _logger.Info(info);
+        Api.OnInit += info => _logger.Info($"Render Api ({Enum.GetName(settings.Api)}) info:\n\r{info}");
         
         Api.Init(context, settings);
     }

@@ -30,7 +30,7 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
             result.AppendLine($"Vendor: {vendor}");
             result.AppendLine($"Renderer: {renderer}");
             result.AppendLine($"Version: {version}, Shading: {shading}");
-            result.AppendLine($"Thread: {Thread.CurrentThread.Name ?? "unnamed"} ({Environment.CurrentManagedThreadId})");
+            result.Append($"Thread: {Thread.CurrentThread.Name ?? "unnamed"} ({Environment.CurrentManagedThreadId})");
             // result.AppendLine($"Swap interval: {SwapInterval}");
 
             return result.ToString();
