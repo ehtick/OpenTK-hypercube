@@ -129,6 +129,11 @@ public sealed unsafe partial class GlfwBaseWindowingApi : BaseWindowingApi
         return _glfw.GetProcAddress(name);
     }
 
+    public override void InternalSwapInterval(int interval)
+    {
+        _glfw.SwapInterval(interval);
+    }
+
     public override void InternalSwapBuffers(nint window)
     {
         _glfw.SwapBuffers((SilkWindowHandle*) window);

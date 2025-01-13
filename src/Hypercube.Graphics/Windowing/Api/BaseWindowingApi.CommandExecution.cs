@@ -40,10 +40,6 @@ public abstract unsafe partial class BaseWindowingApi
                 var window = InternalWindowCreate(windowCreateSync.Settings);
                 Raise(new EventSync<nint>(windowCreateSync.Task, window), windowCreateSync.Thread != Thread);
                 break;
-            
-            case CommandWindowSwapBuffers windowSwapBuffers:
-                InternalSwapBuffers(windowSwapBuffers.Window);
-                break;
         }
     }
 

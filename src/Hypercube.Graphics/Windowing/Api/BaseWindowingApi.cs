@@ -127,7 +127,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
 
     public void WindowSwapBuffers(nint window)
     {
-        Execute(new CommandWindowSwapBuffers(window));   
+        InternalSwapBuffers(window);
     }
     
     public nint GetProcAddress(string name)

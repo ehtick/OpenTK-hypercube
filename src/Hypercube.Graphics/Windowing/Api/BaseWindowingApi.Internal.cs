@@ -24,5 +24,6 @@ public abstract partial class BaseWindowingApi : IWindowingApiInternal
     public abstract void InternalWindowSetSize(nint window, Vector2i size);
     
     public abstract nint InternalGetProcAddress(string name);
+    public abstract void InternalSwapInterval(int interval);
     public abstract void InternalSwapBuffers(nint window);
 }

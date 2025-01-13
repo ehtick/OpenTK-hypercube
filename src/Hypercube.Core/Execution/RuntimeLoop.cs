@@ -36,8 +36,6 @@ public sealed class RuntimeLoop : IRuntimeLoop
     {
         _renderer.Update();
         _renderer.Draw();
-        
-        // TODO: Fix
-        // _renderer.Render();
+        _renderer.Render();
     }
 }

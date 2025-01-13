@@ -63,12 +63,7 @@ public sealed class Runtime
                 StackSize = Config.RenderThreadStackSize,
                 Priority = Config.RenderThreadPriority,
             } : null,
-            WindowingApi = new WindowingApiSettings
-            {
-                Api = WindowingApi.Glfw,
-                EventBridgeBufferSize = 32,
-                WaitEventsTimeout = 0
-            },
+            WindowingApi = WindowingApiSettings.DefaultGlfw,
             RenderingApi = new RenderingApiSettings
             {
                 Api = RenderingApi.OpenGl,

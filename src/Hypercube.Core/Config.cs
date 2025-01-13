@@ -39,7 +39,7 @@ public static class Config
         new("RenderThreading", true);
 
     public static readonly ConfigField<string> RenderThreadName =
-        new("RenderThreadName", "Renderer thread");
+        new("RenderThreadName", "Windowing");
     
     public static readonly ConfigField<ThreadPriority> RenderThreadPriority =
         new("RenderThreadPriority", ThreadPriority.AboveNormal);
