@@ -30,6 +30,8 @@ public sealed class Runtime
     
     public void Start()
     {
+        Thread.CurrentThread.Name = "Main";
+        
         InitPrimaryDependencies();
         
         _logger.Echo(EngineInfo.WelcomeMessage);
@@ -60,21 +62,22 @@ public sealed class Runtime
                 Name = Config.RenderThreadName,
                 StackSize = Config.RenderThreadStackSize,
                 Priority = Config.RenderThreadPriority,
-                ReadySleepDelay = Config.RenderThreadReadySleepDelay
             } : null,
             WindowingApi = new WindowingApiSettings
             {
                 Api = WindowingApi.Glfw,
                 EventBridgeBufferSize = 32,
-                WaitEventsTimeout = 10
+                WaitEventsTimeout = 0
             },
             RenderingApi = new RenderingApiSettings
             {
                 Api = RenderingApi.OpenGl,
                 IndicesPerVertex = 6,
                 MaxVertices = 65532
-            }
+            },
+            ReadySleepDelay = Config.RenderThreadReadySleepDelay
         });
+        
         
         _renderer.CreateMainWindow(new WindowCreateSettings
         {
@@ -91,8 +94,6 @@ public sealed class Runtime
             Floating = Config.MainWindowFloating,
             TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
         });
-
-        _renderer.Setup();
         
         _logger.Info("Preparation is complete, start the main application cycle");
         EntryPointsExecute(EntryPointLevel.AfterInit);

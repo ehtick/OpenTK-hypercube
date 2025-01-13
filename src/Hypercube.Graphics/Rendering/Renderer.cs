@@ -24,14 +24,6 @@ public class Renderer : IRenderer
     {
         InitAsync(settings).Wait();
     }
-
-    public void Setup()
-    {
-        if (_window is null)
-            throw new Exception();
-        
-        _renderManager.Init(_window, _settings.RenderingApi);
-    }
     
     public void Shutdown()
     {
@@ -44,12 +36,20 @@ public class Renderer : IRenderer
         _windowManager.PollEvents();
     }
 
-    public void Render()
+    public void Draw()
     {
         foreach (var patch in _patchManager.Patches)
         {
             patch.Draw(this);
         }   
+    }
+
+    public void Render()
+    {
+        if (_window is null)
+            throw new Exception();
+        
+        _renderManager.Render(_window);
     }
 
     public void CreateMainWindow(WindowCreateSettings settings)
@@ -58,15 +58,22 @@ public class Renderer : IRenderer
             throw new Exception();
         
         _window = _windowManager.Create(settings);
+       
         _window.MakeCurrent();
+        _renderManager.Init(_window, _settings.RenderingApi);
     }
     
     private Task InitAsync(RendererSettings settings)
     {
         _settings = settings;
-        
+
         if (_settings.Thread is not { } thread)
-            throw new NotImplementedException();
+        {
+            _windowManager.Init(_settings.WindowingApi);
+            _windowManager.WaitInit(_settings.ReadySleepDelay);
+            
+            return Task.CompletedTask;
+        }
         
         _thread = new Thread(OnThreadStart, thread.StackSize)
         {
@@ -86,7 +93,7 @@ public class Renderer : IRenderer
             throw new InvalidOperationException();
         
         _windowManager.Init(_settings.WindowingApi);
-        _windowManager.WaitInit(thread.ReadySleepDelay);
+        _windowManager.WaitInit(_settings.ReadySleepDelay);
         
         _readyEvent.Set();
         

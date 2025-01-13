@@ -15,14 +15,22 @@ public class WindowManager : IWindowManager
 
     public void Init(WindowingApiSettings settings)
     {
-        _windowApi = Graphics.ApiFactory.Get(settings.Api);
+        _windowApi = ApiFactory.Get(settings.Api);
+        
+        _windowApi.OnInit += OnInit; 
+        _windowApi.OnError += OnError;
+        
         _windowApi.Init(settings);
         
-        _windowApi.OnError += OnError;
         _windowApi.OnWindowPosition += (window, position) =>
         {
             _windowApi.WindowSetTitle(window, $"{window} - {position}");
         };
+    }
+
+    private void OnInit(string info)
+    {
+        _logger.Info($"Windowing Api ({Enum.GetName(_windowApi.Type)}) info:\n\r{info}");
     }
 
     public void WaitInit(int sleepDelay)

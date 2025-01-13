@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.InteropServices;
+using System.Text;
 using Hypercube.Graphics.Rendering.Batching;
 using Hypercube.Graphics.Utilities.Extensions;
 using Hypercube.Mathematics;
@@ -27,9 +28,10 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
             
             var result = new StringBuilder();
             
+            result.AppendLine($"Version: {version}");
+            result.AppendLine($"Shading: {shading}");
             result.AppendLine($"Vendor: {vendor}");
             result.AppendLine($"Renderer: {renderer}");
-            result.AppendLine($"Version: {version}, Shading: {shading}");
             result.Append($"Thread: {Thread.CurrentThread.Name ?? "unnamed"} ({Environment.CurrentManagedThreadId})");
             // result.AppendLine($"Swap interval: {SwapInterval}");
 
@@ -41,13 +43,13 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
     {
         _gl = GL.GetApi(contextInfo.GetProcAddress);
         
+        if (_gl.HasErrors())
+            return false;
+        
         _gl.Enable(EnableCap.DebugOutput);
         _gl.Enable(EnableCap.DebugOutputSynchronous);
         
         _gl.DebugMessageCallback(DebugProcCallback, nint.Zero);
-
-        if (_gl.HasErrors())
-            return false;
         
         _vao = GenArrayObject("Main VAO");
         _vbo = GenBufferObject(BufferTargetARB.ArrayBuffer, "Main VBO");
@@ -112,6 +114,7 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
 
     private void DebugProcCallback(GLEnum source, GLEnum type, int id, GLEnum severity, int length, nint message, nint userparam)
     {
-        throw new NotImplementedException();
+        var messageString = Marshal.PtrToStringAnsi(message) ?? "Unknown message";
+        Console.WriteLine($"[OpenGL Debug] Source: {source}, Type: {type}, ID: {id}, Severity: {severity}, Message: {messageString}");
     }
 }

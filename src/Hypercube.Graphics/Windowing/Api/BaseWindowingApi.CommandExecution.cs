@@ -38,7 +38,7 @@ public abstract unsafe partial class BaseWindowingApi
             
             case CommandWindowCreateSync windowCreateSync:
                 var window = InternalWindowCreate(windowCreateSync.Settings);
-                Raise(new EventSync<nint>(windowCreateSync.Task, window), windowCreateSync.Thread != _thread);
+                Raise(new EventSync<nint>(windowCreateSync.Task, window), windowCreateSync.Thread != Thread);
                 break;
             
             case CommandWindowSwapBuffers windowSwapBuffers:
@@ -74,7 +74,7 @@ public abstract unsafe partial class BaseWindowingApi
         // For single-threaded system operation,
         // we don't need to pass the command through the bridge,
         // which is much more logical
-        if (Thread.CurrentThread == _thread)
+        if (Thread.CurrentThread == Thread)
         {
             Process(command);
             return;

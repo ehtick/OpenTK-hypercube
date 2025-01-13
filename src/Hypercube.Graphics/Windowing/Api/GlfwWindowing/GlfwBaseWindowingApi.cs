@@ -1,4 +1,5 @@
-﻿using Hypercube.Graphics.Windowing.Settings;
+﻿using System.Text;
+using Hypercube.Graphics.Windowing.Settings;
 using Hypercube.Mathematics.Vectors;
 using Silk.NET.GLFW;
 using ContextApi = Hypercube.Graphics.Windowing.Settings.ContextApi;
@@ -8,49 +9,73 @@ namespace Hypercube.Graphics.Windowing.Api.GlfwWindowing;
 
 public sealed unsafe partial class GlfwBaseWindowingApi : BaseWindowingApi
 {
-    private static readonly Glfw Glfw = Glfw.GetApi();
+    public override WindowingApi Type => WindowingApi.Glfw;
     
+    private Glfw _glfw = default!;
+
+    protected override string InternalInfo
+    {
+        get
+        {
+            _glfw.GetVersion(out var major, out var minor, out var revision);
+           
+            var result = new StringBuilder();
+            
+            result.AppendLine($"Version: {major}.{minor}.{revision}");
+            result.Append($"Thread: {Thread?.Name ?? "unnamed"} ({Thread?.ManagedThreadId ?? -1})");
+
+            return result.ToString();
+        }
+    }
+
+
     public override bool InternalInit()
     {
-        Glfw.SetErrorCallback(OnErrorCallback);
+        _glfw = Glfw.GetApi();
+        _glfw.SetErrorCallback(OnErrorCallback);
         
-        if (!Glfw.Init())
+        if (!_glfw.Init())
             return false;
 
-        Glfw.SetMonitorCallback(OnMonitorCallback);
-        Glfw.SetJoystickCallback(OnJoystickCallback);
+        _glfw.SetMonitorCallback(OnMonitorCallback);
+        _glfw.SetJoystickCallback(OnJoystickCallback);
         
         return true;
     }
 
     public override void InternalTerminate()
     {
-        Glfw.Terminate();
+        _glfw.Terminate();
     }
 
     public override void InternalPollEvents()
     {
-        Glfw.PollEvents();
+        _glfw.PollEvents();
     }
 
     public override void InternalPostEmptyEvent()
     {
-        Glfw.PostEmptyEvent();
+        _glfw.PostEmptyEvent();
     }
 
     public override void InternalMakeContextCurrent(nint window)
     {
-        Glfw.MakeContextCurrent((SilkWindowHandle*) window);
+        _glfw.MakeContextCurrent((SilkWindowHandle*) window);
+    }
+
+    public override nint InternalGetCurrentContext()
+    {
+        return (nint) _glfw.GetCurrentContext();
     }
 
     public override void InternalWaitEvents()
     {
-        Glfw.WaitEvents();
+        _glfw.WaitEvents();
     }
 
     public override void InternalWaitEventsTimeout(double timeout)
     {
-        Glfw.WaitEventsTimeout(timeout);
+        _glfw.WaitEventsTimeout(timeout);
     }
 
     public override nint InternalWindowCreate(WindowCreateSettings settings)
@@ -60,52 +85,52 @@ public sealed unsafe partial class GlfwBaseWindowingApi : BaseWindowingApi
         var monitor = settings.MonitorShare;
         var share = settings.ContextShare;
         
-        Glfw.WindowHint(WindowHintClientApi.ClientApi, ToClientApi(settings.Api));
+        _glfw.WindowHint(WindowHintClientApi.ClientApi, ToClientApi(settings.Api));
 
         if (settings.Api != ContextApi.None)
         {
-            Glfw.WindowHint(WindowHintInt.ContextVersionMajor, settings.Api.Version.Major);
-            Glfw.WindowHint(WindowHintInt.ContextVersionMinor, settings.Api.Version.Minor);
+            _glfw.WindowHint(WindowHintInt.ContextVersionMajor, settings.Api.Version.Major);
+            _glfw.WindowHint(WindowHintInt.ContextVersionMinor, settings.Api.Version.Minor);
         }
 
-        Glfw.WindowHint(WindowHintBool.OpenGLDebugContext, settings.Api.DebugFlag);
-        Glfw.WindowHint(WindowHintBool.OpenGLForwardCompat, settings.Api.ForwardCompatibleFlag);
+        _glfw.WindowHint(WindowHintBool.OpenGLDebugContext, settings.Api.DebugFlag);
+        _glfw.WindowHint(WindowHintBool.OpenGLForwardCompat, settings.Api.ForwardCompatibleFlag);
 
         if (settings.Api >= new Version(3, 2))
-            Glfw.WindowHint(WindowHintOpenGlProfile.OpenGlProfile, ToGlProfile(settings.Api));
+            _glfw.WindowHint(WindowHintOpenGlProfile.OpenGlProfile, ToGlProfile(settings.Api));
 
-        var windowHandle = Glfw.CreateWindow(size.X, size.Y, title, null, null);
+        var windowHandle = _glfw.CreateWindow(size.X, size.Y, title, null, null);
 
-        Glfw.SetWindowCloseCallback(windowHandle, OnWindowCloseCallback);
-        Glfw.SetWindowSizeCallback(windowHandle, OnWindowSizeCallback);
-        Glfw.SetWindowPosCallback(windowHandle, OnWindowPositionCallback);
-        Glfw.SetWindowFocusCallback(windowHandle, OnWindowFocusCallback);
+        _glfw.SetWindowCloseCallback(windowHandle, OnWindowCloseCallback);
+        _glfw.SetWindowSizeCallback(windowHandle, OnWindowSizeCallback);
+        _glfw.SetWindowPosCallback(windowHandle, OnWindowPositionCallback);
+        _glfw.SetWindowFocusCallback(windowHandle, OnWindowFocusCallback);
         
         return (nint) windowHandle;
     }
 
     public override void InternalWindowSetTitle(nint window, string title)
     {
-        Glfw.SetWindowTitle((SilkWindowHandle*) window, title);
+        _glfw.SetWindowTitle((SilkWindowHandle*) window, title);
     }
 
     public override void InternalWindowSetPosition(nint window, Vector2i position)
     {
-        Glfw.SetWindowPos((SilkWindowHandle*) window, position.X, position.Y);
+        _glfw.SetWindowPos((SilkWindowHandle*) window, position.X, position.Y);
     }
 
     public override void InternalWindowSetSize(nint window, Vector2i size)
     {
-        Glfw.SetWindowSize((SilkWindowHandle*) window, size.X, size.Y);
+        _glfw.SetWindowSize((SilkWindowHandle*) window, size.X, size.Y);
     }
 
     public override nint InternalGetProcAddress(string name)
     {
-        return Glfw.GetProcAddress(name);
+        return _glfw.GetProcAddress(name);
     }
 
     public override void InternalSwapBuffers(nint window)
     {
-        Glfw.SwapBuffers((SilkWindowHandle*) window);
+        _glfw.SwapBuffers((SilkWindowHandle*) window);
     }
 }

@@ -8,6 +8,9 @@ namespace Hypercube.Graphics.Windowing.Api;
 
 public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInternal
 {
+    public abstract WindowingApi Type { get; }
+    
+    public event InitHandler? OnInit;
     public event ErrorHandler? OnError;
     public event MonitorHandler? OnMonitor;
     public event JoystickHandler? OnJoystick;
@@ -19,12 +22,19 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
     private ThreadBridge<ICommand>? _commandBridge;
     private ThreadBridge<IEvent>? _eventBridge;
 
-    private Thread? _thread;
     private bool _running;
     
     private float _waitEventsTimeout;
 
-    public bool Ready => _thread is not null;
+    public bool Ready => Thread is not null;
+
+    protected Thread? Thread { get; private set; }
+
+    public nint ContextCurrent
+    {
+        get => InternalGetCurrentContext();
+        set => InternalMakeContextCurrent(value);
+    }
 
     public void Init(WindowingApiSettings settings)
     {
@@ -47,7 +57,9 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         if (!InternalInit())
             throw new Exception();
         
-        _thread = Thread.CurrentThread;
+        Thread = Thread.CurrentThread;
+        
+        OnInit?.Invoke(InternalInfo);
     }
 
     public void EnterLoop()
@@ -63,7 +75,12 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
     
     public void PollEvents()
     {
-        InternalPollEvents();
+        if (Thread.CurrentThread == Thread)
+        {
+            InternalPollEvents();
+            return;
+        }
+
         ProcessEvents();
     }
     
@@ -76,7 +93,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         
         // That's last command whose need send 
         _commandBridge.CompleteWrite();
-        _thread = null;
+        Thread = null;
     }
 
     public void WindowSetTitle(nint window, string title)
@@ -112,12 +129,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
     {
         Execute(new CommandWindowSwapBuffers(window));   
     }
-
-    public void MakeContextCurrent(nint window)
-    {
-        InternalMakeContextCurrent(window);
-    }
-
+    
     public nint GetProcAddress(string name)
     {
         return InternalGetProcAddress(name);
@@ -140,7 +152,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
     private void WaitEvents()
     {
         if (_waitEventsTimeout == 0)
-        {
+        { 
             InternalWaitEvents();
             return;
         }

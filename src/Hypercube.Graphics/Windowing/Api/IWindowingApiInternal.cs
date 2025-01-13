@@ -1,8 +1,10 @@
 ﻿using Hypercube.Graphics.Windowing.Settings;
 using Hypercube.Mathematics.Vectors;
+using JetBrains.Annotations;
 
 namespace Hypercube.Graphics.Windowing.Api;
 
+[PublicAPI]
 public interface IWindowingApiInternal : IContextInfo
 {
     bool InternalInit();

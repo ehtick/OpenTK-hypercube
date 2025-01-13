@@ -70,7 +70,7 @@ public abstract partial class BaseWindowingApi
         if (_eventBridge is null)
             throw new WindowingApiNotInitializedException();
 
-        if (Thread.CurrentThread == _thread && !outOfThread)
+        if (Thread.CurrentThread == Thread && !outOfThread)
         {
             Process(ev);
             return;

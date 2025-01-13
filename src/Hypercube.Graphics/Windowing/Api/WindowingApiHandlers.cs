@@ -3,6 +3,7 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Windowing.Api;
 
+public delegate void InitHandler(string info);
 public delegate void ErrorHandler(string message);
 public delegate void MonitorHandler(nint window, ConnectedState state);
 public delegate void JoystickHandler(int joystick, ConnectedState state);

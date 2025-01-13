@@ -5,6 +5,7 @@ namespace Hypercube.Graphics.Windowing;
 public class Window : IWindow
 {
     public nint Handle { get; }
+    public nint CurrentContext => _api.ContextCurrent;
 
     private readonly IWindowingApi _api;
 
@@ -16,7 +17,7 @@ public class Window : IWindow
 
     public void MakeCurrent()
     {
-        _api.MakeContextCurrent(Handle);
+        _api.ContextCurrent = Handle;
     }
 
     public void SwapBuffers()

@@ -10,6 +10,9 @@ namespace Hypercube.Graphics.Windowing.Api;
 [PublicAPI]
 public interface IWindowingApi : IDisposable
 {
+    WindowingApi Type { get; }
+    
+    event InitHandler? OnInit;
     event ErrorHandler? OnError; 
     event MonitorHandler? OnMonitor;
     event JoystickHandler? OnJoystick;
@@ -19,6 +22,7 @@ public interface IWindowingApi : IDisposable
     event WindowFocusHandler? OnWindowFocus; 
     
     bool Ready { get; }
+    nint ContextCurrent { get; set; }
     
     void Init(WindowingApiSettings settings);
     void EnterLoop();
@@ -31,8 +35,6 @@ public interface IWindowingApi : IDisposable
     void WindowCreate(WindowCreateSettings settings);
     nint WindowCreateSync(WindowCreateSettings settings);
     void WindowSwapBuffers(nint window);
-    
-    void MakeContextCurrent(nint window);
 
     nint GetProcAddress(string name);
 }
