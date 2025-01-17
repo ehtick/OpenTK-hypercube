@@ -24,7 +24,12 @@ public class Renderer : IRenderer
     {
         InitAsync(settings).Wait();
     }
-    
+
+    public void Load()
+    {
+        _renderManager.Load();
+    }
+
     public void Shutdown()
     {
         _windowManager.Shutdown();
@@ -40,7 +45,7 @@ public class Renderer : IRenderer
     {
         foreach (var patch in _patchManager.Patches)
         {
-            patch.Draw(this);
+            //patch.Draw(this);
         }   
     }
 

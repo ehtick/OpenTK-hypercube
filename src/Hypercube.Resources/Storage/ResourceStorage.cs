@@ -8,7 +8,6 @@ namespace Hypercube.Resources.Storage;
 
 public class ResourceStorage : IResourceStorage
 {
-    [Dependency] private readonly DependenciesContainer _container = default!;
     [Dependency] private readonly ILogger _logger = default!;
     
     private readonly FrozenDictionary<Type, Dictionary<ResourcePath, Resource>> _cachedResources;
@@ -34,8 +33,7 @@ public class ResourceStorage : IResourceStorage
         
         try
         {
-            // TODO: Optimize the process of resolving dependencies within a resource
-            resource.Load(path, _container);
+            resource.Load(path);
         }
         catch (Exception exception)
         {
@@ -60,8 +58,7 @@ public class ResourceStorage : IResourceStorage
    
         try
         {
-            // TODO: Optimize the process of resolving dependencies within a resource
-            resource.Load(path, _container);
+            resource.Load(path);
         }
         catch (Exception exception)
         {
@@ -82,7 +79,7 @@ public class ResourceStorage : IResourceStorage
     public bool TryCacheResource<T>(ResourcePath path, T resource)
         where T : Resource, new()
     {
-        if (_cachedResources.ContainsKey(typeof(T)))
+        if (!_cachedResources.ContainsKey(typeof(T)))
             return false;
 
         CacheResource(path, resource);

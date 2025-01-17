@@ -5,6 +5,7 @@ namespace Hypercube.Graphics.Rendering;
 public interface IRenderer
 {
     void Init(RendererSettings settings);
+    void Load();
     void Shutdown();
     void Update();
     void Draw();

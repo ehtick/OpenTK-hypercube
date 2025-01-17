@@ -3,11 +3,11 @@
 public readonly struct BatchData : IEquatable<BatchData>
 {
     public readonly int Start;
-    public readonly int? Texture;
-    public readonly int Shader;
+    public readonly uint? Texture;
+    public readonly uint Shader;
     public readonly PrimitiveTopology PrimitiveTopology;
 
-    public BatchData(int start, int? texture, int shader, PrimitiveTopology primitiveTopology)
+    public BatchData(int start, uint? texture, uint shader, PrimitiveTopology primitiveTopology)
     {
         Start = start;
         Texture = texture;
@@ -15,7 +15,7 @@ public readonly struct BatchData : IEquatable<BatchData>
         PrimitiveTopology = primitiveTopology;
     }
     
-    public bool Equals(PrimitiveTopology topology, int? texture, int shader)
+    public bool Equals(PrimitiveTopology topology, uint? texture, uint shader)
     {
         return Texture == texture &&
                Shader == shader &&

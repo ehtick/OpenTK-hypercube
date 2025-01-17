@@ -1,8 +1,8 @@
-﻿using Hypercube.Graphics.Rendering;
+﻿using Hypercube.Graphics.Rendering.Context;
 
 namespace Hypercube.Graphics.Patching;
 
 public interface IPatch
 {
-    void Draw(IRenderer renderer);
+    void Draw(IRenderContext renderer);
 }

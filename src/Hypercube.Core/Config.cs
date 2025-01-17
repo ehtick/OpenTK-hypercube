@@ -1,5 +1,6 @@
 ﻿using Hypercube.Graphics;
-using Hypercube.GraphicsApi;
+using Hypercube.Graphics.Rendering;
+using Hypercube.Mathematics;
 using Hypercube.Utilities.Configuration;
 
 namespace Hypercube.Core;
@@ -22,34 +23,54 @@ public static class Config
         });
     
     /** 
-     * API
+     * Rendering
+     */
+    
+    public static readonly ConfigField<RenderingApi> Rendering =
+        new("Rendering", RenderingApi.OpenGl);
+
+    public static readonly ConfigField<Color> RenderingClearColor =
+        new("RenderingClearColor", Color.Black);
+    
+    public static readonly ConfigField<int> RenderingMaxVertices =
+        new("RenderingMaxVertices", 65532);    
+    
+    public static readonly ConfigField<int> RenderingIndicesPerVertex =
+        new("RenderingIndicesPerVertex", 6);
+    
+    /**
+     * Windowing
      */
     
     public static readonly ConfigField<WindowingApi> Windowing =
         new("Windowing", WindowingApi.Glfw);
+
     
-    public static readonly ConfigField<RenderingApi> Rendering =
-        new("Rendering", RenderingApi.OpenGl);
-    
+    public static readonly ConfigField<int> WindowingWaitEventsTimeout =
+        new("WindowingWaitEventsTimeout", 0);
+
     /**
-     * Render threading
+     * Windowing threading
      */
     
-    public static readonly ConfigField<bool> RenderThreading =
-        new("RenderThreading", true);
+    public static readonly ConfigField<bool> WindowingThreading =
+        new("WindowingThreading", true);
 
-    public static readonly ConfigField<string> RenderThreadName =
-        new("RenderThreadName", "Windowing");
-    
-    public static readonly ConfigField<ThreadPriority> RenderThreadPriority =
-        new("RenderThreadPriority", ThreadPriority.AboveNormal);
-    
-    public static readonly ConfigField<int> RenderThreadStackSize =
-        new("RenderThreadStackSize", 8 * 1024 * 1024); // 8MByte
-    
-    public static readonly ConfigField<int> RenderThreadReadySleepDelay =
-        new("RenderThreadReadySleepDelay", 10);
- 
+    public static readonly ConfigField<string> WindowingThreadName =
+        new("WindowingThreadName", "Windowing");
+
+    public static readonly ConfigField<ThreadPriority> WindowingThreadPriority =
+        new("WindowingThreadPriority", ThreadPriority.AboveNormal);
+
+    public static readonly ConfigField<int> WindowingThreadStackSize =
+        new("WindowingThreadStackSize", 8 * 1024 * 1024); // 8MByte
+
+    public static readonly ConfigField<int> WindowingThreadReadySleepDelay =
+        new("WindowingThreadReadySleepDelay", 10);
+
+    public static readonly ConfigField<int> WindowingThreadEventBridgeBufferSize =
+        new("WindowingThreadEventBridgeBufferSize", 32);
+
     /**
      *  Render batching
      */

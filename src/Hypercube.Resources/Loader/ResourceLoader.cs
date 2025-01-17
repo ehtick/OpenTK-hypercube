@@ -119,6 +119,40 @@ public class ResourceLoader : IResourceLoader
         return content;
     }
 
+    public bool TryReadFileContentAll(ResourcePath path, [NotNullWhen(true)] out string? content)
+    {
+        content = null;
+        
+        if (!path.Rooted)
+            throw new ArgumentException($"Path must be rooted: {path}");
+
+        if (path.Path.EndsWith(ResourcePath.Separator))
+            return false;
+
+        try
+        {
+            foreach (var (prefix, root) in _roots)
+            {
+                if (!path.TryRelativeTo(prefix, out var relative))
+                    continue;
+
+                if (!root.TryGetFile(relative.Value, out var stream))
+                    continue;
+
+                using var warped = WrapStream(stream);
+                content = warped.ReadToEnd();
+                _cachedContent[path] = content;
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Critical(ex.Message);
+        }
+        
+        return false;
+    }
+
     public Stream? ReadFileContent(ResourcePath path)
     {
         return !TryReadFileContent(path, out var stream) ? null : stream;

@@ -12,4 +12,5 @@ public interface IResourceLoader
     bool TryReadFileContent(ResourcePath path, [NotNullWhen(true)] out Stream? fileStream);
     IEnumerable<ResourcePath> FindContentFiles(ResourcePath? path);
     string ReadFileContentAllText(ResourcePath path);
+    bool TryReadFileContentAll(ResourcePath path, [NotNullWhen(true)] out string? content);
 }

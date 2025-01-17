@@ -1,12 +1,13 @@
 ﻿using System.Reflection;
 using Hypercube.Core.Execution.Attributes;
 using Hypercube.Core.Execution.Enums;
+using Hypercube.Core.Utilities.Helpers;
 using Hypercube.Graphics;
 using Hypercube.Graphics.Rendering;
 using Hypercube.Graphics.Rendering.Api;
 using Hypercube.Graphics.Windowing.Api;
 using Hypercube.Graphics.Windowing.Settings;
-using Hypercube.GraphicsApi;
+using Hypercube.Mathematics;
 using Hypercube.Resources.Loader;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
@@ -57,22 +58,11 @@ public sealed class Runtime
         
         _renderer.Init(new RendererSettings
         {
-            Thread = Config.RenderThreading ? new RendererThreadSettings
-            {
-                Name = Config.RenderThreadName,
-                StackSize = Config.RenderThreadStackSize,
-                Priority = Config.RenderThreadPriority,
-            } : null,
-            WindowingApi = WindowingApiSettings.DefaultGlfw,
-            RenderingApi = new RenderingApiSettings
-            {
-                Api = RenderingApi.OpenGl,
-                IndicesPerVertex = 6,
-                MaxVertices = 65532
-            },
-            ReadySleepDelay = Config.RenderThreadReadySleepDelay
+            Thread = WindowingThreadSettingsHelper.FromConfig(),
+            WindowingApi = WindowingApiSettingsHelper.FromConfig(),
+            RenderingApi = RenderingApiSettingsHelper.FromConfig(),
+            ReadySleepDelay = Config.WindowingThreadReadySleepDelay
         });
-        
         
         _renderer.CreateMainWindow(new WindowCreateSettings
         {
@@ -89,6 +79,12 @@ public sealed class Runtime
             Floating = Config.MainWindowFloating,
             TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
         });
+
+        var graphicsPreloader = new GraphicsPreloader();
+        _dependencies.Inject(graphicsPreloader);
+        graphicsPreloader.PreloadShaders();
+        
+        _renderer.Load();
         
         _logger.Info("Preparation is complete, start the main application cycle");
         EntryPointsExecute(EntryPointLevel.AfterInit);

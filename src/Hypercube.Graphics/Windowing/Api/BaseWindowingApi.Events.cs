@@ -1,5 +1,4 @@
 ﻿using Hypercube.Graphics.Windowing.Api.Enums;
-using Hypercube.GraphicsApi.GlfwApi.Enums;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Windowing.Api;
@@ -43,6 +42,7 @@ public abstract unsafe partial class BaseWindowingApi
         Vector2d Offset
     ) : IEvent;
 
+    /*
     protected record struct EventKey(
         nint Window,
         Key Key,
@@ -57,6 +57,7 @@ public abstract unsafe partial class BaseWindowingApi
         InputAction Action,
         KeyModifier Mods
     ) : IEvent;
+    */
     
     protected record struct EventChar
     (

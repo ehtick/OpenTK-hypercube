@@ -41,6 +41,8 @@ public readonly struct ResourcePath
     /// </summary>
     public static readonly ResourcePath Self = ".";
 
+    public static readonly ResourcePath Empty = string.Empty;
+    
     /// <summary>
     /// The actual path represented by this instance.
     /// </summary>

@@ -11,26 +11,28 @@ public abstract class Resource
     public bool HasFallback => FallbackPath is not null;
     public virtual ResourcePath? FallbackPath => null;
 
-    public void Load(ResourcePath path, DependenciesContainer container)
+    public abstract void Init(DependenciesContainer container);
+    
+    public void Load(ResourcePath path)
     {
         if (Loaded)
             return;
         
-        OnLoad(path, container);
+        OnLoad(path);
         Loaded = true;
     }
 
-    public void Reload(ResourcePath path, DependenciesContainer container)
+    public void Reload(ResourcePath path)
     {
-        OnReload(path, container);
+        OnReload(path);
     }
 
-    protected virtual void OnLoad(ResourcePath path, DependenciesContainer container)
+    protected virtual void OnLoad(ResourcePath path)
     {
         // Do nothing...
     }
 
-    public virtual void OnReload(ResourcePath path, DependenciesContainer container)
+    public virtual void OnReload(ResourcePath path)
     {
         // Do nothing...
     }

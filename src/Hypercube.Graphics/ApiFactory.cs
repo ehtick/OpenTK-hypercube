@@ -1,8 +1,8 @@
-﻿using Hypercube.Graphics.Rendering.Api;
+﻿using Hypercube.Graphics.Rendering;
+using Hypercube.Graphics.Rendering.Api;
 using Hypercube.Graphics.Rendering.Api.OpenGlRenderer;
 using Hypercube.Graphics.Windowing.Api;
 using Hypercube.Graphics.Windowing.Api.GlfwWindowing;
-using Hypercube.GraphicsApi;
 
 namespace Hypercube.Graphics;
 

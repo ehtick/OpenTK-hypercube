@@ -28,7 +28,6 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\Hypercube.GraphicsApi\Hypercube.GraphicsApi.csproj" />
       <ProjectReference Include="..\Hypercube.Graphics\Hypercube.Graphics.csproj" />
       <ProjectReference Include="..\Hypercube.Resources\Hypercube.Resources.csproj" />
     </ItemGroup>

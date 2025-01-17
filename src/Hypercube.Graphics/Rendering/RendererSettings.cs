@@ -5,14 +5,13 @@ namespace Hypercube.Graphics.Rendering;
 
 public readonly struct RendererSettings
 {
-    public RendererThreadSettings? Thread { get; init; }
+    public WindowingThreadSettings? Thread { get; init; }
     public WindowingApiSettings WindowingApi { get; init; }
     public RenderingApiSettings RenderingApi { get; init; }
     public int ReadySleepDelay { get; init; }
-    public bool Threading => Thread is not null;
 }
 
-public readonly struct RendererThreadSettings
+public readonly struct WindowingThreadSettings
 {
     public string Name { get; init; }
     public ThreadPriority Priority { get; init; }

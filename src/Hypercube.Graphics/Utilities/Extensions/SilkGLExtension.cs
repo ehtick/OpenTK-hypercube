@@ -2,11 +2,18 @@
 using Hypercube.Graphics.Rendering.Batching;
 using Hypercube.Mathematics;
 using Silk.NET.OpenGL;
+using ShaderType = Hypercube.Graphics.Rendering.Shaders.ShaderType;
+using SilkShaderType = Silk.NET.OpenGL.ShaderType;
 
 namespace Hypercube.Graphics.Utilities.Extensions;
 
 public static class SilkGLExtension
 {
+    public static uint CreateShader(this GL gl, ShaderType type)
+    {
+        return gl.CreateShader(ToShaderType(type));
+    }
+    
     public static unsafe string GetStringExt(this GL gl, StringName name)
     {
         var pointer = gl.GetString(name);
@@ -46,6 +53,19 @@ public static class SilkGLExtension
             PrimitiveTopology.TriangleFan => PrimitiveType.TriangleFan,
             PrimitiveTopology.TriangleStrip => PrimitiveType.TriangleStrip,
             _ => throw new ArgumentOutOfRangeException(nameof(primitiveTopology), primitiveTopology, null)
+        };
+    }
+
+    private static SilkShaderType ToShaderType(ShaderType type)
+    {
+        return type switch
+        {
+            ShaderType.Vertex => SilkShaderType.VertexShader,
+            ShaderType.Fragment => SilkShaderType.FragmentShader,
+            ShaderType.Geometry => SilkShaderType.GeometryShader,
+            ShaderType.Compute => SilkShaderType.ComputeShader,
+            ShaderType.Tesselation => SilkShaderType.TessEvaluationShader,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
 }
