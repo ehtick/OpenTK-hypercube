@@ -6,6 +6,8 @@ namespace Hypercube.Graphics.Rendering.Manager;
 
 public interface IRenderManager
 {
+    event DrawHandler? OnDraw;
+    
     void Init(IContextInfo context, RenderingApiSettings settings);
     void Load();
     void Shutdown();

@@ -3,47 +3,43 @@ using Hypercube.Graphics.Rendering.Shaders;
 using Hypercube.Graphics.Windowing;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
-using Hypercube.Resources.Storage;
 
 namespace Hypercube.Graphics.Rendering.Api;
 
 public abstract partial class BaseRenderingApi : IRenderingApi
 {
     public event InitHandler? OnInit;
+    public abstract event DrawHandler? OnDraw;
+    public abstract event DebugInfoHandler? OnDebugInfo;
+
+    public IShaderProgram? PrimitiveShaderProgram { get; protected set; }
+    public IShaderProgram? TexturingShaderProgram { get; protected set; }
+    public int BatchVerticesIndex { get; protected set; }
+    public int BatchIndicesIndex { get; protected set; }
 
     protected Color ClearColor { get; private set; } = Color.Black;
-    
-    private readonly List<Batch> _batches = [];
+    protected readonly List<Batch> Batches = [];
+    protected Vertex[] BatchVertices = [];
+    protected uint[] BatchIndices = [];
 
-    private Vertex[] _batchVertices = [];
-    private int _batchVerticesIndex;
-
-    private uint[] _batchIndices = [];
-    private int _batchIndicesIndex;
-    
     private BatchData? _currentBatchData;
     
     public void Init(IContextInfo context, RenderingApiSettings settings)
     {
         ClearColor = settings.ClearColor;
         
-        _batchVertices = new Vertex[settings.MaxVertices];
-        _batchIndices = new uint[settings.MaxIndices];
+        BatchVertices = new Vertex[settings.MaxVertices];
+        BatchIndices = new uint[settings.MaxIndices];
 
         if (!InternalInit(context))
             throw new Exception();
         
-        OnInit?.Invoke(InternalInfo);
+        OnInit?.Invoke(InternalInfo, settings);
     }
 
     public void Load()
     {
-        throw new NotImplementedException();
-    }
-
-    public void Load(IResourceStorage resourceStorage)
-    {
-        InternalLoad(resourceStorage);
+        InternalLoad();
     }
 
     public void Terminate()
@@ -51,23 +47,7 @@ public abstract partial class BaseRenderingApi : IRenderingApi
         InternalTerminate();
     }
 
-    public void Render(IWindow window)
-    {
-        Clear();
-        BreakCurrentBatch();
-        
-        InternalRenderSetup();
-        InternalRenderSetupData(_batchVertices, _batchIndices);
-        
-        foreach (var batch in _batches)
-        {
-            InternalRender(batch);
-        }
-
-        InternalRenderUnsetup();
-        
-        window.SwapBuffers();
-    }
+    public abstract void Render(IWindow window);
 
     public void EnsureBatch(PrimitiveTopology topology, uint shader, uint? texture)
     {
@@ -82,7 +62,7 @@ public abstract partial class BaseRenderingApi : IRenderingApi
             GenerateBatch();
         }
 
-        _currentBatchData = new BatchData(_batchIndicesIndex, texture, shader, topology);
+        _currentBatchData = new BatchData(BatchIndicesIndex, texture, shader, topology);
     }
 
     public void BreakCurrentBatch()
@@ -97,18 +77,18 @@ public abstract partial class BaseRenderingApi : IRenderingApi
     public void PushVertex(Vertex vertex)
     {
         // TODO: Add clamping and warning for index
-        _batchVertices[_batchVerticesIndex++] = vertex;
+        BatchVertices[BatchVerticesIndex++] = vertex;
     }
 
-    public void PushIndex(uint offset)
+    public void PushIndex(uint start,uint offset)
     {
         // TODO: Add clamping and warning for index
-        _batchIndices[_batchIndicesIndex++] = (uint) _batchVerticesIndex + offset;
+        BatchIndices[BatchIndicesIndex++] = start + offset;
     }
 
-    public void PushIndex(int index)
+    public void PushIndex(int start, int index)
     {
-        PushIndex((uint) index);
+        PushIndex((uint) start, (uint) index);
     }
 
     public IShader CreateShader(string source, ShaderType type)
@@ -129,17 +109,17 @@ public abstract partial class BaseRenderingApi : IRenderingApi
         return InternalCreateShaderProgram(shaders);
     }
 
-    private void Clear()
+    protected void Clear()
     {
         // TODO: optimize
-        Array.Clear(_batchVertices, 0, _batchVerticesIndex);
-        Array.Clear(_batchIndices, 0, _batchIndicesIndex);
+        Array.Clear(BatchVertices, 0, BatchVerticesIndex);
+        Array.Clear(BatchIndices, 0, BatchIndicesIndex);
 
-        _batchVerticesIndex = 0;
-        _batchIndicesIndex = 0;
+        BatchVerticesIndex = 0;
+        BatchIndicesIndex = 0;
         
         _currentBatchData = null;
-        _batches.Clear();
+        Batches.Clear();
     }
     
     private void GenerateBatch()
@@ -148,7 +128,7 @@ public abstract partial class BaseRenderingApi : IRenderingApi
             throw new NullReferenceException();
 
         var data = _currentBatchData.Value;
-        var currentIndex = _batchIndicesIndex;
+        var currentIndex = BatchIndicesIndex;
 
         var batch = new Batch(
             data.Start,
@@ -157,6 +137,6 @@ public abstract partial class BaseRenderingApi : IRenderingApi
             data.PrimitiveTopology,
             Matrix4x4.Identity);
 
-        _batches.Add(batch);
+        Batches.Add(batch);
     }
 }

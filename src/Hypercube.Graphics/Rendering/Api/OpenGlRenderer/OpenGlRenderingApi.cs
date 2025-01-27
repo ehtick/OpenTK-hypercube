@@ -4,7 +4,10 @@ using Hypercube.Graphics.Rendering.Batching;
 using Hypercube.Graphics.Rendering.Resources;
 using Hypercube.Graphics.Rendering.Shaders;
 using Hypercube.Graphics.Utilities.Extensions;
+using Hypercube.Graphics.Viewports;
+using Hypercube.Graphics.Windowing;
 using Hypercube.Resources.Storage;
+using Hypercube.Utilities.Dependencies;
 using Silk.NET.OpenGL;
 using ShaderType = Hypercube.Graphics.Rendering.Shaders.ShaderType;
 
@@ -12,13 +15,13 @@ namespace Hypercube.Graphics.Rendering.Api.OpenGlRenderer;
 
 public sealed partial class OpenGlRenderingApi : BaseRenderingApi
 {
-    private IShaderProgram? _primitiveShaderProgram;
-    private IShaderProgram? _texturingShaderProgram;
+    [Dependency] private readonly ICameraManager _cameraManager = default!;
+    [Dependency] private readonly IResourceStorage _resourceStorage = default!;
 
-    //  I don't want to think about nulls,
-    // let's accept the fact that it's not null
+    public override event DrawHandler? OnDraw;
+    public override event DebugInfoHandler? OnDebugInfo;
+
     private GL? _gl;
-
     private ArrayObject? _vao;
     private BufferObject? _vbo;
     private BufferObject? _ebo;
@@ -58,22 +61,42 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         if (Gl.HasErrors())
             return false;
 
+        Gl.DebugMessageCallback(DebugProcCallback, nint.Zero);
+        
         Gl.Enable(EnableCap.DebugOutput);
         Gl.Enable(EnableCap.DebugOutputSynchronous);
-
-        Gl.DebugMessageCallback(DebugProcCallback, nint.Zero);
-
+        
         _vao = GenArrayObject("Main VAO");
         _vbo = GenBufferObject(BufferTargetARB.ArrayBuffer, "Main VBO");
         _ebo = GenBufferObject(BufferTargetARB.ElementArrayBuffer, "Main EBO");
+                
+        _vao.Bind();
+        _vbo.SetData(BatchVertices);
+        _ebo.SetData(BatchIndices);
+        
+        // aPos
+        Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, Vertex.Size * sizeof(float), 0);
+        Gl.EnableVertexAttribArray(0);
 
+        // aColor
+        Gl.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, Vertex.Size * sizeof(float), 3 * sizeof(float));
+        Gl.EnableVertexAttribArray(1);
+
+        // aTexCoords
+        Gl.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, Vertex.Size * sizeof(float), 7 * sizeof(float));
+        Gl.EnableVertexAttribArray(2);
+        
+        _vao.Unbind();
+        _vbo.Unbind();
+        _ebo.Unbind();
+        
         return true;
     }
 
-    protected override void InternalLoad(IResourceStorage resourceStorage)
+    protected override void InternalLoad()
     {
-        _primitiveShaderProgram = resourceStorage.GetResource<ResourceShader>("/shaders/base_primitive").ShaderProgram;
-        _texturingShaderProgram = resourceStorage.GetResource<ResourceShader>("/shaders/base_texturing").ShaderProgram;
+        PrimitiveShaderProgram = _resourceStorage.GetResource<ResourceShader>("/shaders/base_primitive").ShaderProgram;
+        TexturingShaderProgram = _resourceStorage.GetResource<ResourceShader>("/shaders/base_texturing").ShaderProgram;
     }
 
     protected override void InternalTerminate()
@@ -83,8 +106,17 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         _ebo?.Delete();
     }
 
-    protected override void InternalRenderSetup()
+    public override void Render(IWindow window)
     {
+        Clear();
+
+        Gl.Viewport(window.Size);
+        Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+        
+        OnDraw?.Invoke();
+
+        BreakCurrentBatch();
+
         Gl.Enable(EnableCap.Blend);
         Gl.Disable(EnableCap.ScissorTest);
 
@@ -92,47 +124,48 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
         Gl.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Fill);
-
-        Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         Gl.ClearColor(ClearColor);
-    }
-
-    protected override void InternalRenderSetupData(Vertex[] vertices, uint[] indices)
-    {
+        
         _vao?.Bind();
-        _vbo?.SetData(vertices);
-        _ebo?.SetData(indices);
+        _vbo?.SetData(BatchVertices);
+        _ebo?.SetData(BatchIndices);
+        
+        foreach (var batch in Batches)
+        {
+            Render(batch);
+        }
+
+        _vao?.Unbind();
+        _vbo?.Unbind();
+        _ebo?.Unbind();
+        
+        window.SwapBuffers();
     }
 
-    protected override void InternalRender(Batch batch)
+    private void Render(Batch batch)
     {
-        var shader = _primitiveShaderProgram;
+        var shader = PrimitiveShaderProgram;
+        
         if (batch.TextureHandle is not null)
         {
             Gl.ActiveTexture(TextureUnit.Texture0);
             Gl.BindTexture(TextureTarget.Texture2D, batch.TextureHandle.Value);
-            shader = _texturingShaderProgram;
+            shader = TexturingShaderProgram;
         }
-
+        
         if (shader is null)
             throw new Exception();
         
         shader.Use();
         shader.SetUniform("model", batch.Model);
-        // shader.SetUniform("view", _cameraManager.View);
-        // shader.SetUniform("projection", _cameraManager.Projection);
+        shader.SetUniform("view", _cameraManager.MainCamera.View);
+        shader.SetUniform("projection", _cameraManager.MainCamera.Projection);
 
-        Gl.DrawElements(batch.PrimitiveTopology, batch.Start * sizeof(uint), DrawElementsType.UnsignedInt, batch.Size);
+        Gl.DrawElements(batch.PrimitiveTopology, batch.Size, DrawElementsType.UnsignedInt, batch.Start * sizeof(uint));
 
         shader.Stop();
+        
         Gl.BindTexture(TextureTarget.Texture2D, 0);
-    }
-
-    protected override void InternalRenderUnsetup()
-    {
-        _vao?.Unbind();
-        _vbo?.Unbind();
-        _ebo?.Unbind();
     }
 
     protected override IShader InternalCreateShader(string source, ShaderType type)
@@ -153,11 +186,9 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         return new ShaderProgram(Gl, handle, shaders);
     }
 
-    private void DebugProcCallback(GLEnum source, GLEnum type, int id, GLEnum severity, int length, nint message,
-        nint userparam)
+    private void DebugProcCallback(GLEnum source, GLEnum type, int id, GLEnum severity, int length, nint message, nint userParam)
     {
         var messageString = Marshal.PtrToStringAnsi(message) ?? "Unknown message";
-        Console.WriteLine(
-            $"[OpenGL Debug] Source: {source}, Type: {type}, ID: {id}, Severity: {severity}, Message: {messageString}");
+        OnDebugInfo?.Invoke($"[OpenGL] Source: {source}, Type: {type}, ID: {id}, Severity: {severity}, Message: {messageString}");
     }
 }

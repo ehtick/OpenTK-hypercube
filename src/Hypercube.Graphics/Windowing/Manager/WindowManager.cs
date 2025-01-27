@@ -59,7 +59,7 @@ public class WindowManager : IWindowManager
     public IWindow Create(WindowCreateSettings settings)
     {
         var handle = _windowApi.WindowCreateSync(settings);
-        var window = new Window(_windowApi, handle);
+        var window = new Window(_windowApi, handle, settings);
 
         return window;
     }

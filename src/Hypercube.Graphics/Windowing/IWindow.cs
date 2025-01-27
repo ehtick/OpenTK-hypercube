@@ -1,10 +1,13 @@
-﻿namespace Hypercube.Graphics.Windowing;
+﻿using Hypercube.Mathematics.Vectors;
 
-public interface IWindow : IContextInfo
+namespace Hypercube.Graphics.Windowing;
+
+public interface IWindow : IContextInfo, IDisposable
 {
     public nint Handle { get; }
     public nint CurrentContext { get; }
-
+    public Vector2i Size { get; set; }
+    
     void MakeCurrent();
     void SwapBuffers();
 }

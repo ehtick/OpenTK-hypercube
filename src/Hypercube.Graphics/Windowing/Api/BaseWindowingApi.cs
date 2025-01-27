@@ -125,6 +125,11 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         return WaitCommand(tcs);
     }
 
+    public void WindowDestroy(nint window)
+    {
+        InternalWindowDestroy(window);
+    }
+
     public void WindowSwapBuffers(nint window)
     {
         InternalSwapBuffers(window);

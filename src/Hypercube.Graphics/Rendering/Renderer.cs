@@ -1,4 +1,5 @@
 ﻿using Hypercube.Graphics.Patching;
+using Hypercube.Graphics.Rendering.Context;
 using Hypercube.Graphics.Rendering.Manager;
 using Hypercube.Graphics.Windowing;
 using Hypercube.Graphics.Windowing.Manager;
@@ -10,8 +11,10 @@ namespace Hypercube.Graphics.Rendering;
 
 public class Renderer : IRenderer
 {
+    [Dependency] private readonly DependenciesContainer _dependencies = default!;
     [Dependency] private readonly IWindowManager _windowManager = default!;
     [Dependency] private readonly IRenderManager _renderManager = default!;
+    [Dependency] private readonly IRenderContext _renderContext = default!;
     [Dependency] private readonly IPatchManager _patchManager = default!;
     
     private readonly ManualResetEvent _readyEvent = new(false);
@@ -27,6 +30,11 @@ public class Renderer : IRenderer
 
     public void Load()
     {
+        var graphicsPreloader = new GraphicsPreloader();
+        _dependencies.Inject(graphicsPreloader);
+        
+        graphicsPreloader.PreloadShaders();
+        
         _renderManager.Load();
     }
 
@@ -45,7 +53,7 @@ public class Renderer : IRenderer
     {
         foreach (var patch in _patchManager.Patches)
         {
-            //patch.Draw(this);
+            patch.Draw(_renderContext);
         }   
     }
 
@@ -71,6 +79,7 @@ public class Renderer : IRenderer
     private Task InitAsync(RendererSettings settings)
     {
         _settings = settings;
+        _renderManager.OnDraw += Draw;
 
         if (_settings.Thread is not { } thread)
         {

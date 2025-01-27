@@ -1,9 +1,11 @@
-﻿using Hypercube.Mathematics;
+﻿using System.Diagnostics;
+using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Rendering.Shaders;
 
+[DebuggerDisplay("ShaderProgram {Handle}")]
 public abstract partial class BaseShaderProgram : IShaderProgram
 {
     public uint Handle { get; }
@@ -15,68 +17,25 @@ public abstract partial class BaseShaderProgram : IShaderProgram
 
     public void Use()
     {
-        throw new NotImplementedException();
+        InternalUseProgram(Handle);
     }
 
     public void Stop()
     {
-        throw new NotImplementedException();
+        InternalUseProgram(0);
     }
 
-    public void SetUniform(string name, int value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUniform(string name, float value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUniform(string name, double value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUniform(string name, Vector2 value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUniform(string name, Vector2i value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUniform(string name, Vector3 value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUniform(string name, Vector3i value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUniform(string name, Vector4 value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUniform(string name, Matrix3x3 value, bool transpose = false)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUniform(string name, Matrix4x4 value, bool transpose = false)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUniform(string name, Color value)
-    {
-        throw new NotImplementedException();
-    }
+    public abstract void SetUniform(string name, int value);
+    public abstract void SetUniform(string name, float value);
+    public abstract void SetUniform(string name, double value);
+    public abstract void SetUniform(string name, Vector2 value);
+    public abstract void SetUniform(string name, Vector2i value);
+    public abstract void SetUniform(string name, Vector3 value);
+    public abstract void SetUniform(string name, Color value);
+    public abstract void SetUniform(string name, Vector3i value);
+    public abstract void SetUniform(string name, Vector4 value);
+    public abstract void SetUniform(string name, Matrix3x3 value, bool transpose = false);
+    public abstract void SetUniform(string name, Matrix4x4 value, bool transpose = false);
 
     public void Label(string name)
     {
@@ -85,6 +44,6 @@ public abstract partial class BaseShaderProgram : IShaderProgram
 
     public void Dispose()
     {
-        // TODO release managed resources here
+        InternalDelete(Handle);
     }
 }

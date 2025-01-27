@@ -79,10 +79,6 @@ public sealed class Runtime
             Floating = Config.MainWindowFloating,
             TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
         });
-
-        var graphicsPreloader = new GraphicsPreloader();
-        _dependencies.Inject(graphicsPreloader);
-        graphicsPreloader.PreloadShaders();
         
         _renderer.Load();
         

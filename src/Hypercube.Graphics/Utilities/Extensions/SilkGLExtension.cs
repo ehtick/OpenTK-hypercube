@@ -37,7 +37,7 @@ public static class SilkGLExtension
 
     public static unsafe void DrawElements(this GL gl, PrimitiveTopology topology, int count, DrawElementsType type, int indices)
     {
-        var pointer = (void*)&indices;
+        var pointer = (void*) indices;
         gl.DrawElements(ToPrimitiveType(topology), (uint) count, type, pointer);
     }
 

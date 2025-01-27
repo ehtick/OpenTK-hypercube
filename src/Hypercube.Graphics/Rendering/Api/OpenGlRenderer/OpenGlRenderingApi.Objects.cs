@@ -134,30 +134,18 @@ public sealed partial class OpenGlRenderingApi
             _gl.DeleteBuffer(_handle);
         }
         
-        public void SetData(int size, nint data, BufferUsageARB hint = BufferUsageARB.StaticDraw)
+        public unsafe void SetData(int size, nint data, BufferUsageARB hint = BufferUsageARB.StaticDraw)
         {
             Bind();
-            // _gl.BufferData(_target, size, data, hint);
+            _gl.BufferData(_target, (nuint) size, (void*) data, hint);
         }
     
-        public void SetData<T>(T[] data, BufferUsageARB hint = BufferUsageARB.StaticDraw)
+        public unsafe void SetData<T>(T[] data, BufferUsageARB hint = BufferUsageARB.StaticDraw)
             where T : unmanaged
         {
             Bind();
-            // _gl.BufferData(_target, data.Length * Marshal.SizeOf(default(T)), data, hint);
-        }
-    
-        public void SetSubData(int size, nint data)
-        {
-            Bind();
-            // _gl.BufferSubData(_target, nint.Zero, size, data);
-        }
-        
-        public void SetSubData<T>(T[] data)
-            where T : unmanaged
-        {
-            Bind();
-            // _gl.BufferSubData(_target, nint.Zero, data.Length * Marshal.SizeOf<T>(), data);
+            fixed (T* dataPtr = data)
+                _gl.BufferData(_target, (nuint) (data.Length * sizeof(T)), dataPtr, hint);
         }
         
         public void Label(string name)

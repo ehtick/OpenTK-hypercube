@@ -19,10 +19,11 @@ public abstract partial class BaseWindowingApi : IWindowingApiInternal
     public abstract nint InternalGetCurrentContext();
     
     public abstract nint InternalWindowCreate(WindowCreateSettings settings);
+    public abstract void InternalWindowDestroy(nint window);
     public abstract void InternalWindowSetTitle(nint window, string title);
     public abstract void InternalWindowSetPosition(nint window, Vector2i position);
     public abstract void InternalWindowSetSize(nint window, Vector2i size);
-    
+
     public abstract nint InternalGetProcAddress(string name);
     public abstract void InternalSwapInterval(int interval);
     public abstract void InternalSwapBuffers(nint window);

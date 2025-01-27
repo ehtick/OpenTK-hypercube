@@ -109,6 +109,11 @@ public sealed unsafe partial class GlfwBaseWindowingApi : BaseWindowingApi
         return (nint) windowHandle;
     }
 
+    public override void InternalWindowDestroy(IntPtr window)
+    {
+        _glfw.DestroyWindow((SilkWindowHandle*) window);
+    }
+
     public override void InternalWindowSetTitle(nint window, string title)
     {
         _glfw.SetWindowTitle((SilkWindowHandle*) window, title);

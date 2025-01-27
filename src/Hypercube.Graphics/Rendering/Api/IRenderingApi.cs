@@ -1,19 +1,25 @@
 ﻿using Hypercube.Graphics.Rendering.Batching;
 using Hypercube.Graphics.Rendering.Shaders;
 using Hypercube.Graphics.Windowing;
-using Hypercube.Resources.Storage;
 
 namespace Hypercube.Graphics.Rendering.Api;
 
 public interface IRenderingApi
 {
     event InitHandler? OnInit;
+    event DrawHandler? OnDraw;
+    event DebugInfoHandler? OnDebugInfo;
+
+    IShaderProgram? PrimitiveShaderProgram { get; }
+    IShaderProgram? TexturingShaderProgram { get; }
+    int BatchVerticesIndex { get; }
+    int BatchIndicesIndex { get; }
     
-    public void Init(IContextInfo context, RenderingApiSettings settings);
-    public void Load(IResourceStorage resourceStorage);
+    void Init(IContextInfo context, RenderingApiSettings settings);
+    void Load();
     
-    public void Terminate();
-    public void Render(IWindow window);
+    void Terminate();
+    void Render(IWindow window);
     
     /// <summary>
     /// Preserves the batches data to allow multiple primitives to be rendered in one batch,
@@ -28,8 +34,8 @@ public interface IRenderingApi
     void BreakCurrentBatch();
 
     void PushVertex(Vertex vertex);
-    void PushIndex(uint offset);
-    void PushIndex(int index);
+    void PushIndex(uint start, uint offset);
+    void PushIndex(int start, int index);
     
     IShader CreateShader(string source, ShaderType type);
     IShaderProgram CreateShaderProgram(Dictionary<ShaderType, string> shaderSources);
