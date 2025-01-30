@@ -6,7 +6,7 @@ namespace Hypercube.Core.Utilities;
 /// <summary>
 /// A bit set that supports an arbitrary number of bits beyond 64.
 /// </summary>
-public sealed class BitSet
+public sealed class BitSet : IEquatable<BitSet>
 {
     private const int BitsPerElement = 64;
     private const int MinSizeValue = 1;
@@ -16,7 +16,7 @@ public sealed class BitSet
     /// </summary>
     public readonly int Size;
     
-    private ulong[] _bits;
+    private readonly ulong[] _bits;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BitSet"/> class with the specified number of bits.
@@ -40,7 +40,7 @@ public sealed class BitSet
     public void Set(int index)
     {
         ValidateIndex(index);
-        _bits[index / BitsPerElement] |= 1UL << (index % BitsPerElement);
+        _bits[index / BitsPerElement] |= 1ul << (index % BitsPerElement);
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public sealed class BitSet
     public void Clear(int index)
     {
         ValidateIndex(index);
-        _bits[index / BitsPerElement] &= ~(1UL << (index % BitsPerElement));
+        _bits[index / BitsPerElement] &= ~(1ul << (index % BitsPerElement));
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public sealed class BitSet
     public bool Has(int index)
     {
         ValidateIndex(index);
-        return (_bits[index / BitsPerElement] & (1UL << (index % BitsPerElement))) != 0;
+        return (_bits[index / BitsPerElement] & (1ul << (index % BitsPerElement))) != 0;
     }
 
     /// <summary>
@@ -79,6 +79,48 @@ public sealed class BitSet
             return;
         
         throw new ArgumentOutOfRangeException(nameof(index), $"Index must be between 0 and {Size - 1}.");
+    }
+    
+    /// <summary>
+    /// Checks if two BitSet objects are equal (bitwise comparison).
+    /// </summary>
+    /// <param name="other">Another BitSet to compare with.</param>
+    /// <returns>True if both bitsets have the same size and identical bits.</returns>
+    public bool Equals(BitSet? other)
+    {
+        if (other is null || Size != other.Size)
+            return false;
+
+        for (var i = 0; i < _bits.Length; i++)
+        {
+            if (_bits[i] != other._bits[i])
+                return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Overrides the default Equals method for object comparison.
+    /// </summary>
+    public override bool Equals(object? obj)
+    {
+        return obj is BitSet other && Equals(other);
+    }
+
+    /// <summary>
+    /// Computes a hash code for the BitSet.
+    /// </summary>
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hash = Size;
+            foreach (var value in _bits)
+                hash = (hash * 31) ^ value.GetHashCode();
+            
+            return hash;
+        }
     }
     
     /// <summary>
@@ -101,8 +143,7 @@ public sealed class BitSet
     /// <param name="operation">The bitwise operation to apply.</param>
     /// <returns>A new bitset resulting from the operation.</returns>
     /// <exception cref="ArgumentException">Thrown if the sizes do not match.</exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static BitSet ApplyOperator(BitSet a, BitSet b, Func<ulong, ulong, ulong> operation)
+    public static BitSet ApplyOperator(BitSet a, BitSet b, Func<ulong, ulong, ulong> operation)
     {
         if (a.Size != b.Size)
             throw new ArgumentException("BitSets must have the same size.");
@@ -115,11 +156,28 @@ public sealed class BitSet
 
         return result;
     }
+    
+    /// <summary>
+    /// Overloads the equality operator (==) to compare two <see cref="BitSet"/> objects.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(BitSet a, BitSet b)
+    {
+        return a.Equals(b);
+    }
+
+    /// <summary>
+    /// Overloads the inequality operator (!=) to compare two <see cref="BitSet"/> objects.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(BitSet a, BitSet b)
+    {
+        return !a.Equals(b);
+    }
 
     /// <summary>
     /// Performs a bitwise OR operation between two bitsets.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BitSet operator |(BitSet a, BitSet b)
     {
         if (a.Size != b.Size)
@@ -135,7 +193,6 @@ public sealed class BitSet
     /// <summary>
     /// Performs a bitwise AND operation between two bitsets.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BitSet operator &(BitSet a, BitSet b)
     {
         if (a.Size != b.Size)
@@ -151,7 +208,6 @@ public sealed class BitSet
     /// <summary>
     /// Performs a bitwise XOR operation between two bitsets.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BitSet operator ^(BitSet a, BitSet b)
     {
         if (a.Size != b.Size)
@@ -176,9 +232,9 @@ public sealed class BitSet
             result._bits[i] = ~a._bits[i];
 
         // Trim excess bits in the last block
-        var lastBitCount = a.Size % 64;
+        var lastBitCount = a.Size % BitsPerElement;
         if (lastBitCount > 0)
-            result._bits[^1] &= (1UL << lastBitCount) - 1;
+            result._bits[^1] &= (1ul << lastBitCount) - 1;
 
         return result;
     }
