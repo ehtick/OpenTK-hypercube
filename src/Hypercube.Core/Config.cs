@@ -70,16 +70,6 @@ public static class Config
 
     public static readonly ConfigField<int> WindowingThreadEventBridgeBufferSize =
         new("WindowingThreadEventBridgeBufferSize", 32);
-
-    /**
-     *  Render batching
-     */
-   
-    public static readonly ConfigField<int> RenderBatchingMaxVertices =
-        new("RenderBatchingMaxVertices", 65532);
-    
-    public static readonly ConfigField<int> RenderBatchingIndicesPerVertex =
-        new("RenderBatchingIndicesPerVertex", 6);
     
     /**
      * Main window
