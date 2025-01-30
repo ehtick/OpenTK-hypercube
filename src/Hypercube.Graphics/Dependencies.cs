@@ -12,8 +12,8 @@ public static class Dependencies
 {
     public static void Register(DependenciesContainer container)
     {
-        container.Register<ICameraManager, CameraManager>();
         container.Register<IWindowManager, WindowManager>();
+        container.Register<ICameraManager, CameraManager>();
         container.Register<IRenderContext, RenderContext>();
         container.Register<IRenderManager, RenderManager>();
         container.Register<IPatchManager, PatchManager>();

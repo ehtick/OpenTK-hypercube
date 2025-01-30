@@ -110,7 +110,7 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
     {
         Clear();
 
-        Gl.Viewport(window.Size);
+        Gl.Viewport(0, 0, (uint) window.Size.X, (uint) window.Size.Y);
         Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         
         OnDraw?.Invoke();

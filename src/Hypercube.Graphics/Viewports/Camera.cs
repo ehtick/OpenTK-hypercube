@@ -6,6 +6,7 @@ namespace Hypercube.Graphics.Viewports;
 
 public class Camera : ICamera
 {
+    public static readonly Vector2i DefaultSize = new(640, 320);
     public const float DefaultZNear = 0.1f;
     public const float DefaultZFar = 100f;
     
