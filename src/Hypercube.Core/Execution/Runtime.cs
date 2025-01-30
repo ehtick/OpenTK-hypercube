@@ -77,6 +77,7 @@ public sealed class Runtime
             Resizable = Config.MainWindowResizable,
             Decorated = Config.MainWindowDecorated,
             Floating = Config.MainWindowFloating,
+            Visible = Config.MainWindowVisible,
             TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
         });
         
