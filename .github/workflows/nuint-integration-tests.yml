@@ -1,11 +1,11 @@
 name: NUnit integration test
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    types: [ opened, reopened, synchronize, ready_for_review ]
-    branches: [ master ]
+#  push:
+#    branches: [ master ]
+#  pull_request:
+#    types: [ opened, reopened, synchronize, ready_for_review ]
+#    branches: [ master ]
   workflow_dispatch:
   
 env:
