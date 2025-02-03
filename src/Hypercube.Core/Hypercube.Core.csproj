@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <AssemblyTitle>HypercubeEngine</AssemblyTitle>
-        <Version>1.0.1.0</Version>
-        <FileVersion>1.0.1.0</FileVersion>
+        <Version>2.0.0</Version>
+        <FileVersion>2.0.0</FileVersion>
 
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -13,9 +13,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Ecs\Component\" />
-      <Folder Include="Ecs\Event\" />
-      <Folder Include="Ecs\System\" />
       <Folder Include="IO\" />
       <Folder Include="Networking\Client\" />
       <Folder Include="Networking\Server\" />

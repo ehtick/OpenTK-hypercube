@@ -3,15 +3,29 @@
 namespace Hypercube.Core.Ecs;
 
 [StructLayout(LayoutKind.Sequential)]
-public readonly struct Entity : IDisposable, IEquatable<Entity>
+public readonly struct Entity : IEquatable<Entity>
 {
-    public readonly int Id;
+    private const int NullVersion = -1;
+    private const int NullId = -1;
     
-    public void Dispose()
+    public readonly int Version;
+    public readonly int WorldId;
+    public readonly int Id;
+
+    public Entity(int worldId)
     {
-        // TODO release managed resources here
+        WorldId = worldId;
+        Version = NullVersion;
+        Id = NullId;
     }
 
+    public Entity(int worldId, int id)
+    {
+        WorldId = worldId;
+        Id = id;
+        Version = WorldManager.Worlds[WorldId].EntityData[id].Version;
+    }
+    
     public bool Equals(Entity other)
     {
         return Id == other.Id;

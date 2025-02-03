@@ -2,6 +2,8 @@
 
 public sealed class World : IDisposable
 {
+    public readonly EntityData[] EntityData = [];
+    
     public int MaxEntities { get; }
 
     public World(int maxEntities = int.MaxValue)
@@ -15,6 +17,11 @@ public sealed class World : IDisposable
     public Entity SpawnEntity()
     {
         throw new NotImplementedException();
+    }
+
+    public void RegisterSystem(Type type)
+    {
+        
     }
     
     public void Dispose()

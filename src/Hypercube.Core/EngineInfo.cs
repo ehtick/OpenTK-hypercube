@@ -7,7 +7,7 @@ namespace Hypercube.Core;
 [PublicAPI]
 public static class EngineInfo
 {
-    public static readonly string Name = AssemblyHelper.Title; 
+    public static readonly string Name = "Hypercube"; 
     public static readonly string Version = AssemblyHelper.Version;
     public static readonly string Configuration = AssemblyHelper.Configuration;
     public static readonly string WelcomeMessage =
