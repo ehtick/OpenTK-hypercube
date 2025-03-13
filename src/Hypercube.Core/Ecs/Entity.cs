@@ -1,39 +1,28 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Runtime.CompilerServices;
+using Hypercube.Core.Ecs.Core;
 
 namespace Hypercube.Core.Ecs;
 
-[StructLayout(LayoutKind.Sequential)]
-public readonly struct Entity : IEquatable<Entity>
+public readonly struct Entity : IDisposable, IEquatable<Entity>
 {
-    private const int NullVersion = -1;
-    private const int NullId = -1;
-    
-    public readonly int Version;
-    public readonly int WorldId;
     public readonly int Id;
+    public readonly World World;
 
-    public Entity(int worldId)
+    public Entity(int id, World world)
     {
-        WorldId = worldId;
-        Version = NullVersion;
-        Id = NullId;
-    }
-
-    public Entity(int worldId, int id)
-    {
-        WorldId = worldId;
         Id = id;
-        Version = WorldManager.Worlds[WorldId].EntityData[id].Version;
+        World = world;
     }
-    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Dispose()
+    {
+        
+    }
+
     public bool Equals(Entity other)
     {
-        return Id == other.Id;
-    }
-
-    public override string ToString()
-    {
-        return $"Entity {Id}";
+        return Id == other.Id && World == other.World;
     }
 
     public override bool Equals(object? obj)
@@ -43,14 +32,21 @@ public readonly struct Entity : IEquatable<Entity>
 
     public override int GetHashCode()
     {
-        return Id;
+        return HashCode.Combine(Id, World);
+    }
+    
+    public override string ToString()
+    {
+        return $"Entity {World}:{Id}";
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(Entity left, Entity right)
     {
         return left.Equals(right);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(Entity left, Entity right)
     {
         return !left.Equals(right);

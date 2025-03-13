@@ -1,17 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <AssemblyTitle>HypercubeEngine</AssemblyTitle>
         <Version>2.0.0</Version>
         <FileVersion>2.0.0</FileVersion>
 
+        <AllowEngineCoreUsage>true</AllowEngineCoreUsage>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-
+    
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+            <_Parameter1>AllowEngineCoreUsage</_Parameter1>
+            <_Parameter2>$(AllowEngineCoreUsage)</_Parameter2>
+        </AssemblyAttribute>
+    </ItemGroup>
+    
     <ItemGroup>
       <Folder Include="IO\" />
       <Folder Include="Networking\Client\" />
@@ -25,13 +33,14 @@
     </ItemGroup>
     
     <ItemGroup>
+      <ProjectReference Include="..\Hypercube.Analyzers\Hypercube.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\Hypercube.Graphics\Hypercube.Graphics.csproj" />
       <ProjectReference Include="..\Hypercube.Resources\Hypercube.Resources.csproj" />
     </ItemGroup>
     
     <ItemGroup>
       <PackageReference Include="Hypercube.Mathematics" Version="1.0.2" />
-      <PackageReference Include="Hypercube.Utilities" Version="1.0.1" />
+      <PackageReference Include="Hypercube.Utilities" Version="1.0.4" />
       <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
     </ItemGroup>
 

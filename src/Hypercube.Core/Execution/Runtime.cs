@@ -1,13 +1,11 @@
 ﻿using System.Reflection;
+using Hypercube.Core.Ecs;
+using Hypercube.Core.Ecs.Core.Systems;
 using Hypercube.Core.Execution.Attributes;
 using Hypercube.Core.Execution.Enums;
 using Hypercube.Core.Utilities.Helpers;
-using Hypercube.Graphics;
 using Hypercube.Graphics.Rendering;
-using Hypercube.Graphics.Rendering.Api;
-using Hypercube.Graphics.Windowing.Api;
 using Hypercube.Graphics.Windowing.Settings;
-using Hypercube.Mathematics;
 using Hypercube.Resources.Loader;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
@@ -22,6 +20,7 @@ public sealed class Runtime
     private readonly DependenciesContainer _dependencies = new();
 
     [Dependency] private readonly IConfigManager _configManager = default!;
+    [Dependency] private readonly IEntitySystemManager _entitySystemManager = default!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
     [Dependency] private readonly IResourceLoader _resourceLoader = default!;
     [Dependency] private readonly IRenderer _renderer = default!;
@@ -55,6 +54,8 @@ public sealed class Runtime
         
         _logger.Info("The entry points are called!");
         _logger.Info("Initialization of internal modules...");
+        
+        _entitySystemManager.CrateMainWorld();
         
         _renderer.Init(new RendererSettings
         {
@@ -97,10 +98,11 @@ public sealed class Runtime
     {
         _dependencies.Register<IConfigManager, ConfigManager>();
         _dependencies.Register<IRuntimeLoop, RuntimeLoop>();
-        
+        _dependencies.Register<IEntitySystemManager, EntitySystemManager>();
+
         Resources.Dependencies.Register(_dependencies);
         Graphics.Dependencies.Register(_dependencies);
-        
+
         _dependencies.InstantiateAll();
         _dependencies.Inject(this);
     }
