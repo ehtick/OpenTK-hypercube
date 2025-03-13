@@ -1,6 +1,4 @@
-﻿using Hypercube.Core.Analyzers;
-
-namespace Hypercube.Core.Ecs.Core.Utilities;
+﻿namespace Hypercube.Core.Ecs.Core.Utilities;
 
 [EngineInternal]
 public class IntPool

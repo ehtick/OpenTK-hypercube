@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Hypercube.Core.Ecs.Core.Events;
-using Hypercube.Core.Ecs.Events;
 
 namespace Hypercube.Core.Ecs;
 

@@ -1,5 +1,4 @@
-﻿using Hypercube.Core.Analyzers;
-using Hypercube.Utilities.References;
+﻿using Hypercube.Utilities.References;
 
 namespace Hypercube.Core.Ecs.Core.Events;
 

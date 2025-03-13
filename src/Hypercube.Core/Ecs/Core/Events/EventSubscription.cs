@@ -1,6 +1,4 @@
-﻿using Hypercube.Core.Analyzers;
-
-namespace Hypercube.Core.Ecs.Core.Events;
+﻿namespace Hypercube.Core.Ecs.Core.Events;
 
 [EngineInternal]
 public sealed class EventSubscription : IEquatable<EventSubscription>

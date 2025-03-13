@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using Hypercube.Core.Analyzers;
 
 namespace Hypercube.Core.Ecs.Core.Components;
 

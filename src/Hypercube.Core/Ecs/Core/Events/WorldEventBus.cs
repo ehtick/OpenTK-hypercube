@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using Hypercube.Core.Analyzers;
 using Hypercube.Utilities.Extensions;
 using Hypercube.Utilities.References;
 

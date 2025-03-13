@@ -1,5 +1,4 @@
-﻿using Hypercube.Core.Analyzers;
-using Hypercube.Core.Ecs.Core.Utilities;
+﻿using Hypercube.Core.Ecs.Core.Utilities;
 using Hypercube.Core.Ecs.Utilities;
 using Hypercube.Utilities.Dependencies;
 
