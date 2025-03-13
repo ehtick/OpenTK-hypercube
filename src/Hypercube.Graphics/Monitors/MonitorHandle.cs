@@ -4,7 +4,7 @@ namespace Hypercube.Graphics.Monitors;
 
 public sealed unsafe class MonitorHandle
 {
-    [EngineCore]
+    [EngineInternal]
     public nint* Handle { get; init; }
     
     public static explicit operator nint*(MonitorHandle windowHandle)

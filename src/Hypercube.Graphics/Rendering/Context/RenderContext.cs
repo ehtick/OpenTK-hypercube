@@ -8,7 +8,7 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Rendering.Context;
 
-[EngineCore]
+[EngineInternal]
 public class RenderContext : IRenderContext
 {
     private IRenderingApi _renderingApi = default!;

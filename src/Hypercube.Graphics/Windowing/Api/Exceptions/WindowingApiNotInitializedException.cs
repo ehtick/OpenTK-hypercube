@@ -2,7 +2,7 @@
 
 namespace Hypercube.Graphics.Windowing.Api.Exceptions;
 
-[EngineCore]
+[EngineInternal]
 public sealed class WindowingApiNotInitializedException : Exception
 {
     public WindowingApiNotInitializedException()

@@ -5,7 +5,7 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Windowing;
 
-[EngineCore]
+[EngineInternal]
 public class Window : IWindow
 {
     public nint Handle { get; }

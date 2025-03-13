@@ -6,7 +6,7 @@ using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Graphics.Windowing.Manager;
 
-[EngineCore]
+[EngineInternal]
 public class WindowManager : IWindowManager
 {
     [Dependency] private readonly ILogger _logger = default!;

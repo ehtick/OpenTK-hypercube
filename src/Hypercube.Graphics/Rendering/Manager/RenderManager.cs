@@ -8,7 +8,7 @@ using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Graphics.Rendering.Manager;
 
-[EngineCore]
+[EngineInternal]
 public class RenderManager : IRenderManager
 {
     public event DrawHandler? OnDraw;

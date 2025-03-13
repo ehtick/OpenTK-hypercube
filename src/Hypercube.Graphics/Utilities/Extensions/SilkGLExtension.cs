@@ -8,7 +8,7 @@ using SilkShaderType = Silk.NET.OpenGL.ShaderType;
 
 namespace Hypercube.Graphics.Utilities.Extensions;
 
-[EngineCore]
+[EngineInternal]
 public static class SilkGLExtension
 {
     public static uint CreateShader(this GL gl, ShaderType type)

@@ -4,7 +4,7 @@ using Hypercube.Core.Analyzers;
 
 namespace Hypercube.Core.Ecs.Core.Components;
 
-[EngineCore]
+[EngineInternal]
 public class ComponentMapper<TComponent> where TComponent : IComponent
 {
     private const int DefaultEntity = -1;

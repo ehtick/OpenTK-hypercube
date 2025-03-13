@@ -5,7 +5,7 @@ using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Ecs.Core.Systems;
 
-[EngineCore]
+[EngineInternal]
 public sealed class EntitySystemManager : IEntitySystemManager
 {
     [Dependency] private readonly DependenciesContainer _container = default!;

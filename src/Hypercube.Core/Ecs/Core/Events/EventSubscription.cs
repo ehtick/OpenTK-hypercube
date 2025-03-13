@@ -2,7 +2,7 @@
 
 namespace Hypercube.Core.Ecs.Core.Events;
 
-[EngineCore]
+[EngineInternal]
 public sealed class EventSubscription : IEquatable<EventSubscription>
 {
     public EventRefHandler Handler { get; }

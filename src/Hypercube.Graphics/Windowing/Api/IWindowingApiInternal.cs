@@ -4,7 +4,7 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Windowing.Api;
 
-[EngineCore]
+[EngineInternal]
 public interface IWindowingApiInternal : IContextInfo
 {
     bool InternalInit();

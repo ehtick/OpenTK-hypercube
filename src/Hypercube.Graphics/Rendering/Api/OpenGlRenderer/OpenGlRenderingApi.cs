@@ -14,7 +14,7 @@ using ShaderType = Hypercube.Graphics.Rendering.Shaders.ShaderType;
 
 namespace Hypercube.Graphics.Rendering.Api.OpenGlRenderer;
 
-[EngineCore]
+[EngineInternal]
 public sealed partial class OpenGlRenderingApi : BaseRenderingApi
 {
     [Dependency] private readonly ICameraManager _cameraManager = default!;

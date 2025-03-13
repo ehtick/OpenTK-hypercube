@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Include="..\Hypercube.Core\Analyzers\EngineCoreAttribute.cs" LinkBase="Core/Attributes" />
+        <Compile Include="..\Hypercube.Core\Analyzers\*" LinkBase="Analyzers" />
     </ItemGroup>
     
 </Project>

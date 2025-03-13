@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace Hypercube.Graphics.Patching;
 
-[EngineCore]
+[EngineInternal]
 public class PatchManager : IPatchManager
 {
     private readonly Dictionary<Type, IPatch> _patches = new();

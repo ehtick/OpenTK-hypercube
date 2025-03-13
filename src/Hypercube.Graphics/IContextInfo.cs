@@ -6,7 +6,7 @@ namespace Hypercube.Graphics;
 /// Represents a way to get information about specific functions or procedures in a process or application.
 /// This is used to find and access particular parts of the program's code dynamically.
 /// </summary>
-[EngineCore]
+[EngineInternal]
 public interface IContextInfo
 {
     /// <summary>

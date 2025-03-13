@@ -5,7 +5,7 @@ using Hypercube.Utilities.References;
 
 namespace Hypercube.Core.Ecs.Core.Events;
 
-[EngineCore]
+[EngineInternal]
 public class WorldEventBus
 {
     private readonly Dictionary<Type, List<EventSubscription>> _eventRegistration = new();

@@ -10,7 +10,7 @@ using Hypercube.Utilities.Extensions;
 
 namespace Hypercube.Graphics.Rendering;
 
-[EngineCore]
+[EngineInternal]
 public class Renderer : IRenderer
 {
     [Dependency] private readonly DependenciesContainer _dependencies = default!;

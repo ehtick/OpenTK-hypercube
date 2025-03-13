@@ -8,7 +8,7 @@ using SilkWindowHandle = Silk.NET.GLFW.WindowHandle;
 
 namespace Hypercube.Graphics.Windowing.Api.GlfwWindowing;
 
-[EngineCore]
+[EngineInternal]
 public sealed unsafe partial class GlfwBaseWindowingApi : BaseWindowingApi
 {
     public override WindowingApi Type => WindowingApi.Glfw;

@@ -5,10 +5,10 @@ namespace Hypercube.Graphics.Windowing;
 
 public interface IWindow : IContextInfo, IDisposable
 {
-    [EngineCore]
+    [EngineInternal]
     public nint Handle { get; }
     
-    [EngineCore]
+    [EngineInternal]
     public nint CurrentContext { get; }
     
     public Vector2i Size { get; set; }

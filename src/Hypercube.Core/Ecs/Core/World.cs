@@ -11,7 +11,7 @@ using Hypercube.Utilities.Dependencies;
 namespace Hypercube.Core.Ecs.Core;
 
 /// <inheritdoc/>
-[EngineCore]
+[EngineInternal]
 public class World : IWorld
 {
     /// <inheritdoc/>
