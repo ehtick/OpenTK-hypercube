@@ -17,6 +17,5 @@
     <ItemGroup>
         <Compile Include="..\Hypercube.Core\Analyzers\EngineCoreAttribute.cs" LinkBase="Implementations" />
     </ItemGroup>
-
-
+    
 </Project>
