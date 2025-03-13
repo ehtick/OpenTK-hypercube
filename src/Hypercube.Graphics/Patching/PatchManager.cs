@@ -1,8 +1,9 @@
-﻿using JetBrains.Annotations;
+﻿using Hypercube.Core.Analyzers;
+using JetBrains.Annotations;
 
 namespace Hypercube.Graphics.Patching;
 
-[PublicAPI]
+[EngineCore]
 public class PatchManager : IPatchManager
 {
     private readonly Dictionary<Type, IPatch> _patches = new();

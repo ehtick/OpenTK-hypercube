@@ -1,4 +1,5 @@
-﻿using Hypercube.Graphics.Rendering.Api;
+﻿using Hypercube.Core.Analyzers;
+using Hypercube.Graphics.Rendering.Api;
 using Hypercube.Graphics.Rendering.Batching;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
@@ -7,6 +8,7 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Rendering.Context;
 
+[EngineCore]
 public class RenderContext : IRenderContext
 {
     private IRenderingApi _renderingApi = default!;

@@ -1,4 +1,5 @@
-﻿using Hypercube.Graphics.Rendering.Api;
+﻿using Hypercube.Core.Analyzers;
+using Hypercube.Graphics.Rendering.Api;
 using Hypercube.Graphics.Rendering.Context;
 using Hypercube.Graphics.Rendering.Shaders;
 using Hypercube.Graphics.Windowing;
@@ -7,6 +8,7 @@ using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Graphics.Rendering.Manager;
 
+[EngineCore]
 public class RenderManager : IRenderManager
 {
     public event DrawHandler? OnDraw;

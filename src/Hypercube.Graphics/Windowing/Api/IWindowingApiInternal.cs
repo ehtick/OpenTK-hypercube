@@ -1,10 +1,10 @@
-﻿using Hypercube.Graphics.Windowing.Settings;
+﻿using Hypercube.Core.Analyzers;
+using Hypercube.Graphics.Windowing.Settings;
 using Hypercube.Mathematics.Vectors;
-using JetBrains.Annotations;
 
 namespace Hypercube.Graphics.Windowing.Api;
 
-[PublicAPI]
+[EngineCore]
 public interface IWindowingApiInternal : IContextInfo
 {
     bool InternalInit();

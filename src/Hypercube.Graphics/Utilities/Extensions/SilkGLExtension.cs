@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using Hypercube.Core.Analyzers;
 using Hypercube.Graphics.Rendering.Batching;
 using Hypercube.Mathematics;
 using Silk.NET.OpenGL;
@@ -7,6 +8,7 @@ using SilkShaderType = Silk.NET.OpenGL.ShaderType;
 
 namespace Hypercube.Graphics.Utilities.Extensions;
 
+[EngineCore]
 public static class SilkGLExtension
 {
     public static uint CreateShader(this GL gl, ShaderType type)

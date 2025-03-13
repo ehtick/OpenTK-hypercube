@@ -1,10 +1,12 @@
-﻿using Hypercube.Graphics.Windowing.Api;
+﻿using Hypercube.Core.Analyzers;
+using Hypercube.Graphics.Windowing.Api;
 using Hypercube.Graphics.Windowing.Settings;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Graphics.Windowing.Manager;
 
+[EngineCore]
 public class WindowManager : IWindowManager
 {
     [Dependency] private readonly ILogger _logger = default!;

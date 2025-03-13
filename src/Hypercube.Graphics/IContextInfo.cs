@@ -1,9 +1,12 @@
-﻿namespace Hypercube.Graphics;
+﻿using Hypercube.Core.Analyzers;
+
+namespace Hypercube.Graphics;
 
 /// <summary>
 /// Represents a way to get information about specific functions or procedures in a process or application.
 /// This is used to find and access particular parts of the program's code dynamically.
 /// </summary>
+[EngineCore]
 public interface IContextInfo
 {
     /// <summary>

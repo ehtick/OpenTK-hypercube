@@ -1,9 +1,11 @@
-﻿using Hypercube.Graphics.Windowing.Api;
+﻿using Hypercube.Core.Analyzers;
+using Hypercube.Graphics.Windowing.Api;
 using Hypercube.Graphics.Windowing.Settings;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Graphics.Windowing;
 
+[EngineCore]
 public class Window : IWindow
 {
     public nint Handle { get; }

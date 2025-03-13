@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
+using Hypercube.Core.Analyzers;
 using Hypercube.Graphics.Rendering.Batching;
 using Hypercube.Graphics.Rendering.Resources;
 using Hypercube.Graphics.Rendering.Shaders;
@@ -13,6 +14,7 @@ using ShaderType = Hypercube.Graphics.Rendering.Shaders.ShaderType;
 
 namespace Hypercube.Graphics.Rendering.Api.OpenGlRenderer;
 
+[EngineCore]
 public sealed partial class OpenGlRenderingApi : BaseRenderingApi
 {
     [Dependency] private readonly ICameraManager _cameraManager = default!;

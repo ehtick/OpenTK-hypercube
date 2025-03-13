@@ -1,4 +1,5 @@
-﻿using Hypercube.Graphics.Patching;
+﻿using Hypercube.Core.Analyzers;
+using Hypercube.Graphics.Patching;
 using Hypercube.Graphics.Rendering.Context;
 using Hypercube.Graphics.Rendering.Manager;
 using Hypercube.Graphics.Windowing;
@@ -9,6 +10,7 @@ using Hypercube.Utilities.Extensions;
 
 namespace Hypercube.Graphics.Rendering;
 
+[EngineCore]
 public class Renderer : IRenderer
 {
     [Dependency] private readonly DependenciesContainer _dependencies = default!;

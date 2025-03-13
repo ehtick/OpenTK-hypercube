@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Hypercube.Core.Analyzers;
 using Hypercube.Graphics.Windowing.Settings;
 using Hypercube.Mathematics.Vectors;
 using Silk.NET.GLFW;
@@ -7,6 +8,7 @@ using SilkWindowHandle = Silk.NET.GLFW.WindowHandle;
 
 namespace Hypercube.Graphics.Windowing.Api.GlfwWindowing;
 
+[EngineCore]
 public sealed unsafe partial class GlfwBaseWindowingApi : BaseWindowingApi
 {
     public override WindowingApi Type => WindowingApi.Glfw;

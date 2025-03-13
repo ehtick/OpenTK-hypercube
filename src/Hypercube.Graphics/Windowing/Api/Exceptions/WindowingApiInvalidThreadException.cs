@@ -1,5 +1,8 @@
-﻿namespace Hypercube.Graphics.Windowing.Api.Exceptions;
+﻿using Hypercube.Core.Analyzers;
 
+namespace Hypercube.Graphics.Windowing.Api.Exceptions;
+
+[EngineCore]
 public sealed class WindowingApiInvalidThreadException : Exception
 {
     public WindowingApiInvalidThreadException(string method) :
