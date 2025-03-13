@@ -49,7 +49,7 @@ public class ResourceLoader : IResourceLoader
         if (!path.Rooted)
             throw new ArgumentException($"Path must be rooted: {path}");
 
-        if (path.Path.EndsWith(ResourcePath.Separator))
+        if (path.Value.EndsWith(ResourcePath.Separator))
         {
             fileStream = null;
             return false;
@@ -109,7 +109,7 @@ public class ResourceLoader : IResourceLoader
         
         using var stream = ReadFileContent(path);
         if (stream is null)
-            throw new ArgumentException($"File not found: {path.Path}");
+            throw new ArgumentException($"File not found: {path.Value}");
 
         using var warped = WrapStream(stream);
         
@@ -126,7 +126,7 @@ public class ResourceLoader : IResourceLoader
         if (!path.Rooted)
             throw new ArgumentException($"Path must be rooted: {path}");
 
-        if (path.Path.EndsWith(ResourcePath.Separator))
+        if (path.Value.EndsWith(ResourcePath.Separator))
             return false;
 
         try

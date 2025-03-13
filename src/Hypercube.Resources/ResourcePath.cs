@@ -1,10 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
+using System.Runtime.CompilerServices;
 
 namespace Hypercube.Resources;
 
-[PublicAPI]
-public readonly struct ResourcePath
+public readonly struct ResourcePath : IEquatable<ResourcePath>
 {
     /// <summary>
     /// Separator used in paths (Unix-style).
@@ -42,11 +41,6 @@ public readonly struct ResourcePath
     public static readonly ResourcePath Self = ".";
 
     public static readonly ResourcePath Empty = string.Empty;
-    
-    /// <summary>
-    /// The actual path represented by this instance.
-    /// </summary>
-    public string Path { get; }
 
     /// <summary>
     /// Static constructor to initialize platform-specific separators.
@@ -58,18 +52,14 @@ public readonly struct ResourcePath
     }
 
     /// <summary>
-    /// Constructor that initializes the path and converts it to the appropriate separator for the platform.
+    /// The actual path represented by this instance.
     /// </summary>
-    /// <param name="path">The path string.</param>
-    public ResourcePath(string path)
-    {
-        Path = OperatingSystem.IsWindows() ? path.Replace('\\', '/') : path;
-    }
+    public string Value { get; }
 
     /// <summary>
     /// Indicates whether the path is rooted (starts with the separator).
     /// </summary>
-    public bool Rooted => Path.Length > 0 && Path[0] == Separator;
+    public bool Rooted => Value.Length > 0 && Value[0] == Separator;
 
     /// <summary>
     /// Indicates whether the path is relative (does not start with the separator).
@@ -79,8 +69,10 @@ public readonly struct ResourcePath
     /// <summary>
     /// Indicates whether the path refers to the current directory (".").
     /// </summary>
-    public bool IsSelf => Path == Self.Path;
+    public bool IsSelf => Value == Self;
 
+    public bool IsEmpty => Value == Empty;
+    
     /// <summary>
     /// Extracts the filename with its extension from the path.
     /// </summary>
@@ -88,8 +80,8 @@ public readonly struct ResourcePath
     {
         get
         {
-            var sepIndex = Path.LastIndexOf(Separator) + 1;
-            return sepIndex == -1 ? string.Empty : Path[sepIndex..];
+            var sepIndex = Value.LastIndexOf(Separator) + 1;
+            return sepIndex == -1 ? string.Empty : Value[sepIndex..];
         }
     }
 
@@ -129,20 +121,28 @@ public readonly struct ResourcePath
             if (IsSelf)
                 return Self;
 
-            var lastIndex = Path.Length > 1 && Path[^1] == Separator
-                ? Path[..^1].LastIndexOf(Separator)
-                : Path.LastIndexOf(Separator);
+            var lastIndex = Value.Length > 1 && Value[^1] == Separator
+                ? Value[..^1].LastIndexOf(Separator)
+                : Value.LastIndexOf(Separator);
 
             return lastIndex switch
             {
                 -1 => Self,
-                0 => new ResourcePath(Path[..1]),
-                _ => new ResourcePath(Path[..lastIndex])
+                0 => new ResourcePath(Value[..1]),
+                _ => new ResourcePath(Value[..lastIndex])
             };
         }
     }
-    
 
+    /// <summary>
+    /// Constructor that initializes the path and converts it to the appropriate separator for the platform.
+    /// </summary>
+    /// <param name="value">The path string.</param>
+    public ResourcePath(string value)
+    {
+        Value = OperatingSystem.IsWindows() ? value.Replace('\\', '/') : value;
+    }
+    
     /// <summary>
     /// Tries to calculate the relative path to a given base path.
     /// </summary>
@@ -160,9 +160,9 @@ public readonly struct ResourcePath
             return true;
         }
 
-        if (Path.StartsWith(basePath.Path))
+        if (Value.StartsWith(basePath.Value))
         {
-            var x = Path[basePath.Path.Length..].Trim(Separator);
+            var x = Value[basePath.Value.Length..].Trim(Separator);
             relative = string.IsNullOrEmpty(x) ? Self : new ResourcePath(x);
             return true;
         }
@@ -172,57 +172,57 @@ public readonly struct ResourcePath
     }
 
     /// <summary>
-    /// Creates a ResourcePath from a relative system path, replacing the specified separator.
-    /// </summary>
-    public static ResourcePath FromRelativeSystemPath(string path, char newSeparator)
-    {
-        return new ResourcePath(path.Replace(newSeparator, Separator));
-    }
-
-    /// <summary>
-    /// Compares two ResourcePath instances for equality.
-    /// </summary>
-    public static bool Equals(ResourcePath a, ResourcePath b)
-    {
-        return a.Path == b.Path;
-    }
-
-    /// <summary>
     /// Checks if the current ResourcePath is equal to another.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(ResourcePath other)
     {
-        return Path == other.Path;
+        return Value == other.Value;
     }
-    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object? obj)
     {
         if (obj is not ResourcePath other)
             return false;
 
-        return Path == other.Path;
+        return Value == other.Value;
     }
-    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override int GetHashCode()
     {
-        return Path.GetHashCode();
+        return Value.GetHashCode();
     }
-    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override string ToString()
     {
-        return Path;
+        return Value;
     }
-    
-    public static implicit operator ResourcePath(string path)
+
+    /// <summary>
+    /// Creates a ResourcePath from a relative system path, replacing the specified separator.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ResourcePath FromRelativeSystemPath(string path, char newSeparator)
     {
-        return new ResourcePath(path);
+        return new ResourcePath(path.Replace(newSeparator, Separator));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static implicit operator ResourcePath(string value)
+    {
+        return new ResourcePath(value);
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator string(ResourcePath path)
     {
-        return path.Path;
+        return path.Value;
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ResourcePath operator +(ResourcePath left, ResourcePath right)
     {
         if (right.IsSelf)
@@ -231,19 +231,21 @@ public readonly struct ResourcePath
         if (right.Rooted)
             return right;
 
-        if (left.Path == string.Empty)
-            return new ResourcePath($"/{right.Path}");
+        if (left.IsEmpty)
+            return new ResourcePath($"/{right.Value}");
 
-        return left.Path.EndsWith(Separator)
-            ? new ResourcePath(left.Path + right.Path)
-            : new ResourcePath(left.Path + Separator + right.Path);
+        return left.Value.EndsWith(Separator)
+            ? new ResourcePath(left.Value + right.Value)
+            : new ResourcePath(left.Value + Separator + right.Value);
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(ResourcePath left, ResourcePath right)
     {
         return left.Equals(right);
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(ResourcePath left, ResourcePath right)
     {
         return !left.Equals(right);
