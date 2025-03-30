@@ -28,8 +28,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)../libs/**" Link="%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-        <None Include="$(SolutionDir)../resources/**" Link="resources/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <None Include="$(SolutionDir)libs/**" Link="%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <None Include="$(SolutionDir)resources/**" Link="resources/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
     
     <ItemGroup>

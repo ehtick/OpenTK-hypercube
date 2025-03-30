@@ -1,12 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Core", "Hypercube.Core\Hypercube.Core.csproj", "{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Core", "src\Hypercube.Core\Hypercube.Core.csproj", "{AE394ECD-C2C9-4498-B81D-1123AA84CCAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Graphics", "Hypercube.Graphics\Hypercube.Graphics.csproj", "{35E973E0-51C3-4398-906A-17D5D08E3589}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Graphics", "src\Hypercube.Graphics\Hypercube.Graphics.csproj", "{35E973E0-51C3-4398-906A-17D5D08E3589}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Resources", "Hypercube.Resources\Hypercube.Resources.csproj", "{564D7290-9873-4403-AFFF-F6DB29EE93AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Resources", "src\Hypercube.Resources\Hypercube.Resources.csproj", "{564D7290-9873-4403-AFFF-F6DB29EE93AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Analyzers", "Hypercube.Analyzers\Hypercube.Analyzers.csproj", "{2BF48A85-480F-4341-9407-BA9D974F7E37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Analyzers", "src\Hypercube.Analyzers\Hypercube.Analyzers.csproj", "{2BF48A85-480F-4341-9407-BA9D974F7E37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
