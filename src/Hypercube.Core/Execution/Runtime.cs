@@ -4,9 +4,11 @@ using Hypercube.Core.Ecs.Core.Systems;
 using Hypercube.Core.Execution.Attributes;
 using Hypercube.Core.Execution.Enums;
 using Hypercube.Core.Utilities.Helpers;
+using Hypercube.Graphics;
 using Hypercube.Graphics.Rendering;
+using Hypercube.Graphics.Rendering.Manager;
 using Hypercube.Graphics.Windowing.Settings;
-using Hypercube.Resources.Loader;
+using Hypercube.Resources;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
@@ -22,8 +24,9 @@ public sealed class Runtime
     [Dependency] private readonly IConfigManager _configManager = default!;
     [Dependency] private readonly IEntitySystemManager _entitySystemManager = default!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
-    [Dependency] private readonly IResourceLoader _resourceLoader = default!;
+    [Dependency] private readonly IResourceManager _resourceManager = default!;
     [Dependency] private readonly IRenderer _renderer = default!;
+    [Dependency] private readonly IRenderManager _renderrManager = default!;
 
     private readonly ILogger _logger = new ConsoleLogger();
     private readonly Dictionary<EntryPointLevel, List<MethodInfo>> _entryPoints = [];
@@ -46,11 +49,8 @@ public sealed class Runtime
 
         EntryPointsLoad();
         EntryPointsExecute(EntryPointLevel.BeforeInit);
-
-        foreach (var (file, prefix) in Config.MountFolders.Value)
-        {
-            _resourceLoader.MountContentFolder(file, prefix);
-        }
+        
+        _resourceManager.Mount(Config.MountFolders);
         
         _logger.Info("The entry points are called!");
         _logger.Info("Initialization of internal modules...");
@@ -82,7 +82,15 @@ public sealed class Runtime
             TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
         });
         
+        _resourceManager.AddLoader<Texture>(new TextureResourceLoader());
+        _resourceManager.AddLoader<Shader>(new ShaderResourceLoader(_renderrManager));
+        
         _renderer.Load();
+
+        //var context = _resourceManager.CreatePreloadContext();
+        //context.AddDirectory<Texture>("resources/textures");
+        //context.AddDirectory<Shader>("/resources/shaders/");
+        //context.ExecuteAsync().Wait();
         
         _logger.Info("Preparation is complete, start the main application cycle");
         EntryPointsExecute(EntryPointLevel.AfterInit);
