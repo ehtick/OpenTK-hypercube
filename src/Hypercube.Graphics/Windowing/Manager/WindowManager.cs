@@ -1,15 +1,19 @@
 ﻿using Hypercube.Core.Analyzers;
 using Hypercube.Graphics.Windowing.Api;
 using Hypercube.Graphics.Windowing.Settings;
+using Hypercube.Mathematics.Vectors;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
+using JetBrains.Annotations;
 
 namespace Hypercube.Graphics.Windowing.Manager;
 
-[EngineInternal]
+[EngineInternal, UsedImplicitly]
 public class WindowManager : IWindowManager
 {
     [Dependency] private readonly ILogger _logger = default!;
+
+    public event Action<Vector2i>? OnMainWindowResized;
     
     private IWindowingApi _windowApi = default!;
 
@@ -23,6 +27,11 @@ public class WindowManager : IWindowManager
         _windowApi.OnError += OnError;
         
         _windowApi.Init(settings);
+
+        _windowApi.OnWindowSize += (window, size) =>
+        {
+            OnMainWindowResized?.Invoke(size);
+        };
         
         _windowApi.OnWindowPosition += (window, position) =>
         {

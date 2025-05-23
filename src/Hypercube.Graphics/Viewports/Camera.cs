@@ -1,9 +1,11 @@
 ﻿using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Quaternions;
 using Hypercube.Mathematics.Vectors;
+using JetBrains.Annotations;
 
 namespace Hypercube.Graphics.Viewports;
 
+[PublicAPI]
 public class Camera : ICamera
 {
     public static Camera Default => new (DefaultSize, DefaultZNear, DefaultZFar, Vector3.One);
