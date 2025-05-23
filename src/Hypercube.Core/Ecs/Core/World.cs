@@ -17,7 +17,7 @@ public sealed class World : IWorld
     /// <inheritdoc/>
     public int Id { get; }
     
-    private readonly Dictionary<Type, object> _componentPools = [];
+    private readonly Dictionary<Type, IComponentMapper> _componentPools = [];
     private readonly Dictionary<Type, IEntitySystem> _systems = [];
 
     private readonly DependenciesContainer _container;
@@ -76,6 +76,16 @@ public sealed class World : IWorld
     {
         var component = InstantiateComponent<T>();
         var result =  GetComponentMapper<T>().Set(entity.Id, component);
+        var ev = new AddedEvent();
+        
+        _eventBus.Raise(entity, component, ref ev);
+        return result;
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool AddComponent(Entity entity, Component component)
+    {
+        var result = _componentPools[component.GetType()].Set(entity.Id, component);
         var ev = new AddedEvent();
         
         _eventBus.Raise(entity, component, ref ev);

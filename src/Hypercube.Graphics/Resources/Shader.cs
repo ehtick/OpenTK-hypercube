@@ -4,7 +4,7 @@ using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Vectors;
 using Hypercube.Resources.Loaders;
 
-namespace Hypercube.Graphics;
+namespace Hypercube.Graphics.Resources;
 
 /// <remarks>
 /// This class acts as a wrapper around an underlying <see cref="IShaderProgram"/> implementation.

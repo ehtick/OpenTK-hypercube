@@ -34,9 +34,5 @@
     <ItemGroup>
         <Compile Include="..\Hypercube.Core\Analyzers\*" LinkBase="Analyzers" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Resources\" />
-    </ItemGroup>
     
 </Project>

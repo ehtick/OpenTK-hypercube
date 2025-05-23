@@ -30,13 +30,13 @@ public sealed class ComponentMapper<TComponent> : IComponentMapper
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set => Set(entity, in value);
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Has(int entity)
     {
         return entity < _mapping.Length && _mapping[entity] != DefaultEntity;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Set(int entity, in TComponent component)
     {
@@ -60,7 +60,14 @@ public sealed class ComponentMapper<TComponent> : IComponentMapper
         
         return isNew;
     }
-    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Set(int entity, in IComponent component)
+    {
+        var casted = (TComponent) component;
+        return Set(entity, in casted);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Remove(int entity)
     {

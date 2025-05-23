@@ -5,7 +5,7 @@ using Hypercube.Resources.FileSystems;
 using Hypercube.Resources.Loaders;
 using StbImageSharp;
 
-namespace Hypercube.Graphics;
+namespace Hypercube.Graphics.Resources;
 
 public sealed class TextureResourceLoader : ResourceLoader<Texture>
 {
@@ -23,6 +23,6 @@ public sealed class TextureResourceLoader : ResourceLoader<Texture>
     {
         using var stream = fileSystem.OpenRead(path);
         var result = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-        return new Texture(new Vector2i(result.Width, result.Height), result.Data, Box2.UV);
+        return new Texture(new Vector2i(result.Width, result.Height), result.Data, (int) ColorComponents.RedGreenBlueAlpha, Box2.UV);
     }
 }

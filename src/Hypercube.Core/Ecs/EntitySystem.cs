@@ -2,6 +2,8 @@
 using Hypercube.Core.Ecs.Core;
 using Hypercube.Core.Ecs.Core.Events;
 using Hypercube.Core.Ecs.Core.Query;
+using Hypercube.Core.Ecs.Events;
+using Hypercube.Core.Systems.Rendering;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using JetBrains.Annotations;
@@ -21,7 +23,7 @@ public abstract class EntitySystem : IEntitySystem
     public World World { get; private set; } = default!;
 
     protected EntityQueryBuilder EntityQueryBuilder => World.EntityQueryBuilder;
-    
+
     /// <inheritdoc/>
     public virtual void Startup()
     {

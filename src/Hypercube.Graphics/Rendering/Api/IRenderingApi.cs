@@ -53,4 +53,7 @@ public interface IRenderingApi
     /// A compiled and linked shader program ready for rendering
     /// </returns>
     IShaderProgram CreateShaderProgram(string source);
+    
+    uint CreateTexture(int width, int height, int channels, byte[] data);
+    void DeleteTexture(uint handle);
 }

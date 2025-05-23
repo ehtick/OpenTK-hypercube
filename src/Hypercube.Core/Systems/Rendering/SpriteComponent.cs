@@ -1,6 +1,7 @@
 ﻿using Hypercube.Core.Ecs;
 using Hypercube.Core.Ecs.Attributes;
 using Hypercube.Graphics;
+using Hypercube.Graphics.Resources;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Vectors;
 using Hypercube.Resources;

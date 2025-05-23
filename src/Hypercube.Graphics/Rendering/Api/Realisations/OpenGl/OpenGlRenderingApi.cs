@@ -10,7 +10,9 @@ using Hypercube.Graphics.Windowing;
 using Hypercube.Resources;
 using Hypercube.Utilities.Dependencies;
 using Silk.NET.OpenGL;
+using Shader = Hypercube.Graphics.Resources.Shader;
 using ShaderType = Hypercube.Graphics.Rendering.Shaders.ShaderType;
+using Texture = Hypercube.Graphics.Resources.Texture;
 
 namespace Hypercube.Graphics.Rendering.Api.Realisations.OpenGl;
 
@@ -56,6 +58,47 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         set => _gl = value;
     }
 
+    public override unsafe uint CreateTexture(int width, int height, int channels, byte[] data)
+    {
+        var handle = Gl.GenTexture();
+        Gl.BindTexture(TextureTarget.Texture2D, handle);
+
+        var internalFormat = channels switch
+        {
+            1 => InternalFormat.R8,
+            2 => InternalFormat.RG8,
+            3 => InternalFormat.Rgb8,
+            4 => InternalFormat.Rgba8,
+            _ => throw new ArgumentException($"Unsupported channel count: {channels}")
+        };
+
+        var format = channels switch
+        {
+            1 => PixelFormat.Red,
+            2 => PixelFormat.RG,
+            3 => PixelFormat.Rgb,
+            4 => PixelFormat.Rgba,
+            _ => throw new ArgumentException($"Unsupported channel count: {channels}")
+        };
+        
+        fixed (byte* dataPointer = data)
+            Gl.TexImage2D(TextureTarget.Texture2D, 0, (int) internalFormat, (uint) width, (uint) height, 0, format, PixelType.UnsignedByte, dataPointer);
+        
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Linear);
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.ClampToEdge);
+        
+        Gl.BindTexture(TextureTarget.Texture2D, 0);
+        
+        return handle;
+    }
+
+    public override void DeleteTexture(uint handle)
+    {
+        Gl.DeleteTexture(handle);
+    }
+
     protected override bool InternalInit(IContextInfo contextInfo)
     {
         Gl = GL.GetApi(contextInfo.GetProcAddress);
@@ -99,6 +142,9 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
     {
         PrimitiveShaderProgram = _resource.Get<Shader>("/shaders/base_primitive.shd");
         TexturingShaderProgram = _resource.Get<Shader>("/shaders/base_texturing.shd");
+                
+        foreach (var texture in _resource.GetAll<Texture>())
+            texture.GpuBind(this);
     }
 
     protected override void InternalTerminate()

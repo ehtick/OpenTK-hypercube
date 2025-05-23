@@ -4,6 +4,9 @@ namespace Hypercube.Graphics.Rendering.Api;
 
 public abstract partial class BaseRenderingApi
 {
+    public abstract uint CreateTexture(int width, int height, int channels, byte[] data);
+    public abstract void DeleteTexture(uint handle);
+    
     protected abstract string InternalInfo { get; }
     
     protected abstract bool InternalInit(IContextInfo contextInfo);

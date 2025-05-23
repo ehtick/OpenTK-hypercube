@@ -9,7 +9,11 @@ public interface IImage
     Vector2i Size { get; }
     ReadOnlyCollection<byte> Data { get; }
     Box2 UV { get; }
+    int Channels { get; }
 
     int Width => Size.X;
     int Height => Size.Y;
+    
+    ReadOnlySpan<byte> GetPixel(Vector2i position);
+    ReadOnlySpan<byte> GetPixel(int x, int y);
 }

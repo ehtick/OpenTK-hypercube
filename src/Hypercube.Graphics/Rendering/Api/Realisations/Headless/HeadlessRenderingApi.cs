@@ -61,7 +61,16 @@ public sealed class HeadlessRenderingApi : IRenderingApi
     {
         return new ShaderProgram();
     }
-    
+
+    public uint CreateTexture(int width, int height, int channels, byte[] data)
+    {
+        return 0;
+    }
+
+    public void DeleteTexture(uint handle)
+    {
+    }
+
     private sealed class ShaderProgram : BaseShaderProgram
     {
         public ShaderProgram() : base(0)

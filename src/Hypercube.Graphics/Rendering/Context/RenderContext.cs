@@ -1,6 +1,7 @@
 ﻿using Hypercube.Core.Analyzers;
 using Hypercube.Graphics.Rendering.Api;
 using Hypercube.Graphics.Rendering.Batching;
+using Hypercube.Graphics.Resources;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Shapes;
@@ -22,10 +23,12 @@ public sealed class RenderContext : IRenderContext
 
     public void DrawTexture(Texture texture, Vector2 position, Color color)
     {
-        if (_renderingApi.PrimitiveShaderProgram is null)
+        if (_renderingApi.TexturingShaderProgram is null)
             throw new Exception();
 
         var box = new Box2(position, texture.Size);
+        
+        _renderingApi.EnsureBatch(PrimitiveTopology.TriangleList, _renderingApi.TexturingShaderProgram.Handle, texture.Gpu?.Handle);
         AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, Matrix4x4.Identity.Transform(box), Box2.UV, color);
     }
     

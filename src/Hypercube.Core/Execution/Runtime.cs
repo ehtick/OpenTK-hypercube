@@ -7,6 +7,7 @@ using Hypercube.Core.Utilities.Helpers;
 using Hypercube.Graphics;
 using Hypercube.Graphics.Rendering;
 using Hypercube.Graphics.Rendering.Manager;
+using Hypercube.Graphics.Resources;
 using Hypercube.Graphics.Windowing.Settings;
 using Hypercube.Resources;
 using Hypercube.Utilities.Configuration;

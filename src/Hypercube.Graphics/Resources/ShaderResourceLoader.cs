@@ -3,7 +3,7 @@ using Hypercube.Resources;
 using Hypercube.Resources.FileSystems;
 using Hypercube.Resources.Loaders;
 
-namespace Hypercube.Graphics;
+namespace Hypercube.Graphics.Resources;
 
 public sealed class ShaderResourceLoader : ResourceLoader<Shader>
 {

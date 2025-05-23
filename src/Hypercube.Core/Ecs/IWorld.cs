@@ -51,7 +51,9 @@ public interface IWorld
     /// <param name="entity">The entity to add the component to.</param>
     /// <returns>True if the component was added successfully, otherwise false.</returns>
     bool AddComponent<T>(Entity entity) where T : IComponent;
-
+    
+    bool AddComponent(Entity entity, Component component);
+    
     /// <summary>
     /// Removes a component of type <typeparamref name="T"/> from the specified entity.
     /// </summary>

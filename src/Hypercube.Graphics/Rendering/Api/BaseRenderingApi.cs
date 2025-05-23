@@ -107,7 +107,7 @@ public abstract partial class BaseRenderingApi : IRenderingApi
         
         return InternalCreateShaderProgram(shaders);
     }
-
+    
     protected void Clear()
     {
         // TODO: optimize

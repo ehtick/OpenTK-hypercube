@@ -76,6 +76,15 @@ public sealed class ResourceManager : IResourceManager, IDisposable
         return Load<T>(path);
     }
 
+    public IEnumerable<T> GetAll<T>() where T : Resource
+    {
+        foreach (var resource in _cache.Values)
+        {
+            if (resource is T typedResource)
+                yield return typedResource;
+        }
+    }
+    
     public bool HasCache<T>(ResourcePath path) where T : Resource
     {
         return _cache.ContainsKey(path);

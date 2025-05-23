@@ -13,6 +13,7 @@ public interface IResourceManager
     bool HasLoader<T>() where T : Resource;
     void RemoveLoader<T>() where T : Resource;
     T Get<T>(ResourcePath path) where T : Resource;
+    IEnumerable<T> GetAll<T>() where T : Resource;
     bool HasCache<T>(ResourcePath path) where T : Resource;
     T Load<T>(ResourcePath path) where T : Resource;
     Resource Load(ResourcePath path, Type type);
