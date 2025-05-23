@@ -13,7 +13,7 @@ public sealed class Texture : Resource, IImage
     public Vector2i Size { get; }
     public Box2 UV { get; }
     public int Channels { get; }
-    public GpuTexture? Gpu { get; private set; }
+    public IGpuTexture? Gpu { get; private set; }
 
     private readonly byte[] _data;
 

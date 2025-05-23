@@ -84,8 +84,8 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         fixed (byte* dataPointer = data)
             Gl.TexImage2D(TextureTarget.Texture2D, 0, (int) internalFormat, (uint) width, (uint) height, 0, format, PixelType.UnsignedByte, dataPointer);
         
-        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Linear);
-        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Nearest);
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Nearest);
         Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
         Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.ClampToEdge);
         
@@ -143,7 +143,10 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         PrimitiveShaderProgram = _resource.Get<Shader>("/shaders/base_primitive.shd");
         TexturingShaderProgram = _resource.Get<Shader>("/shaders/base_texturing.shd");
                 
-        foreach (var texture in _resource.GetAll<Texture>())
+        // Okay, we don't fucking upload to the cache
+        _ = _resource.Get<Texture>("/textures/default.png");
+        
+        foreach (var texture in _resource.GetAllCached<Texture>())
             texture.GpuBind(this);
     }
 

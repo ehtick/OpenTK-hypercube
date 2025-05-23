@@ -76,7 +76,7 @@ public sealed class ResourceManager : IResourceManager, IDisposable
         return Load<T>(path);
     }
 
-    public IEnumerable<T> GetAll<T>() where T : Resource
+    public IEnumerable<T> GetAllCached<T>() where T : Resource
     {
         foreach (var resource in _cache.Values)
         {
