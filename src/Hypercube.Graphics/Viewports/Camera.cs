@@ -6,6 +6,8 @@ namespace Hypercube.Graphics.Viewports;
 
 public class Camera : ICamera
 {
+    public static Camera Default => new (DefaultSize, DefaultZNear, DefaultZFar, Vector3.One);
+    
     public static readonly Vector2i DefaultSize = new(640, 320);
     public const float DefaultZNear = 0.1f;
     public const float DefaultZFar = 100f;
@@ -61,11 +63,12 @@ public class Camera : ICamera
     private Quaternion _rotation;
     private Vector3 _scale = new(32, 32, 1);
 
-    public Camera(Vector2i size, float zNear, float zFar)
+    public Camera(Vector2i size, float zNear, float zFar, Vector3 scale)
     {
         Size = size;
         ZNear = zNear;
         ZFar = zFar;
+        Scale = scale;
         
         UpdateProjection();
         UpdateView();
