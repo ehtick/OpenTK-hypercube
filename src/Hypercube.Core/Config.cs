@@ -22,6 +22,7 @@ public static class Config
             { "resources/textures", "/textures/" },
             { "resources/shaders", "/shaders/" },
             { "resources/fonts", "/fonts/" },
+            { "resources/models", "/models/" },
         });
     
     /** 
