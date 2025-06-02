@@ -16,7 +16,7 @@ public class Image : IImage
     public ReadOnlyCollection<byte> Data => Array.AsReadOnly(_data);
     public int Width => Size.X;
     public int Height => Size.Y;
-    public Box2 UV => Box2.UV;
+    public Rect2 UV => Rect2.UV;
 
     public Image(byte[] data, int width, int height, int channels)
     {

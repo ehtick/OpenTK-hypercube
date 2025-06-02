@@ -41,7 +41,7 @@ public sealed class RenderContext : IRenderContext
             
             var uv = vt >= 0 && vt < model.UVs.Length ? model.UVs[vt] : Vector2.Zero;;
             var normal = vn >= 0 && vn < model.Normals.Length
-                ? TransformNormal(model.Normals[vn], matrix).Normalized
+                ? matrix.Transform(model.Normals[vn]).Normalized
                 : Vector3.UnitZ;
     
             _renderingApi.PushVertex(new Vertex(pos, uv, color, normal));
@@ -88,13 +88,13 @@ public sealed class RenderContext : IRenderContext
             );
 
             // Glyph square in local coordinates
-            var quad = new Box2(
+            var quad = new Rect2(
                 new Vector2(glyphPosition.X, glyphPosition.Y + glyphSize.Y),
                 new Vector2(glyphPosition.X + glyphSize.X, glyphPosition.Y)
             );
             
             var textureSize = font.Texture.Size; 
-            var uv = new Box2(
+            var uv = new Rect2(
                 new Vector2(glyph.SourceRect.TopLeft.X / textureSize.X, glyph.SourceRect.TopLeft.Y / textureSize.Y),
                 new Vector2(glyph.SourceRect.BottomRight.X / textureSize.X, glyph.SourceRect.BottomRight.Y / textureSize.Y)
             );
@@ -112,41 +112,33 @@ public sealed class RenderContext : IRenderContext
         if (_renderingApi.TexturingShaderProgram is null)
             throw new Exception();
 
-        var box = new Box2(-texture.Size / 2, texture.Size / 2);
-        var quad =
-            Matrix4x4.CreateScale(new Vector3(scale.X, scale.Y, 1.0f)) *
-            Matrix4x4.CreateRotationZ((float)rotation) *
-            Matrix4x4.CreateTranslation(new Vector3(position, 0));
+        var halfSize = texture.Size / 2;
+        var rect = new Rect4(
+            new Vector2(-halfSize.X, -halfSize.Y),
+            new Vector2(halfSize.X, -halfSize.Y),
+            new Vector2(halfSize.X, halfSize.Y),
+            new Vector2(-halfSize.X, halfSize.Y)
+        );
+        
+        var matrix =
+            Matrix4x4.CreateScale(scale) *
+            Matrix4x4.CreateRotationZ((float) rotation) *
+            Matrix4x4.CreateTranslation(position);
         
         _renderingApi.EnsureBatch(PrimitiveTopology.TriangleList, _renderingApi.TexturingShaderProgram.Handle, texture.Gpu?.Handle);
-        AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, quad.Transform(box), Box2.UV, color);
+        AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, matrix.Transform(rect), Rect2.UV, color);
     }
     
-    public void DrawRectangle(Box2 box, Color color, bool outline = false)
+    public void DrawRectangle(Rect2 box, Color color, bool outline = false)
     {
         if (_renderingApi.PrimitiveShaderProgram is null)
             throw new Exception();
         
         _renderingApi.EnsureBatch(outline ? PrimitiveTopology.LineList : PrimitiveTopology.TriangleList, _renderingApi.PrimitiveShaderProgram.Handle, null);
-        AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, Matrix4x4.Identity.Transform(box), Box2.UV, color);
-    }
-    
-    private void AddQuadTriangleBatch(int start, Box2 quad, Box2 uv, Color color)
-    {
-        _renderingApi.PushVertex(new Vertex(quad.TopRight, uv.TopRight, color));
-        _renderingApi.PushVertex(new Vertex(quad.BottomRight, uv.BottomRight, color));
-        _renderingApi.PushVertex(new Vertex(quad.BottomLeft, uv.BottomLeft, color));
-        _renderingApi.PushVertex(new Vertex(quad.TopLeft, uv.TopLeft, color));
-        
-        _renderingApi.PushIndex(start, 0);
-        _renderingApi.PushIndex(start, 1);
-        _renderingApi.PushIndex(start, 3);
-        _renderingApi.PushIndex(start, 1);
-        _renderingApi.PushIndex(start, 2);
-        _renderingApi.PushIndex(start, 3);
+        AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, Matrix4x4.Identity.Transform(box), Rect2.UV, color);
     }
 
-    public void AddLineBatch(int start, Box2 box2, Color color)
+    public void AddLineBatch(int start, Rect2 box2, Color color)
     {
         _renderingApi.PushVertex(new Vertex(box2.TopRight, Vector2.Zero, color));
         _renderingApi.PushVertex(new Vertex(box2.BottomLeft, Vector2.Zero, color));
@@ -159,13 +151,34 @@ public sealed class RenderContext : IRenderContext
         _renderingApi.PushVertex(new Vertex(point, Vector2.Zero, color));
         _renderingApi.PushIndex(start, 0);
     }
-    
-    private static Vector3 TransformNormal(Vector3 n, Matrix4x4 m)
+
+    private void AddQuadTriangleBatch(int start, Rect4 rect, Rect2 uv, Color color)
     {
-        return new Vector3(
-            n.X * m.M11 + n.Y * m.M21 + n.Z * m.M31,
-            n.X * m.M12 + n.Y * m.M22 + n.Z * m.M32,
-            n.X * m.M13 + n.Y * m.M23 + n.Z * m.M33
-        );
+        _renderingApi.PushVertex(new Vertex(rect.Point0, uv.TopLeft, color));
+        _renderingApi.PushVertex(new Vertex(rect.Point1, uv.TopRight, color));
+        _renderingApi.PushVertex(new Vertex(rect.Point2, uv.BottomRight, color));
+        _renderingApi.PushVertex(new Vertex(rect.Point3, uv.BottomLeft, color));
+        
+        _renderingApi.PushIndex(start, 0);
+        _renderingApi.PushIndex(start, 1);
+        _renderingApi.PushIndex(start, 3);
+        _renderingApi.PushIndex(start, 1);
+        _renderingApi.PushIndex(start, 2);
+        _renderingApi.PushIndex(start, 3);
+    }
+
+    private void AddQuadTriangleBatch(int start, Rect2 rect, Rect2 uv, Color color)
+    {
+        _renderingApi.PushVertex(new Vertex(rect.TopRight, uv.TopRight, color));
+        _renderingApi.PushVertex(new Vertex(rect.BottomRight, uv.BottomRight, color));
+        _renderingApi.PushVertex(new Vertex(rect.BottomLeft, uv.BottomLeft, color));
+        _renderingApi.PushVertex(new Vertex(rect.TopLeft, uv.TopLeft, color));
+        
+        _renderingApi.PushIndex(start, 0);
+        _renderingApi.PushIndex(start, 1);
+        _renderingApi.PushIndex(start, 3);
+        _renderingApi.PushIndex(start, 1);
+        _renderingApi.PushIndex(start, 2);
+        _renderingApi.PushIndex(start, 3);
     }
 }

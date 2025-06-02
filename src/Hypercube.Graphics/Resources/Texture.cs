@@ -11,7 +11,7 @@ namespace Hypercube.Graphics.Resources;
 public sealed class Texture : Resource, IImage
 {
     public Vector2i Size { get; }
-    public Box2 UV { get; }
+    public Rect2 UV { get; }
     public int Channels { get; }
     public IGpuTexture? Gpu { get; private set; }
 
@@ -19,7 +19,7 @@ public sealed class Texture : Resource, IImage
 
     public ReadOnlyCollection<byte> Data => _data.AsReadOnly();
     
-    public Texture(Vector2i size, byte[] data, int channels, Box2 uv)
+    public Texture(Vector2i size, byte[] data, int channels, Rect2 uv)
     {
         _data = data;
         

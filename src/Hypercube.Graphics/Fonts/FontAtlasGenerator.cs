@@ -78,7 +78,7 @@ public class FontAtlasGenerator
             glyphs.Add(c, new Glyph
             {
                 Character = c,
-                SourceRect = new Box2(x, y, x + width, y + height),
+                SourceRect = new Rect2(x, y, x + width, y + height),
                 Offset = new Vector2(xOffset, baseline - yOffset),
                 Advance = advanceWidth * scale
             });

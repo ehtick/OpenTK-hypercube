@@ -8,7 +8,7 @@ public interface IImage
 {
     Vector2i Size { get; }
     ReadOnlyCollection<byte> Data { get; }
-    Box2 UV { get; }
+    Rect2 UV { get; }
     int Channels { get; }
 
     int Width => Size.X;

@@ -23,6 +23,6 @@ public sealed class TextureResourceLoader : ResourceLoader<Texture>
     {
         using var stream = fileSystem.OpenRead(path);
         var result = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-        return new Texture(new Vector2i(result.Width, result.Height), result.Data, (int) ColorComponents.RedGreenBlueAlpha, Box2.UV);
+        return new Texture(new Vector2i(result.Width, result.Height), result.Data, (int) ColorComponents.RedGreenBlueAlpha, Rect2.UV);
     }
 }

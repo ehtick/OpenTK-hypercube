@@ -29,7 +29,7 @@ public class FontResourceLoader : ResourceLoader<Font>
         
         var fontStream = FontAtlasGenerator.Generate(fontData, out var glyphs, size);
         var result = ImageResult.FromStream(fontStream, ColorComponents.RedGreenBlueAlpha);
-        var texture = new Texture(new Vector2i(result.Width, result.Height), result.Data, (int) ColorComponents.RedGreenBlueAlpha, Box2.UV);
+        var texture = new Texture(new Vector2i(result.Width, result.Height), result.Data, (int) ColorComponents.RedGreenBlueAlpha, Rect2.UV);
         
         return new Font(texture, glyphs, size);
     }
