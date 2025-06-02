@@ -37,6 +37,9 @@ public interface IRenderContext
     /// <param name="color">The color to use for the rectangle.</param>
     /// <param name="outline">Whether to draw only the outline (true) or fill the rectangle (false).</param>
     void DrawRectangle(Rect2 box, Color color, bool outline = false);
+
+    void DrawLine(Vector2 start, Vector2 end, Color color, float thickness = 1f);
+    void DrawCircle(Vector2 center, float radius, Color color, int segments = 32);
     
     /// <summary>
     /// Draws a texture on the screen with specified transformations.
@@ -47,8 +50,4 @@ public interface IRenderContext
     /// <param name="scale">The scale to apply to the texture.</param>
     /// <param name="color">The color tint to apply to the texture.</param>
     void DrawTexture(Texture texture, Vector2 position, Angle rotation, Vector2 scale, Color color);
-
-    void AddLineBatch(int start, Rect2 box2, Color color);
-    
-    void AddPointBatch(int start, Vector2 point, Color color);
 }

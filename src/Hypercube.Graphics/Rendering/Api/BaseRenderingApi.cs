@@ -25,10 +25,12 @@ public abstract partial class BaseRenderingApi : IRenderingApi
     protected Vertex[] BatchVertices = [];
     protected uint[] BatchIndices = [];
 
-    private int _bacthCount;
+    private int _batchCount;
+    private int _verticesCount;
     private BatchData? _currentBatchData;
 
-    public int BatchCount => _bacthCount;
+    public int BatchCount => _batchCount;
+    public int VerticesCount => _verticesCount;
     
     public void Init(IContextInfo context, RenderingApiSettings settings)
     {
@@ -113,7 +115,8 @@ public abstract partial class BaseRenderingApi : IRenderingApi
 
     protected void UpdateBatchCount()
     {
-        _bacthCount = Batches.Count;
+        _batchCount = Batches.Count;
+        _verticesCount = BatchVerticesIndex;
     }
     
     protected void Clear()

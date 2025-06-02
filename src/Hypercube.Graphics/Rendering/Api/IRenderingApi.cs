@@ -21,6 +21,7 @@ public interface IRenderingApi
     int BatchVerticesIndex { get; }
     int BatchIndicesIndex { get; }
     int BatchCount { get; }
+    int VerticesCount { get; }
     
     void Init(IContextInfo context, RenderingApiSettings settings);
     void Load();

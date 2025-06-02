@@ -137,8 +137,58 @@ public sealed class RenderContext : IRenderContext
         _renderingApi.EnsureBatch(outline ? PrimitiveTopology.LineList : PrimitiveTopology.TriangleList, _renderingApi.PrimitiveShaderProgram.Handle, null);
         AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, Matrix4x4.Identity.Transform(box), Rect2.UV, color);
     }
+    
+    public void DrawLine(Vector2 start, Vector2 end, Color color, float thickness = 1f)
+    {
+        if (_renderingApi.PrimitiveShaderProgram is null)
+            throw new InvalidOperationException("Primitive shader program is not initialized");
 
-    public void AddLineBatch(int start, Rect2 box2, Color color)
+        var direction = (end - start).Normalized;
+        var normal = new Vector2(-direction.Y, direction.X) * thickness / 2f;
+
+        _renderingApi.EnsureBatch(PrimitiveTopology.TriangleList, _renderingApi.PrimitiveShaderProgram.Handle, null);
+
+        var startIndex = _renderingApi.BatchVerticesIndex;
+        
+        _renderingApi.PushVertex(new Vertex(start - normal, Vector2.Zero, color));
+        _renderingApi.PushVertex(new Vertex(start + normal, Vector2.Zero, color));
+        _renderingApi.PushVertex(new Vertex(end - normal, Vector2.Zero, color));
+        _renderingApi.PushVertex(new Vertex(end + normal, Vector2.Zero, color));
+        
+        _renderingApi.PushIndex(startIndex, 0);
+        _renderingApi.PushIndex(startIndex, 1);
+        _renderingApi.PushIndex(startIndex, 2);
+        _renderingApi.PushIndex(startIndex, 1);
+        _renderingApi.PushIndex(startIndex, 3);
+        _renderingApi.PushIndex(startIndex, 2);
+    }
+
+    public void DrawCircle(Vector2 center, float radius, Color color, int segments = 32)
+    {
+        if (_renderingApi.PrimitiveShaderProgram is null)
+            throw new InvalidOperationException("Primitive shader program is not initialized");
+
+        _renderingApi.EnsureBatch(PrimitiveTopology.TriangleList, _renderingApi.PrimitiveShaderProgram.Handle, null);
+
+        var startIndex = _renderingApi.BatchVerticesIndex;
+        _renderingApi.PushVertex(new Vertex(center, Vector2.Zero, color));
+        
+        for (var i = 0; i <= segments; i++)
+        {
+            var angle = (float)i / segments * MathF.PI * 2;
+            var point = center + new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * radius;
+            _renderingApi.PushVertex(new Vertex(point, Vector2.Zero, color));
+        }
+        
+        for (var i = 1; i <= segments; i++)
+        {
+            _renderingApi.PushIndex(startIndex, 0);
+            _renderingApi.PushIndex(startIndex, i);
+            _renderingApi.PushIndex(startIndex, i % segments + 1);
+        }
+    }
+
+    private void AddLineBatch(int start, Rect2 box2, Color color)
     {
         _renderingApi.PushVertex(new Vertex(box2.TopRight, Vector2.Zero, color));
         _renderingApi.PushVertex(new Vertex(box2.BottomLeft, Vector2.Zero, color));
@@ -146,7 +196,7 @@ public sealed class RenderContext : IRenderContext
         _renderingApi.PushIndex(start, 1);
     }
     
-    public void AddPointBatch(int start, Vector2 point, Color color)
+    private void AddPointBatch(int start, Vector2 point, Color color)
     {
         _renderingApi.PushVertex(new Vertex(point, Vector2.Zero, color));
         _renderingApi.PushIndex(start, 0);

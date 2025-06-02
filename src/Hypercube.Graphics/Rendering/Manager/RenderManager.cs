@@ -33,6 +33,7 @@ public sealed class RenderManager : IRenderManager, IRenderManagerInternal
     }
 
     public int BatchCount => Api.BatchCount;
+    public int VerticesCount => Api.VerticesCount;
 
     public void Init(IContextInfo context, RenderingApiSettings settings)
     {
