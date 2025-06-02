@@ -30,6 +30,7 @@ public sealed class Texture : Resource, IImage
 
     public void GpuBind(IRenderingApi api)
     {
+        Gpu?.Dispose();
         Gpu = new GpuTexture(api, Size.X, Size.Y, Channels, _data);
     }
     

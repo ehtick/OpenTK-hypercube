@@ -1,4 +1,5 @@
-﻿using Hypercube.Graphics.Rendering.Api;
+﻿using Hypercube.Core.Analyzers;
+using Hypercube.Graphics.Rendering.Api;
 using Hypercube.Graphics.Rendering.Api.Handlers;
 using Hypercube.Graphics.Rendering.Api.Settings;
 using Hypercube.Graphics.Rendering.Shaders;
@@ -9,6 +10,10 @@ namespace Hypercube.Graphics.Rendering.Manager;
 public interface IRenderManager
 {
     event DrawHandler? OnDraw;
+    
+    [EngineInternal]
+    IRenderingApi Api { get; }
+    int BatchCount { get; }
     
     void Init(IContextInfo context, RenderingApiSettings settings);
     void Load();

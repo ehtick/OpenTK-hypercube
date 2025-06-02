@@ -5,9 +5,11 @@ using Hypercube.Mathematics.Vectors;
 namespace Hypercube.Core.Systems.Physics;
 
 [RegisterComponent]
-public class PhysicsComponent : Component
+public sealed class PhysicsComponent : Component
 {
     public Vector2 LinearVelocity;
-   
     public float AngularVelocity;
+    public float Mass;
+    public float Friction;
+    public float Restitution;
 }

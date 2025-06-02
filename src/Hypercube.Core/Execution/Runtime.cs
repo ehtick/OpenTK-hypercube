@@ -56,8 +56,6 @@ public sealed class Runtime
         _logger.Info("The entry points are called!");
         _logger.Info("Initialization of internal modules...");
         
-        _entitySystemManager.CrateMainWorld();
-        
         _renderer.Init(new RendererSettings
         {
             Thread = WindowingThreadSettingsHelper.FromConfig(),
@@ -83,15 +81,11 @@ public sealed class Runtime
             TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
         });
         
-        _resourceManager.AddLoader<Texture>(new TextureResourceLoader());
-        _resourceManager.AddLoader<Shader>(new ShaderResourceLoader(_renderrManager));
+        _resourceManager.AddAllLoaders();
+        
+        _entitySystemManager.CrateMainWorld();
         
         _renderer.Load();
-
-        //var context = _resourceManager.CreatePreloadContext();
-        //context.AddDirectory<Texture>("resources/textures");
-        //context.AddDirectory<Shader>("/resources/shaders/");
-        //context.ExecuteAsync().Wait();
         
         _logger.Info("Preparation is complete, start the main application cycle");
         EntryPointsExecute(EntryPointLevel.AfterInit);

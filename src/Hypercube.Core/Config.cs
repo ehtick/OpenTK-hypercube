@@ -18,9 +18,10 @@ public static class Config
         {
             { ".", "/" },
             { "resources", "/" },
- //           { "resources/audio", "audio/" },
- //           { "resources/textures", "textures/" },
+ //         { "resources/audio", "audio/" },
+            { "resources/textures", "/textures/" },
             { "resources/shaders", "/shaders/" },
+            { "resources/fonts", "/fonts/" },
         });
     
     /** 

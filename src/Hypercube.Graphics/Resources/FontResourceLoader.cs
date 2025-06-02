@@ -1,6 +1,10 @@
-﻿using Hypercube.Resources;
+﻿using Hypercube.Graphics.Fonts;
+using Hypercube.Mathematics.Shapes;
+using Hypercube.Mathematics.Vectors;
+using Hypercube.Resources;
 using Hypercube.Resources.FileSystems;
 using Hypercube.Resources.Loaders;
+using StbImageSharp;
 
 namespace Hypercube.Graphics.Resources;
 
@@ -15,16 +19,18 @@ public class FontResourceLoader : ResourceLoader<Font>
 
     public override Font Load(ResourcePath path, IFileSystem fileSystem)
     {
+        const int size = 32;
+        
         var stream = fileSystem.OpenRead(path);
         using var memory = new MemoryStream();
         stream.CopyTo(memory);
         var fontData = memory.ToArray();
 
-        /*
-        var bitmap = FontAtlasGenerator.Generate(fontData, out var glyphs);
-        var texture = Texture2D.FromBitmap(bitmap);
-        return new FontTextureResource(texture, glyphs);
-        */
-        throw new NotImplementedException();
+        
+        var fontStream = FontAtlasGenerator.Generate(fontData, out var glyphs, size);
+        var result = ImageResult.FromStream(fontStream, ColorComponents.RedGreenBlueAlpha);
+        var texture = new Texture(new Vector2i(result.Width, result.Height), result.Data, (int) ColorComponents.RedGreenBlueAlpha, Box2.UV);
+        
+        return new Font(texture, glyphs, size);
     }
 }

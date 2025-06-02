@@ -12,7 +12,6 @@ using Hypercube.Utilities.Dependencies;
 using Silk.NET.OpenGL;
 using Shader = Hypercube.Graphics.Resources.Shader;
 using ShaderType = Hypercube.Graphics.Rendering.Shaders.ShaderType;
-using Texture = Hypercube.Graphics.Resources.Texture;
 
 namespace Hypercube.Graphics.Rendering.Api.Realisations.OpenGl;
 
@@ -131,6 +130,10 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         Gl.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, Vertex.Size * sizeof(float), 7 * sizeof(float));
         Gl.EnableVertexAttribArray(2);
         
+        // aNormal
+        Gl.VertexAttribPointer(3, 3, VertexAttribPointerType.Float, false, Vertex.Size * sizeof(float), 10 * sizeof(float));
+        Gl.EnableVertexAttribArray(3);
+        
         _vao.Unbind();
         _vbo.Unbind();
         _ebo.Unbind();
@@ -142,12 +145,6 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
     {
         PrimitiveShaderProgram = _resource.Get<Shader>("/shaders/base_primitive.shd");
         TexturingShaderProgram = _resource.Get<Shader>("/shaders/base_texturing.shd");
-                
-        // Okay, we don't fucking upload to the cache
-        _ = _resource.Get<Texture>("/textures/default.png");
-        
-        foreach (var texture in _resource.GetAllCached<Texture>())
-            texture.GpuBind(this);
     }
 
     protected override void InternalTerminate()
@@ -161,12 +158,13 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
     {
         Clear();
 
-        Gl.Viewport(0, 0, (uint) window.Size.X, (uint) window.Size.Y);
+        Gl.Viewport(window);
         Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         
         OnDraw?.Invoke();
 
         BreakCurrentBatch();
+        UpdateBatchCount();
 
         Gl.Enable(EnableCap.Blend);
         Gl.Disable(EnableCap.ScissorTest);

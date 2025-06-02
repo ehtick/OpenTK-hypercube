@@ -9,10 +9,7 @@ namespace Hypercube.Core.Systems.Transform;
 public sealed class TransformComponent : Component
 {
     public Entity? Parent;
-    
     public Vector2 LocalPosition;
-
     public Angle LocalRotation;
-
-    public Vector2 LocalScale;
+    public Vector2 LocalScale = Vector2.One;
 }

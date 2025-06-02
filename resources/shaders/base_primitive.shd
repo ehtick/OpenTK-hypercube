@@ -17,6 +17,7 @@ void main()
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec4 aColor;
 layout (location = 2) in vec2 aTexCoord;
+layout (location = 3) in vec2 aNormal;   // Doesn't make sense in the 2D context
 
 out vec4 Color;
 out vec2 TexCoord;

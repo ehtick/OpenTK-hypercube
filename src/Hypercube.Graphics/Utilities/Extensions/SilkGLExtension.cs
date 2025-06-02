@@ -1,7 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using Hypercube.Core.Analyzers;
 using Hypercube.Graphics.Rendering.Batching;
+using Hypercube.Graphics.Windowing;
 using Hypercube.Mathematics;
+using Hypercube.Mathematics.Vectors;
 using Silk.NET.OpenGL;
 using ShaderType = Hypercube.Graphics.Rendering.Shaders.ShaderType;
 using SilkShaderType = Silk.NET.OpenGL.ShaderType;
@@ -11,6 +13,16 @@ namespace Hypercube.Graphics.Utilities.Extensions;
 [EngineInternal]
 public static class SilkGLExtension
 {
+    public static void Viewport(this GL gl, IWindow window)
+    {
+        Viewport(gl, window.Size);
+    }
+    
+    public static void Viewport(this GL gl, Vector2i size)
+    {
+        gl.Viewport(0, 0, (uint) size.X, (uint) size.Y);
+    }
+    
     public static uint CreateShader(this GL gl, ShaderType type)
     {
         return gl.CreateShader(ToShaderType(type));

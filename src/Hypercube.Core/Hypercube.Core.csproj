@@ -25,6 +25,9 @@
       <Folder Include="Networking\Client\" />
       <Folder Include="Networking\Server\" />
       <Folder Include="Physics\" />
+      <Folder Include="Scenes\" />
+      <Folder Include="Serialization\Yaml\SourceGenerator\" />
+      <Folder Include="Serialization\Yaml\Utilities\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -42,6 +45,8 @@
       <PackageReference Include="Hypercube.Mathematics" Version="1.0.2" />
       <PackageReference Include="Hypercube.Utilities" Version="1.0.4" />
       <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.12.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
     </ItemGroup>
 
 </Project>

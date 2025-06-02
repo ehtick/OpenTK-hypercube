@@ -25,7 +25,10 @@ public abstract partial class BaseRenderingApi : IRenderingApi
     protected Vertex[] BatchVertices = [];
     protected uint[] BatchIndices = [];
 
+    private int _bacthCount;
     private BatchData? _currentBatchData;
+
+    public int BatchCount => _bacthCount;
     
     public void Init(IContextInfo context, RenderingApiSettings settings)
     {
@@ -106,6 +109,11 @@ public abstract partial class BaseRenderingApi : IRenderingApi
         }
         
         return InternalCreateShaderProgram(shaders);
+    }
+
+    protected void UpdateBatchCount()
+    {
+        _bacthCount = Batches.Count;
     }
     
     protected void Clear()

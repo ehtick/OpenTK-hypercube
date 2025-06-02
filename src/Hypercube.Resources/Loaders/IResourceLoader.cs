@@ -1,7 +1,9 @@
 ﻿using Hypercube.Resources.FileSystems;
+using JetBrains.Annotations;
 
 namespace Hypercube.Resources.Loaders;
 
+[UsedImplicitly(ImplicitUseTargetFlags.WithInheritors)]
 public interface IResourceLoader
 {
     string[] Extensions { get; }

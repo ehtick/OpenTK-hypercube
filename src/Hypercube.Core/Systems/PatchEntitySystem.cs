@@ -11,7 +11,7 @@ public abstract class PatchEntitySystem : EntitySystem, IPatch, IPostInject
     
     public abstract void Draw(IRenderContext renderer);
 
-    public void PostInject()
+    public virtual void PostInject()
     {
         PatchManager.AddPatch(this);
     }

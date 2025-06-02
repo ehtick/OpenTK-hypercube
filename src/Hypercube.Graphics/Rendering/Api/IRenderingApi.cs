@@ -20,6 +20,7 @@ public interface IRenderingApi
     IShaderProgram? TexturingShaderProgram { get; }
     int BatchVerticesIndex { get; }
     int BatchIndicesIndex { get; }
+    int BatchCount { get; }
     
     void Init(IContextInfo context, RenderingApiSettings settings);
     void Load();

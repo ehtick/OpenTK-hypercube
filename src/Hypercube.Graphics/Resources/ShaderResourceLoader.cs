@@ -2,20 +2,16 @@
 using Hypercube.Resources;
 using Hypercube.Resources.FileSystems;
 using Hypercube.Resources.Loaders;
+using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Graphics.Resources;
 
 public sealed class ShaderResourceLoader : ResourceLoader<Shader>
 {
-    private readonly IRenderManager _renderManager;
+    [Dependency] private readonly IRenderManager _renderManager = default!;
 
     public override string[] Extensions => ["shd"];
-
-    public ShaderResourceLoader(IRenderManager renderManager)
-    {
-        _renderManager = renderManager;
-    }
-
+    
     public override bool CanLoad(ResourcePath path, IFileSystem fileSystem)
     {
         return true;

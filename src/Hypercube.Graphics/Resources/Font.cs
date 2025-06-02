@@ -1,5 +1,4 @@
-﻿using Hypercube.Mathematics.Shapes;
-using Hypercube.Mathematics.Vectors;
+﻿using Hypercube.Graphics.Fonts;
 using Hypercube.Resources.Loaders;
 
 namespace Hypercube.Graphics.Resources;
@@ -7,24 +6,23 @@ namespace Hypercube.Graphics.Resources;
 public sealed class Font : Resource
 {
     public Texture Texture { get; }
-    public Dictionary<char, GlyphInfo> Glyphs { get; }
+    public int Size { get; }
 
-    public Font(Texture texture, Dictionary<char, GlyphInfo> glyphs)
+    private readonly Dictionary<char, Glyph> _glyphs;
+    
+    public IReadOnlyDictionary<char, Glyph> Glyphs => _glyphs;
+
+    public Font(Texture texture, Dictionary<char, Glyph> glyphs, int size)
     {
         Texture = texture;
-        Glyphs = glyphs;
+        _glyphs = glyphs;
+        Size = size;
     }
 
     public override void Dispose()
     {
         Texture.Dispose();
-        Glyphs.Clear();
+        _glyphs.Clear();
     }
 }
 
-public struct GlyphInfo
-{
-    public Box2 SourceRect;
-    public Vector2 Offset;
-    public float Advance;
-}

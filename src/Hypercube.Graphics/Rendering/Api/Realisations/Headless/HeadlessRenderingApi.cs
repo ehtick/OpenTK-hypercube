@@ -20,6 +20,7 @@ public sealed class HeadlessRenderingApi : IRenderingApi
 
     public int BatchVerticesIndex => 0;
     public int BatchIndicesIndex => 0;
+    public int BatchCount => 0;
 
     public void Init(IContextInfo context, RenderingApiSettings settings)
     {

@@ -1,6 +1,8 @@
 ﻿using Hypercube.Resources.FileSystems;
 using Hypercube.Resources.Loaders;
 using Hypercube.Resources.Preloading;
+using Hypercube.Utilities.Dependencies;
+using Hypercube.Utilities.Helpers;
 using JetBrains.Annotations;
 
 namespace Hypercube.Resources;
@@ -9,20 +11,17 @@ namespace Hypercube.Resources;
 public sealed class ResourceManager : IResourceManager, IDisposable
 {
     public readonly IFileSystem FileSystem;
+    public readonly DependenciesContainer? Container;
     
     private readonly Dictionary<Type, IResourceLoader> _loaders = [];
     private readonly Dictionary<ResourcePath, Resource> _cache = [];
 
-    public ResourceManager(IFileSystem fileSystem)
+    public ResourceManager(IFileSystem? fileSystem = null, DependenciesContainer? container = null)
     {
-        FileSystem = fileSystem;
+        FileSystem = fileSystem ?? new PhysicalFileSystem();
+        Container = container;
     }
-    
-    public ResourceManager()
-    {
-        FileSystem = new PhysicalFileSystem();
-    }
-    
+
     /// <inheritdoc/>
     public void Mount(Dictionary<ResourcePath, ResourcePath> mountFolders)
     {
@@ -55,6 +54,15 @@ public sealed class ResourceManager : IResourceManager, IDisposable
         _loaders.Add(typeof(T), loader);
     }
 
+    public void AddAllLoaders()
+    {
+        foreach (var loader in GetAllLoaders(Container))
+        {
+            if (!_loaders.TryAdd(loader.ResourceType, loader))
+                throw new Exception();
+        }
+    }
+
     public bool HasLoader<T>() where T : Resource
     {
         return _loaders.ContainsKey(typeof(T));
@@ -84,7 +92,7 @@ public sealed class ResourceManager : IResourceManager, IDisposable
                 yield return typedResource;
         }
     }
-    
+
     public bool HasCache<T>(ResourcePath path) where T : Resource
     {
         return _cache.ContainsKey(path);
@@ -130,7 +138,7 @@ public sealed class ResourceManager : IResourceManager, IDisposable
 
         resource.Dispose();
     }
-    
+
     public void UnloadAll()
     {
         foreach (var (path, _) in _cache)
@@ -147,5 +155,29 @@ public sealed class ResourceManager : IResourceManager, IDisposable
     public void Dispose()
     {
         UnloadAll();
+    }
+
+    private static List<IResourceLoader> GetAllLoaders(DependenciesContainer? container)
+    {
+        var result = new List<IResourceLoader>();
+        var types = ReflectionHelper.GetAllInstantiableSubclassOf(typeof(IResourceLoader));
+        
+        foreach (var type in types)
+        {
+            var constructors = type.GetConstructors();
+            if (constructors.Length != 1)
+                throw new InvalidOperationException();
+
+            var constructor = constructors[0];
+            var parameters = constructor.GetParameters();
+            if (parameters.Length != 0)
+                throw new InvalidOperationException();
+
+            var instance = (IResourceLoader) constructor.Invoke(null);
+            container?.Inject(instance);
+            result.Add(instance);
+        }
+
+        return result;
     }
 }

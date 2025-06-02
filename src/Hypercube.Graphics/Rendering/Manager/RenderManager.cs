@@ -23,7 +23,7 @@ public sealed class RenderManager : IRenderManager, IRenderManagerInternal
     [Dependency] private readonly IRenderContext _context = default!;
 
     public event DrawHandler? OnDraw;
-    
+
     private IRenderingApi? _api;
 
     public IRenderingApi Api
@@ -31,6 +31,8 @@ public sealed class RenderManager : IRenderManager, IRenderManagerInternal
         get => _api ?? throw new Exception();
         private set => _api = value;
     }
+
+    public int BatchCount => Api.BatchCount;
 
     public void Init(IContextInfo context, RenderingApiSettings settings)
     {
