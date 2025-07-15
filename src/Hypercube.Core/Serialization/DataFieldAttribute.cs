@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace Hypercube.Core.Serialization;
+﻿namespace Hypercube.Core.Serialization;
 
 [AttributeUsage(AttributeTargets.Field), MeansImplicitUse]
 public class DataFieldAttribute : Attribute

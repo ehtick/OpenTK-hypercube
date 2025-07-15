@@ -1,0 +1,36 @@
+﻿using Hypercube.Core.Graphics.Fonts;
+using Hypercube.Core.Resources;
+using Hypercube.Core.Resources.FileSystems;
+using Hypercube.Core.Resources.Loaders;
+using Hypercube.Mathematics.Shapes;
+using Hypercube.Mathematics.Vectors;
+using StbImageSharp;
+
+namespace Hypercube.Core.Graphics.Resources;
+
+public class FontResourceLoader : ResourceLoader<Font>
+{
+    public override string[] Extensions => ["ttf", "otf"];
+
+    public override bool CanLoad(ResourcePath path, IFileSystem fileSystem)
+    {
+        return Extensions.Contains(path.Extension, StringComparer.OrdinalIgnoreCase);
+    }
+
+    public override Font Load(ResourcePath path, IFileSystem fileSystem)
+    {
+        const int size = 32;
+        
+        var stream = fileSystem.OpenRead(path);
+        using var memory = new MemoryStream();
+        stream.CopyTo(memory);
+        var fontData = memory.ToArray();
+
+        
+        var fontStream = FontAtlasGenerator.Generate(fontData, out var glyphs, size);
+        var result = ImageResult.FromStream(fontStream, ColorComponents.RedGreenBlueAlpha);
+        var texture = new Texture(new Vector2i(result.Width, result.Height), result.Data, (int) ColorComponents.RedGreenBlueAlpha, Rect2.UV);
+        
+        return new Font(texture, glyphs, size);
+    }
+}

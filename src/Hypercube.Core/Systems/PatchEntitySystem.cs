@@ -1,6 +1,6 @@
 ﻿using Hypercube.Core.Ecs;
-using Hypercube.Graphics.Patching;
-using Hypercube.Graphics.Rendering.Context;
+using Hypercube.Core.Graphics.Patching;
+using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Systems;

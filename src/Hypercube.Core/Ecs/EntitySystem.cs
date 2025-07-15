@@ -2,11 +2,8 @@
 using Hypercube.Core.Ecs.Core;
 using Hypercube.Core.Ecs.Core.Events;
 using Hypercube.Core.Ecs.Core.Query;
-using Hypercube.Core.Ecs.Events;
-using Hypercube.Core.Systems.Rendering;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
-using JetBrains.Annotations;
 
 namespace Hypercube.Core.Ecs;
 

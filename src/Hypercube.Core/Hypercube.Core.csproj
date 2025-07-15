@@ -1,52 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <AssemblyTitle>HypercubeEngine</AssemblyTitle>
-        <Version>2.0.0</Version>
-        <FileVersion>2.0.0</FileVersion>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyTitle>HypercubeEngine</AssemblyTitle>
+    <Version>2.0.0</Version>
+    <FileVersion>2.0.0</FileVersion>
 
-        <AllowEngineCoreUsage>true</AllowEngineCoreUsage>
-        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
-    
-    <ItemGroup>
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-            <_Parameter1>AllowEngineCoreUsage</_Parameter1>
-            <_Parameter2>$(AllowEngineCoreUsage)</_Parameter2>
-        </AssemblyAttribute>
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="IO\" />
-      <Folder Include="Networking\Client\" />
-      <Folder Include="Networking\Server\" />
-      <Folder Include="Physics\" />
-      <Folder Include="Scenes\" />
-      <Folder Include="Serialization\Yaml\SourceGenerator\" />
-      <Folder Include="Serialization\Yaml\Utilities\" />
-    </ItemGroup>
+    <AllowEngineCoreUsage>true</AllowEngineCoreUsage>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <None Include="$(SolutionDir)libs/**" Link="%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-        <None Include="$(SolutionDir)resources/**" Link="resources/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <ProjectReference Include="..\Hypercube.Analyzers\Hypercube.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-      <ProjectReference Include="..\Hypercube.Graphics\Hypercube.Graphics.csproj" />
-      <ProjectReference Include="..\Hypercube.Resources\Hypercube.Resources.csproj" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <PackageReference Include="Hypercube.Mathematics" Version="1.0.5" />
-      <PackageReference Include="Hypercube.Utilities" Version="1.0.4" />
-      <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
-      <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.12.0" />
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>AllowEngineCoreUsage</_Parameter1>
+      <_Parameter2>$(AllowEngineCoreUsage)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Serialization\Yaml\SourceGenerator\" />
+    <Folder Include="Serialization\Yaml\Utilities\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(SolutionDir)libs/**" Link="%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(SolutionDir)resources/**" Link="resources/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hypercube.Analyzers\Hypercube.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hypercube.Mathematics" Version="1.0.5" />
+    <PackageReference Include="Hypercube.Utilities" Version="1.0.4" />
+    <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.12.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+    <PackageReference Include="Silk.NET.GLFW" Version="2.22.0" />
+    <PackageReference Include="Silk.NET.OpenGL" Version="2.22.0" />
+    <PackageReference Include="Silk.NET.SDL" Version="2.22.0" />
+    <PackageReference Include="StbImageSharp" Version="2.30.15" />
+    <PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
+    <PackageReference Include="StbTrueTypeSharp" Version="1.26.12" />
+  </ItemGroup>
 
 </Project>

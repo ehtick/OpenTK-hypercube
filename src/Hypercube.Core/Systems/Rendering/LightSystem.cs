@@ -1,7 +1,7 @@
 ﻿using Hypercube.Core.Ecs.Attributes;
 using Hypercube.Core.Ecs.Core.Query;
+using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Systems.Transform;
-using Hypercube.Graphics.Rendering.Context;
 
 namespace Hypercube.Core.Systems.Rendering;
 

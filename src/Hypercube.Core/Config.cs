@@ -1,6 +1,5 @@
-﻿using Hypercube.Graphics;
-using Hypercube.Graphics.Rendering;
-using Hypercube.Graphics.Rendering.Api;
+﻿using Hypercube.Core.Graphics;
+using Hypercube.Core.Graphics.Rendering.Api;
 using Hypercube.Mathematics;
 using Hypercube.Utilities.Configuration;
 

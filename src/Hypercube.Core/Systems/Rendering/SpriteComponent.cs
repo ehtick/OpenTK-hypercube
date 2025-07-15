@@ -1,10 +1,10 @@
 ﻿using Hypercube.Core.Ecs;
 using Hypercube.Core.Ecs.Attributes;
+using Hypercube.Core.Graphics.Resources;
+using Hypercube.Core.Resources;
 using Hypercube.Core.Serialization;
-using Hypercube.Graphics.Resources;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Vectors;
-using Hypercube.Resources;
 
 namespace Hypercube.Core.Systems.Rendering;
 

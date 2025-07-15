@@ -2,12 +2,11 @@
 using Hypercube.Core.Ecs.Attributes;
 using Hypercube.Core.Ecs.Core.Query;
 using Hypercube.Core.Ecs.Events;
+using Hypercube.Core.Graphics.Rendering.Context;
+using Hypercube.Core.Graphics.Rendering.Manager;
+using Hypercube.Core.Graphics.Resources;
+using Hypercube.Core.Resources;
 using Hypercube.Core.Systems.Transform;
-using Hypercube.Graphics;
-using Hypercube.Graphics.Rendering.Context;
-using Hypercube.Graphics.Rendering.Manager;
-using Hypercube.Graphics.Resources;
-using Hypercube.Resources;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Systems.Rendering;

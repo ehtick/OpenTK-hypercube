@@ -1,4 +1,4 @@
-﻿using Hypercube.Graphics.Windowing.Api;
+﻿using Hypercube.Core.Graphics.Windowing.Api;
 
 namespace Hypercube.Core.Utilities.Helpers;
 
