@@ -1,15 +1,17 @@
 ﻿using Hypercube.Core.Ecs.Core.Utilities;
 using Hypercube.Core.Ecs.Utilities;
+using Hypercube.Core.Execution;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Ecs.Core.Systems;
 
 [EngineInternal]
 [UsedImplicitly]
-public sealed class EntitySystemManager : IEntitySystemManager
+public sealed class EntitySystemManager : IEntitySystemManager, IPostInject
 {
     [Dependency] private readonly DependenciesContainer _container = default!;
-
+    [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
+    
     public IWorld Main { get; private set; } = default!;
 
     private readonly WorldRegistrar _registrar = new();
@@ -17,10 +19,9 @@ public sealed class EntitySystemManager : IEntitySystemManager
 
     private IWorld[] _worlds = [];
 
-    public void Update(float deltaTime)
+    public void PostInject()
     {
-        foreach (var world in _worlds)
-            world.Update(deltaTime);
+        _runtimeLoop.Actions.Add(OnUpdate, (int) EngineUpdatePriority.EntitySystemManager);
     }
 
     public void CrateMainWorld()
@@ -41,5 +42,11 @@ public sealed class EntitySystemManager : IEntitySystemManager
         _worlds[world.Id] = world;
         
         return world;
+    }
+
+    private void OnUpdate(FrameEventArgs args)
+    {
+        foreach (var world in _worlds)
+            world.Update(args.DeltaSeconds);
     }
 }

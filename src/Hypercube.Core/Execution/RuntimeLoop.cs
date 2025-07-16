@@ -1,17 +1,19 @@
-﻿using Hypercube.Core.Ecs;
-using Hypercube.Core.Graphics.Rendering;
+﻿using Hypercube.Core.Utilities.Events;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Execution;
 
+[UsedImplicitly]
 public sealed class RuntimeLoop : IRuntimeLoop
 {
-    [Dependency] private readonly IEntitySystemManager _entitySystemManager = default!;
     [Dependency] private readonly ILogger _logger = default!;
-    [Dependency] private readonly IRenderer _renderer = default!;
-
+    
+    private readonly OrderedActions<FrameEventArgs> _actions = [];
+    
     public bool Running { get; private set; }
+
+    public ISubscribableOrderedActions<FrameEventArgs> Actions => _actions;
 
     public void Run()
     {
@@ -21,8 +23,11 @@ public sealed class RuntimeLoop : IRuntimeLoop
         _logger.Debug("Started run loop, suspend main thread");
         
         Running = true;
+        
         while (Running)
+        {
             OnRun();
+        }
         
         _logger.Debug("Shutdown run loop, unsuspend main thread");
     }
@@ -31,11 +36,9 @@ public sealed class RuntimeLoop : IRuntimeLoop
     {
         Running = false;
     }
-
+    
     private void OnRun()
     {
-        _entitySystemManager.Update(1);
-        _renderer.Update();
-        _renderer.Render();
+        _actions.InvokeAll(new FrameEventArgs(1));
     }
 }

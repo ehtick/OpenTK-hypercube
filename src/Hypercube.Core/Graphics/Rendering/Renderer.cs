@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Graphics.Patching;
+﻿using Hypercube.Core.Execution;
+using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Windowing;
@@ -10,9 +11,9 @@ using Hypercube.Utilities.Extensions;
 namespace Hypercube.Core.Graphics.Rendering;
 
 [EngineInternal]
-public class Renderer : IRenderer
+public class Renderer : IRenderer, IPostInject
 {
-    [Dependency] private readonly DependenciesContainer _dependencies = default!;
+    [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
     [Dependency] private readonly IWindowManager _windowManager = default!;
     [Dependency] private readonly IRenderManager _renderManager = default!;
     [Dependency] private readonly IRenderContext _renderContext = default!;
@@ -23,6 +24,12 @@ public class Renderer : IRenderer
     private Thread? _thread;
     private RendererSettings _settings;
     private IWindow? _window;
+
+    public void PostInject()
+    {
+        _runtimeLoop.Actions.Add(_ => Update(), (int) EngineUpdatePriority.RendererUpdate);
+        _runtimeLoop.Actions.Add(_ => Render(), (int) EngineUpdatePriority.RendererRender);
+    }
 
     public void Init(RendererSettings settings)
     {
@@ -71,7 +78,7 @@ public class Renderer : IRenderer
         _window.MakeCurrent();
         _renderManager.Init(_window, _settings.RenderingApi);
     }
-    
+
     private Task InitAsync(RendererSettings settings)
     {
         _settings = settings;

@@ -1,30 +1,44 @@
-﻿using Hypercube.Core.Graphics.Windowing.Api;
+﻿using Hypercube.Core.Execution;
+using Hypercube.Core.Graphics.Windowing.Api;
 using Hypercube.Core.Graphics.Windowing.Manager;
+using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;
 
 namespace Hypercube.Core.Input;
 
+/// <summary>
+/// A class that directly listens to window events and processes them to work correctly,
+/// pre first level work with push handling, lower level would be <see cref="IWindowingApi"/>
+/// which takes data directly from the current window handling API.
+///
+/// In most cases it is better to work with <see cref="IInputManager"/>,
+/// which is an add-on on top of the current implementation.
+/// </summary>
 [UsedImplicitly]
 public sealed class InputHandler : IInputHandler, IPostInject
 {
     [Dependency] private readonly IWindowManager _window = default!;
-
-    private Dictionary<nint, Keys> _key = new();
+    [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
+    [Dependency] private readonly ILogger _logger = default!;
     
-    private IWindowingApi _windowingApi => _window.Api;
+    private readonly Dictionary<nint, Keys> _key = new();
+    
+    private IWindowingApi WindowingApi => _window.Api;
     
     public void PostInject()
     {
-        _windowingApi.OnWindowKey += OnKeyUpdate;
-        _windowingApi.OnWindowMouseButton += OnMouseButtonUpdate;
+       _runtimeLoop.Actions.Add(OnUpdate, (int) EngineUpdatePriority.InputHandler); 
+        
+        WindowingApi.OnWindowKey += OnKeyUpdate;
+        WindowingApi.OnWindowMouseButton += OnMouseButtonUpdate;
     }
 
-    public void Update()
+    public void Clear()
     {
         foreach (var (_, keys) in _key)
         {
-            keys.Held.Clear();
+            keys.Pressed.Clear();
             keys.Released.Clear();
         }
     }
@@ -51,7 +65,7 @@ public sealed class InputHandler : IInputHandler, IPostInject
 
     public bool IsKeyState(Key key, KeyState state)
     {
-        return IsKeyState(_windowingApi.ContextCurrent, key, state);
+        return IsKeyState(WindowingApi.ContextCurrent, key, state);
     }
 
     public bool IsKeyHeld(Key key)
@@ -67,6 +81,21 @@ public sealed class InputHandler : IInputHandler, IPostInject
     public bool IsKeyReleased(Key key)
     {
         return IsKeyState(key, KeyState.Pressed);
+    }
+
+    public void Simulate(KeyStateChangedArgs state)
+    {
+        Simulate(WindowingApi.ContextCurrent, state);
+    }
+
+    public void Simulate(nint window, KeyStateChangedArgs state)
+    {
+        OnKeyUpdate(window, state);
+    }
+
+    private void OnUpdate(FrameEventArgs args)
+    {
+        Clear();
     }
     
     private void OnKeyUpdate(nint window, KeyStateChangedArgs state)

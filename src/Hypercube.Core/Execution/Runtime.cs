@@ -3,9 +3,14 @@ using Hypercube.Core.Ecs;
 using Hypercube.Core.Ecs.Core.Systems;
 using Hypercube.Core.Execution.Attributes;
 using Hypercube.Core.Execution.Enums;
+using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering;
+using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Rendering.Manager;
+using Hypercube.Core.Graphics.Viewports;
+using Hypercube.Core.Graphics.Windowing.Manager;
 using Hypercube.Core.Graphics.Windowing.Settings;
+using Hypercube.Core.Input;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Utilities.Helpers;
 using Hypercube.Utilities.Configuration;
@@ -27,7 +32,7 @@ public sealed class Runtime
     [Dependency] private readonly IRenderer _renderer = default!;
     [Dependency] private readonly IRenderManager _renderrManager = default!;
 
-    private readonly ILogger _logger = new ConsoleLogger();
+    private readonly ConsoleLogger _logger = new();
     private readonly Dictionary<EntryPointLevel, List<MethodInfo>> _entryPoints = [];
     
     public void Start()
@@ -81,10 +86,12 @@ public sealed class Runtime
         
         _resourceManager.AddAllLoaders();
         
-        _entitySystemManager.CrateMainWorld();
-        
         _renderer.Load();
+
+        InitDependentsDependencies();
         
+        _entitySystemManager.CrateMainWorld();
+
         _logger.Info("Preparation is complete, start the main application cycle");
         EntryPointsExecute(EntryPointLevel.AfterInit);
         _runtimeLoop.Run();
@@ -97,15 +104,31 @@ public sealed class Runtime
     
     private void InitDependencies()
     {
+        // Core
         _dependencies.Register<IConfigManager, ConfigManager>();
         _dependencies.Register<IRuntimeLoop, RuntimeLoop>();
         _dependencies.Register<IEntitySystemManager, EntitySystemManager>();
 
-        Resources.Dependencies.Register(_dependencies);
-        Graphics.Dependencies.Register(_dependencies);
+        // Resources
+        _dependencies.Register<IResourceManager>(new ResourceManager(container: _dependencies));
+        
+        // Graphics
+        _dependencies.Register<IWindowManager, WindowManager>();
+        _dependencies.Register<ICameraManager, CameraManager>();
+        _dependencies.Register<IRenderContext, RenderContext>();
+        _dependencies.Register<IRenderManager, RenderManager>();
+        _dependencies.Register<IPatchManager, PatchManager>();
+        _dependencies.Register<IRenderer, Renderer>();
 
         _dependencies.InstantiateAll();
         _dependencies.Inject(this);
+    }
+    
+    private void InitDependentsDependencies()
+    {
+        // Input
+        _dependencies.Register<IInputHandler, InputHandler>();
+        _dependencies.InstantiateAll();
     }
 
     private void EntryPointsLoad()
