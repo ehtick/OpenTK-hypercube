@@ -1,6 +1,6 @@
 ﻿using Hypercube.Core.Execution;
-using Hypercube.Core.Graphics.Windowing.Api;
-using Hypercube.Core.Graphics.Windowing.Manager;
+using Hypercube.Core.Windowing.Api;
+using Hypercube.Core.Windowing.Manager;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;

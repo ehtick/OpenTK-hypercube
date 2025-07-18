@@ -2,7 +2,7 @@
 using Hypercube.Core.Graphics.Rendering.Api.Handlers;
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Shaders;
-using Hypercube.Core.Graphics.Windowing;
+using Hypercube.Core.Windowing;
 
 namespace Hypercube.Core.Graphics.Rendering.Manager;
 

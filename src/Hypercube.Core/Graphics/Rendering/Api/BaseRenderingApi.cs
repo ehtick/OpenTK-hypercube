@@ -3,7 +3,7 @@ using Hypercube.Core.Graphics.Rendering.Api.Handlers;
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
-using Hypercube.Core.Graphics.Windowing;
+using Hypercube.Core.Windowing;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
 

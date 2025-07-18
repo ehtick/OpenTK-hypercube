@@ -1,2 +1,2 @@
-﻿global using Hypercube.Core.Analyzers;
+﻿global using Hypercube.Analyzers;
 global using JetBrains.Annotations;

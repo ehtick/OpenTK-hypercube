@@ -1,4 +1,4 @@
-﻿using Hypercube.Core.Graphics.Windowing.Settings;
+﻿using Hypercube.Core.Windowing.Settings;
 
 namespace Hypercube.Core.Graphics.Rendering;
 

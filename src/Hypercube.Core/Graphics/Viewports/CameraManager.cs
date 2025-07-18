@@ -1,4 +1,4 @@
-﻿using Hypercube.Core.Graphics.Windowing.Manager;
+﻿using Hypercube.Core.Windowing.Manager;
 using Hypercube.Mathematics.Vectors;
 using Hypercube.Utilities.Dependencies;
 

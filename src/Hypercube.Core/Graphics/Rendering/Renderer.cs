@@ -2,9 +2,9 @@
 using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Rendering.Manager;
-using Hypercube.Core.Graphics.Windowing;
-using Hypercube.Core.Graphics.Windowing.Manager;
-using Hypercube.Core.Graphics.Windowing.Settings;
+using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Manager;
+using Hypercube.Core.Windowing.Settings;
 using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;
 
