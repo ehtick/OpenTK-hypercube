@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Hypercube.Core.Audio.Manager;
 using Hypercube.Core.Ecs;
 using Hypercube.Core.Ecs.Core.Systems;
 using Hypercube.Core.Execution.Attributes;
@@ -30,7 +31,7 @@ public sealed class Runtime
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
     [Dependency] private readonly IResourceManager _resourceManager = default!;
     [Dependency] private readonly IRenderer _renderer = default!;
-    [Dependency] private readonly IRenderManager _renderrManager = default!;
+    [Dependency] private readonly IAudioManager _audioManager = default!;
 
     private readonly ConsoleLogger _logger = new();
     private readonly Dictionary<EntryPointLevel, List<MethodInfo>> _entryPoints = [];
@@ -84,6 +85,8 @@ public sealed class Runtime
             TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
         });
         
+        _audioManager.Init();
+        
         _resourceManager.AddAllLoaders();
         
         _renderer.Load();
@@ -112,13 +115,18 @@ public sealed class Runtime
         // Resources
         _dependencies.Register<IResourceManager>(new ResourceManager(container: _dependencies));
         
-        // Graphics
+        // Windowing
         _dependencies.Register<IWindowManager, WindowManager>();
+        
+        // Graphics
         _dependencies.Register<ICameraManager, CameraManager>();
         _dependencies.Register<IRenderContext, RenderContext>();
         _dependencies.Register<IRenderManager, RenderManager>();
         _dependencies.Register<IPatchManager, PatchManager>();
         _dependencies.Register<IRenderer, Renderer>();
+        
+        // Audio
+        _dependencies.Register<IAudioManager, AudioManager>();
 
         _dependencies.InstantiateAll();
         _dependencies.Inject(this);
