@@ -9,7 +9,7 @@ namespace Hypercube.Core.Audio;
 /// </summary>
 /// <seealso cref="IAudioManager.CreateSource(AudioStream)"/>
 [PublicAPI]
-public class AudioStream : IDisposable
+public sealed class AudioStream : IDisposable
 {
     public readonly AudioHandle Handle;
     public readonly AudioMetaData MetaData;
@@ -27,7 +27,6 @@ public class AudioStream : IDisposable
     public void Dispose()
     {
         _api.DisposeStream(this);
-        GC.SuppressFinalize(this);
     }
 
     public override string ToString()
