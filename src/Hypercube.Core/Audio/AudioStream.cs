@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Audio.Manager;
+﻿using Hypercube.Core.Audio.Api;
+using Hypercube.Core.Audio.Manager;
 
 namespace Hypercube.Core.Audio;
 
@@ -7,23 +8,30 @@ namespace Hypercube.Core.Audio;
 /// and contains all the information necessary to create a <see cref="IAudioSource"/>.
 /// </summary>
 /// <seealso cref="IAudioManager.CreateSource(AudioStream)"/>
-public struct AudioStream : IDisposable
+[PublicAPI]
+public class AudioStream : IDisposable
 {
-    public readonly int Id;
-    public readonly AudioFormat AudioFormat;
-    public readonly TimeSpan Length;
-    public readonly int SampleRate;
+    public readonly AudioHandle Handle;
+    public readonly AudioMetaData MetaData;
 
-    public AudioStream(int id, AudioFormat audioFormat, TimeSpan length, int sampleRate)
+    private readonly IAudioApi _api;
+
+    public AudioStream(IAudioApi api, AudioHandle handle, AudioMetaData metaData)
     {
-        Id = id;
-        AudioFormat = audioFormat;
-        Length = length;
-        SampleRate = sampleRate;
+        Handle = handle;
+        MetaData = metaData;
+
+        _api = api;
     }
 
     public void Dispose()
     {
-        
+        _api.DisposeStream(this);
+        GC.SuppressFinalize(this);
+    }
+
+    public override string ToString()
+    {
+        return $"BufferId: {Handle}, MetaData: {{{MetaData}}}";
     }
 }

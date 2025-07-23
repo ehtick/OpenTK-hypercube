@@ -5,6 +5,7 @@ public abstract partial class AudioApi : IAudioApi
     public event InfoHandler? OnInfo;
     public event ErrorHandler? OnError;
     
+    public abstract string Info { get; }
     public bool Ready { get; }
 
     public bool Init()

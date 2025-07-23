@@ -4,8 +4,8 @@ using System.Runtime.CompilerServices;
 using Hypercube.Core.Ecs.Core.Components;
 using Hypercube.Core.Ecs.Core.Events;
 using Hypercube.Core.Ecs.Core.Query;
-using Hypercube.Core.Ecs.Core.Utilities;
 using Hypercube.Core.Ecs.Events;
+using Hypercube.Core.Utilities;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Ecs.Core;

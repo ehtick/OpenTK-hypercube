@@ -1,5 +1,6 @@
 ﻿using Hypercube.Core.Audio.Manager;
 using Hypercube.Core.Audio.Reader.Wav;
+using Hypercube.Core.Audio.Utilities;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Resources.FileSystems;
 using Hypercube.Core.Resources.Loaders;
@@ -7,7 +8,7 @@ using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Audio.Resources;
 
-public class AudioResourceLoader : ResourceLoader<Audio>
+public sealed class AudioResourceLoader : ResourceLoader<Audio>
 {
     [Dependency] private readonly IAudioManager _audioManager = default!;
     
@@ -20,8 +21,9 @@ public class AudioResourceLoader : ResourceLoader<Audio>
 
     public override Audio Load(ResourcePath path, IFileSystem fileSystem)
     {
-        var reader = new AudioWavReader(fileSystem.OpenRead(path));
-        var data = reader.Read();
-        return new Audio(_audioManager.CreateStream(data.Data, data.Format, data.Length, data.Channels));
+        using var reader = new AudioWavReader(fileSystem.OpenRead(path));
+        reader.Read(out var data);
+        
+        return new Audio(_audioManager.CreateStream(in data));
     }
 }

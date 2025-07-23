@@ -1,16 +1,13 @@
-﻿namespace Hypercube.Core.Ecs.Core.Utilities;
+﻿namespace Hypercube.Core.Utilities;
 
-[EngineInternal]
-public class IntPool
+public sealed class IntPool
 {
     private readonly Stack<int> _released = new();
     private int _counter;
 
-    public int Next => _released.Count > 0 ? _released.Pop() : _counter++;
-
-    public IntPool()
-    {
-    }
+    public int Next => _released.Count > 0
+        ? _released.Pop()
+        : _counter++;
 
     public void Release(int value)
     {

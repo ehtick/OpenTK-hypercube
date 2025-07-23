@@ -1,6 +1,6 @@
-﻿using Hypercube.Core.Ecs.Core.Utilities;
-using Hypercube.Core.Ecs.Utilities;
+﻿using Hypercube.Core.Ecs.Utilities;
 using Hypercube.Core.Execution;
+using Hypercube.Core.Utilities;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Ecs.Core.Systems;

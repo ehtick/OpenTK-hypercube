@@ -10,6 +10,6 @@ public interface IAudioManager
     bool Ready { get; }
     void Init();
     
-    IAudioSource CreateSource(AudioStream stream);
-    AudioStream CreateStream(ReadOnlyMemory<byte> data, AudioFormat audioFormat, TimeSpan length, int sampleRate);
+    AudioSource CreateSource(AudioStream stream);
+    AudioStream CreateStream(in AudioData data);
 }

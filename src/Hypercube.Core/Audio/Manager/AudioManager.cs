@@ -19,19 +19,22 @@ public sealed class AudioManager : IAudioManager
     public void Init()
     {
         _api = new OpenAlAudioApi();
+
         _api.OnInfo += OnInfo;
         _api.OnError += OnError;
+        
         _api.Init();
+        OnInfo($"Audio Api (OpenAL) info:\n{_api.Info}");
     }
 
-    public IAudioSource CreateSource(AudioStream stream)
+    public AudioSource CreateSource(AudioStream stream)
     {
-        throw new NotImplementedException();
+        return new AudioSource(Api, Api.CreateSource(stream));
     }
 
-    public AudioStream CreateStream(ReadOnlyMemory<byte> data , AudioFormat audioFormat, TimeSpan length, int sampleRate)
+    public AudioStream CreateStream(in AudioData data)
     {
-        return Api.CreateStream(data, audioFormat, length, sampleRate);
+        return new AudioStream(Api, Api.CreateStream(in data), data.MetaData);
     }
 
     private void OnInfo(string message)

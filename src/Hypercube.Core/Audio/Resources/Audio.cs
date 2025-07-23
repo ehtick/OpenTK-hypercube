@@ -4,7 +4,7 @@ namespace Hypercube.Core.Audio.Resources;
 
 public sealed class Audio : Resource
 {
-    public AudioStream Stream { get; private set; }
+    public readonly AudioStream Stream;
 
     public Audio(AudioStream stream)
     {
@@ -14,5 +14,10 @@ public sealed class Audio : Resource
     public override void Dispose()
     {
         Stream.Dispose();
+    }
+
+    public static implicit operator AudioStream(Audio audio)
+    {
+        return audio.Stream;
     }
 }
