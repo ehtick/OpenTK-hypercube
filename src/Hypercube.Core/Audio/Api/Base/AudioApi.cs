@@ -2,11 +2,12 @@
 
 public abstract partial class AudioApi : IAudioApi
 {
-    public event InfoHandler? OnInfo;
     public event ErrorHandler? OnError;
-    
+
     public abstract string Info { get; }
-    public bool Ready { get; }
+    private Thread? Thread { get; set; }
+    
+    public bool Ready => Thread is not null;
 
     public bool Init()
     {
@@ -14,14 +15,10 @@ public abstract partial class AudioApi : IAudioApi
             return false;
         
         CreateContext();
+        Thread = Thread.CurrentThread;
         return true;
     }
-
-    protected void LogInfo(string message)
-    {
-        OnInfo?.Invoke(message);
-    }
-
+    
     protected void LogError(string message)
     {
         OnError?.Invoke(message);

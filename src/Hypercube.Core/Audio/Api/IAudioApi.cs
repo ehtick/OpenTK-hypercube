@@ -2,16 +2,14 @@
 
 public interface IAudioApi
 {
-    event InfoHandler? OnInfo;
     event ErrorHandler? OnError;
     
     string Info { get; }
     bool Ready { get; }
     
     bool Init();
-    AudioHandle CreateStream(in AudioData data);
-    void DisposeStream(AudioStream stream);
-    
+    AudioHandle CreateBuffer(in AudioData data);
+    void DeleteBuffer(AudioHandle handle);
     AudioHandle CreateSource(AudioStream stream);
     void DeleteSource(AudioHandle source);
     void SourcePlay(AudioHandle source);

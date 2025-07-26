@@ -19,12 +19,10 @@ public sealed class AudioManager : IAudioManager
     public void Init()
     {
         _api = new OpenAlAudioApi();
-
-        _api.OnInfo += OnInfo;
         _api.OnError += OnError;
-        
         _api.Init();
-        OnInfo($"Audio Api (OpenAL) info:\n{_api.Info}");
+        
+        _logger.Info($"Audio Api (OpenAL) info:\n{_api.Info}");
     }
 
     public AudioSource CreateSource(AudioStream stream)
@@ -34,12 +32,7 @@ public sealed class AudioManager : IAudioManager
 
     public AudioStream CreateStream(in AudioData data)
     {
-        return new AudioStream(Api, Api.CreateStream(in data), data.MetaData);
-    }
-
-    private void OnInfo(string message)
-    {
-        _logger.Info(message);
+        return new AudioStream(Api, Api.CreateBuffer(in data), data.MetaData);
     }
 
     private void OnError(string message)

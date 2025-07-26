@@ -2,9 +2,9 @@
 
 public partial class AudioApi
 {
-    public abstract void DisposeStream(AudioStream stream);
+    public abstract AudioHandle CreateBuffer(in AudioData data);
+    public abstract void DeleteBuffer(AudioHandle handle);
 
-    public abstract AudioHandle CreateStream(in AudioData data);
     protected abstract bool LoadDevice();
     protected abstract void CreateContext();
     
