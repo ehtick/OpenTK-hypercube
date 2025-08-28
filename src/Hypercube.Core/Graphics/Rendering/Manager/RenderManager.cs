@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Graphics.Rendering.Api;
+﻿using System.Diagnostics;
+using Hypercube.Core.Graphics.Rendering.Api;
 using Hypercube.Core.Graphics.Rendering.Api.Handlers;
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Context;
@@ -29,7 +30,14 @@ public sealed class RenderManager : IRenderManager, IRenderManagerInternal
 
     public int BatchCount => Api.BatchCount;
     public int VerticesCount => Api.VerticesCount;
-
+    public double Fps => _fps;
+    
+    private readonly Stopwatch _stopwatch = new();
+    private double _lastTime;
+    private double _fps;
+    private int _frameCount;
+    private double _elapsedTime;
+    
     public void Init(IContextInfo context, RenderingApiSettings settings)
     {
         Api = ApiFactory.Get(settings.Api);
@@ -43,6 +51,8 @@ public sealed class RenderManager : IRenderManager, IRenderManagerInternal
         Api.Init(context, settings);
         
         _context.Init(Api);
+
+        StartupFrameTime();
     }
 
     private void OnInit(string info, RenderingApiSettings settings)
@@ -67,11 +77,34 @@ public sealed class RenderManager : IRenderManager, IRenderManagerInternal
 
     public void Render(IWindow window)
     {
+        RefreshFrameTime();
         Api.Render(window);
     }
 
     public IShaderProgram CreateShaderProgram(string source)
     {
         return Api.CreateShaderProgram(source);
+    }
+
+    private void StartupFrameTime()
+    {
+        _stopwatch.Start();
+    }
+    
+    private void RefreshFrameTime()
+    {
+        var currentTime = _stopwatch.Elapsed.TotalSeconds;
+        var deltaTime = currentTime - _lastTime;
+
+        _frameCount++;
+        _lastTime = currentTime;
+        _elapsedTime += deltaTime;
+
+        if (_elapsedTime < 1.0)
+            return;
+        
+        _fps = _frameCount / _elapsedTime;
+        _frameCount = 0;
+        _elapsedTime = 0.0;
     }
 }

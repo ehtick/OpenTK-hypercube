@@ -33,6 +33,8 @@ public interface  IWindowingApi : IDisposable
     void EnterLoop();
     void PollEvents();
     void Terminate();
+
+    void SwapInterval(int value);
     
     void WindowSetTitle(nint window, string title);
     void WindowSetPosition(nint window, Vector2i position);

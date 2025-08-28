@@ -3,6 +3,7 @@ using Hypercube.Core.Graphics;
 using Hypercube.Core.Windowing.Api.Base;
 using Hypercube.Core.Windowing.Settings;
 using Hypercube.Mathematics.Vectors;
+using Hypercube.Utilities.Extensions;
 using Silk.NET.GLFW;
 using SilkGlfw = Silk.NET.GLFW.Glfw;
 using SilkWindowHandle = Silk.NET.GLFW.WindowHandle;
@@ -111,7 +112,7 @@ public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
         
         OnWindowSizeCallback(windowHandle, settings.Size.X, settings.Size.Y);
         OnWindowPositionCallback(windowHandle, positionX, positionY);
-        
+
         // Callbacks
         _glfw.SetKeyCallback(windowHandle, OnWindowKey);
         _glfw.SetScrollCallback(windowHandle, OnWindowScroll);

@@ -14,6 +14,7 @@ public interface IRenderManager
     IRenderingApi Api { get; }
     int BatchCount { get; }
     int VerticesCount { get; }
+    double Fps { get; }
     
     void Init(IContextInfo context, RenderingApiSettings settings);
     void Load();

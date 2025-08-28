@@ -30,7 +30,7 @@ public abstract partial class BaseWindowingApi
         TaskCompletionSource<TResult> Task { get; }
         Thread Thread { get; }
     }
-
+    
     private readonly record struct CommandTerminate
         : ICommand;
 

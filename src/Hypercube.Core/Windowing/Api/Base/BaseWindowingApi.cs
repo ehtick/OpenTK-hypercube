@@ -3,6 +3,7 @@ using Hypercube.Core.Graphics;
 using Hypercube.Core.Windowing.Api.Exceptions;
 using Hypercube.Core.Windowing.Settings;
 using Hypercube.Mathematics.Vectors;
+using Hypercube.Utilities.Extensions;
 using Hypercube.Utilities.Threads;
 
 namespace Hypercube.Core.Windowing.Api.Base;
@@ -102,6 +103,11 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         Thread = null;
     }
 
+    public void SwapInterval(int value)
+    {
+        InternalSwapInterval(value);
+    }
+    
     public void WindowSetTitle(nint window, string title)
     {
         Execute(new CommandWindowSetTitle(window, title, Thread.CurrentThread));
@@ -124,11 +130,25 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
 
     public nint WindowCreateSync(WindowCreateSettings settings)
     {
-        var tcs = new TaskCompletionSource<nint>();
-        var command = new CommandWindowCreateSync(settings, tcs, Thread.CurrentThread);
+        var tempContext = ContextCurrent;
         
-        Execute(command);
-        return WaitCommand(tcs);
+        try
+        {
+            var tcs = new TaskCompletionSource<nint>();
+            var command = new CommandWindowCreateSync(settings, tcs, Thread.CurrentThread);
+        
+            Execute(command);
+            var context =  WaitCommand(tcs);
+
+            ContextCurrent = context;
+            SwapInterval(settings.VSync.ToInt());
+
+            return context;
+        }
+        finally
+        {
+            ContextCurrent = tempContext;
+        }
     }
 
     public void WindowDestroy(nint window)
@@ -149,7 +169,6 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
     public void Dispose()
     {
         InternalTerminate();
-        
         GC.SuppressFinalize(this);
     }
 

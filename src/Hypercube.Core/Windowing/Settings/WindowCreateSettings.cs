@@ -43,6 +43,7 @@ public struct WindowCreateSettings
     public nint? ContextShare { get; init; } = null;
     
     public nint? MonitorShare { get; init; } = null;
+    public bool VSync { get; init; } = false;
     
     public WindowCreateSettings()
     {

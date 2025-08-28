@@ -1,6 +1,6 @@
 ﻿namespace Hypercube.Core.Graphics.Patching;
 
-[EngineInternal]
+[EngineInternal, UsedImplicitly]
 public class PatchManager : IPatchManager
 {
     private readonly Dictionary<Type, IPatch> _patches = new();
@@ -36,8 +36,7 @@ public class PatchManager : IPatchManager
     /// </summary>
     public bool RemovePatch<T>() where T : IPatch
     {
-        var patchType = typeof(T);
-        return _patches.Remove(patchType);
+        return _patches.Remove(typeof(T));
     }
 
     /// <summary>

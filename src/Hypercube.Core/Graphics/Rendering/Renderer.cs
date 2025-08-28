@@ -24,7 +24,8 @@ public class Renderer : IRenderer, IPostInject
     private Thread? _thread;
     private RendererSettings _settings;
     private IWindow? _window;
-
+    
+    
     public void PostInject()
     {
         _runtimeLoop.Actions.Add(_ => Update(), (int) EngineUpdatePriority.RendererUpdate);

@@ -5,7 +5,7 @@ using Hypercube.Mathematics;
 namespace Hypercube.Core.Systems.Rendering;
 
 [RegisterComponent]
-public class PointLightComponent: Component
+public class PointLightComponent : Component
 {
     public float Radius;
     public float Intensity;

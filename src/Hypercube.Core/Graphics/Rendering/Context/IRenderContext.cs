@@ -8,7 +8,8 @@ using Hypercube.Mathematics.Vectors;
 namespace Hypercube.Core.Graphics.Rendering.Context;
 
 /// <summary>
-/// Defines a rendering context.
+/// Defines a rendering context abstraction that provides high-level drawing 
+/// and rendering operations on top of a low-level rendering API.
 /// </summary>
 public interface IRenderContext
 {
@@ -18,6 +19,15 @@ public interface IRenderContext
     /// <param name="api">An instance of the rendering API providing low-level drawing functionality.</param>
     void Init(IRenderingApi api);
 
+    /// <summary>
+    /// Draws a 3D model at a given position, with rotation, scale, and optional texture override.
+    /// </summary>
+    /// <param name="model">The 3D model to render.</param>
+    /// <param name="position">The world-space position where the model will be drawn.</param>
+    /// <param name="rotation">The rotation applied to the model.</param>
+    /// <param name="scale">The scaling factor applied to the model.</param>
+    /// <param name="color">The base color tint applied to the model.</param>
+    /// <param name="texture">An optional texture that can override the model's default material texture.</param>
     void DrawModel(Model model, Vector3 position, Quaternion rotation, Vector3 scale, Color color, Texture? texture = null);
     
     /// <summary>
@@ -38,7 +48,22 @@ public interface IRenderContext
     /// <param name="outline">Whether to draw only the outline (true) or fill the rectangle (false).</param>
     void DrawRectangle(Rect2 box, Color color, bool outline = false);
 
+    /// <summary>
+    /// Draws a straight line between two points on the screen.
+    /// </summary>
+    /// <param name="start">The starting point of the line.</param>
+    /// <param name="end">The ending point of the line.</param>
+    /// <param name="color">The color of the line.</param>
+    /// <param name="thickness">The thickness of the line.</param>
     void DrawLine(Vector2 start, Vector2 end, Color color, float thickness = 1f);
+    
+    /// <summary>
+    /// Draws a circle on the screen.
+    /// </summary>
+    /// <param name="center">The center position of the circle.</param>
+    /// <param name="radius">The radius of the circle.</param>
+    /// <param name="color">The color of the circle.</param>
+    /// <param name="segments">The number of line segments used to approximate the circle. Higher values yield smoother circles.</param>
     void DrawCircle(Vector2 center, float radius, Color color, int segments = 32);
     
     /// <summary>
