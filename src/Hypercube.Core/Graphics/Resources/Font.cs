@@ -3,26 +3,23 @@ using Hypercube.Core.Resources.Loaders;
 
 namespace Hypercube.Core.Graphics.Resources;
 
-public sealed class Font : Resource
+/// <summary>
+/// Represents a GPU font with glyph atlas, metrics, and helpers.
+/// </summary>
+[PublicAPI]
+public class Font : Resource
 {
-    public Texture Texture { get; }
-    public int Size { get; }
+    public readonly Texture Texture;
+    public readonly FontInfo Info;
 
-    private readonly Dictionary<char, Glyph> _glyphs;
-    
-    public IReadOnlyDictionary<char, Glyph> Glyphs => _glyphs;
-
-    public Font(Texture texture, Dictionary<char, Glyph> glyphs, int size)
+    public Font(Texture texture, FontInfo info)
     {
         Texture = texture;
-        _glyphs = glyphs;
-        Size = size;
+        Info = Info;
     }
-
+    
     public override void Dispose()
     {
         Texture.Dispose();
-        _glyphs.Clear();
     }
 }
-

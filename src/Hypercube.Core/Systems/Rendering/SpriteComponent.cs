@@ -1,5 +1,4 @@
 ﻿using Hypercube.Core.Ecs;
-using Hypercube.Core.Ecs.Attributes;
 using Hypercube.Core.Graphics.Resources;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Serialization;
@@ -8,7 +7,6 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Systems.Rendering;
 
-[RegisterComponent]
 public sealed class SpriteComponent : Component
 {
     public Texture? Texture;

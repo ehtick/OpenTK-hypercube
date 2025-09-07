@@ -10,7 +10,10 @@ namespace Hypercube.Core.Graphics.Resources;
 
 public class FontResourceLoader : ResourceLoader<Font>
 {
+    private const int DefaultSize = 16;
+    
     public override string[] Extensions => ["ttf", "otf"];
+    public override bool SupportLoadArgs => true;
 
     public override bool CanLoad(ResourcePath path, IFileSystem fileSystem)
     {
@@ -19,18 +22,39 @@ public class FontResourceLoader : ResourceLoader<Font>
 
     public override Font Load(ResourcePath path, IFileSystem fileSystem)
     {
-        const int size = 32;
+        return Load(path, DefaultSize, fileSystem);
+    }
+
+    public override Font Load(ResourcePath path, IFileSystem fileSystem, ResourceLoadArg[] args)
+    {
+        var size = DefaultSize;
+        foreach (var arg in args)
+        {
+            if (arg is { Key: "size", Value: int value })
+                size = value;
+        }
         
-        var stream = fileSystem.OpenRead(path);
+        return Load(path, size, fileSystem);
+    }
+
+    private static Font Load(ResourcePath path, int size, IFileSystem fileSystem)
+    {
+        var fontData = GetData(fileSystem.OpenRead(path));
+        var texture = CreateTexture(FontAtlasGenerator.Generate(fontData, size, out var info));
+        return new Font(texture, info);
+    }
+
+    private static byte[] GetData(FileStream stream)
+    {
         using var memory = new MemoryStream();
         stream.CopyTo(memory);
-        var fontData = memory.ToArray();
-
         
-        var fontStream = FontAtlasGenerator.Generate(fontData, out var glyphs, size);
-        var result = ImageResult.FromStream(fontStream, ColorComponents.RedGreenBlueAlpha);
-        var texture = new Texture(new Vector2i(result.Width, result.Height), result.Data, (int) ColorComponents.RedGreenBlueAlpha, Rect2.UV);
-        
-        return new Font(texture, glyphs, size);
+        return memory.ToArray();
+    }
+    
+    private static Texture CreateTexture(Stream stream)
+    {
+        var result = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+        return new Texture(new Vector2i(result.Width, result.Height), result.Data, (int) ColorComponents.RedGreenBlueAlpha, Rect2.UV);
     }
 }

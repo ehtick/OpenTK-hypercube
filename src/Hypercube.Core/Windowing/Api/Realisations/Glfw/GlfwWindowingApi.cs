@@ -3,7 +3,6 @@ using Hypercube.Core.Graphics;
 using Hypercube.Core.Windowing.Api.Base;
 using Hypercube.Core.Windowing.Settings;
 using Hypercube.Mathematics.Vectors;
-using Hypercube.Utilities.Extensions;
 using Silk.NET.GLFW;
 using SilkGlfw = Silk.NET.GLFW.Glfw;
 using SilkWindowHandle = Silk.NET.GLFW.WindowHandle;

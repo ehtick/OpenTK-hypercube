@@ -3,6 +3,7 @@ using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
 using Hypercube.Core.Windowing;
+using Hypercube.Mathematics.Shapes;
 
 namespace Hypercube.Core.Graphics.Rendering.Api;
 
@@ -18,8 +19,10 @@ public interface IRenderingApi
 
     IShaderProgram? PrimitiveShaderProgram { get; }
     IShaderProgram? TexturingShaderProgram { get; }
+    
     int BatchVerticesIndex { get; }
     int BatchIndicesIndex { get; }
+    
     int BatchCount { get; }
     int VerticesCount { get; }
     
@@ -58,4 +61,7 @@ public interface IRenderingApi
     
     uint CreateTexture(int width, int height, int channels, byte[] data);
     void DeleteTexture(uint handle);
+    
+    void SetScissor(bool value);
+    void SetScissorRect(Rect2i rect);
 }

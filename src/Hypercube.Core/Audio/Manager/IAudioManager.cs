@@ -1,5 +1,4 @@
 ﻿using Hypercube.Core.Audio.Api;
-using Hypercube.Core.Resources;
 
 namespace Hypercube.Core.Audio.Manager;
 

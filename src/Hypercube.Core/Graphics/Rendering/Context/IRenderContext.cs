@@ -66,6 +66,10 @@ public interface IRenderContext
     /// <param name="segments">The number of line segments used to approximate the circle. Higher values yield smoother circles.</param>
     void DrawCircle(Vector2 center, float radius, Color color, int segments = 32);
     
+    void DrawTexture(Texture texture, Vector2 position);
+    void DrawTexture(Texture texture, Vector2 position, Angle rotation);
+    void DrawTexture(Texture texture, Vector2 position, Angle rotation, Vector2 scale);
+    
     /// <summary>
     /// Draws a texture on the screen with specified transformations.
     /// </summary>
@@ -75,4 +79,7 @@ public interface IRenderContext
     /// <param name="scale">The scale to apply to the texture.</param>
     /// <param name="color">The color tint to apply to the texture.</param>
     void DrawTexture(Texture texture, Vector2 position, Angle rotation, Vector2 scale, Color color);
+    
+    void Scissor(bool value);
+    void Scissor(Rect2i rect);
 }

@@ -5,7 +5,7 @@ using Hypercube.Core.Ecs.Core.Components;
 using Hypercube.Core.Ecs.Core.Events;
 using Hypercube.Core.Ecs.Core.Query;
 using Hypercube.Core.Ecs.Events;
-using Hypercube.Core.Utilities;
+using Hypercube.Utilities.Collections;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Ecs.Core;
@@ -22,7 +22,7 @@ public sealed class World : IWorld
 
     private readonly DependenciesContainer _container;
     private readonly WorldEventBus _eventBus = new();
-    private readonly IntPool _entityPool = new();
+    private readonly NumPool<int> _entityPool = new();
 
     public EntityQueryBuilder EntityQueryBuilder => new(this);
     

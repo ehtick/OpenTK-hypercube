@@ -1,5 +1,4 @@
-﻿using Hypercube.Analyzers;
-using Hypercube.Core.Graphics;
+﻿using Hypercube.Core.Graphics;
 using Hypercube.Core.Windowing.Api;
 using Hypercube.Mathematics.Vectors;
 
