@@ -10,8 +10,9 @@ using Hypercube.Utilities.Extensions;
 
 namespace Hypercube.Core.Graphics.Rendering;
 
+[UsedImplicitly]
 [EngineInternal]
-public class Renderer : IRenderer, IPostInject
+public class Renderer : IRenderer
 {
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
     [Dependency] private readonly IWindowManager _windowManager = default!;
@@ -24,9 +25,8 @@ public class Renderer : IRenderer, IPostInject
     private Thread? _thread;
     private RendererSettings _settings;
     private IWindow? _window;
-    
-    
-    public void PostInject()
+
+    public Renderer()
     {
         _runtimeLoop.Actions.Add(_ => Update(), (int) EngineUpdatePriority.RendererUpdate);
         _runtimeLoop.Actions.Add(_ => Render(), (int) EngineUpdatePriority.RendererRender);

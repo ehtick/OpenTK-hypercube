@@ -5,16 +5,17 @@ using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Systems;
 
-public abstract class PatchEntitySystem : EntitySystem, IPatch, IPostInject
+public abstract class PatchEntitySystem : EntitySystem, IPatch
 {
-    [Dependency] protected readonly IPatchManager PatchManager = default!;
+    [Dependency, PublicAPI]
+    protected readonly IPatchManager PatchManager = default!;
 
     public virtual int Priority => 0;
-    
-    public abstract void Draw(IRenderContext renderer);
 
-    public virtual void PostInject()
+    protected PatchEntitySystem()
     {
         PatchManager.AddPatch(this);
     }
+
+    public abstract void Draw(IRenderContext renderer);
 }

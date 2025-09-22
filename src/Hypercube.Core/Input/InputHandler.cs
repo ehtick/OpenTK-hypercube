@@ -16,7 +16,7 @@ namespace Hypercube.Core.Input;
 /// which is an add-on on top of the current implementation.
 /// </summary>
 [UsedImplicitly]
-public sealed class InputHandler : IInputHandler, IPostInject
+public sealed class InputHandler : IInputHandler
 {
     [Dependency] private readonly IWindowManager _window = default!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
@@ -25,10 +25,10 @@ public sealed class InputHandler : IInputHandler, IPostInject
     private readonly Dictionary<nint, Keys> _key = new();
     
     private IWindowingApi WindowingApi => _window.Api;
-    
-    public void PostInject()
+
+    public InputHandler()
     {
-       _runtimeLoop.Actions.Add(OnUpdate, (int) EngineUpdatePriority.InputHandler); 
+        _runtimeLoop.Actions.Add(OnUpdate, (int) EngineUpdatePriority.InputHandler); 
         
         WindowingApi.OnWindowKey += OnKeyUpdate;
         WindowingApi.OnWindowMouseButton += OnMouseButtonUpdate;

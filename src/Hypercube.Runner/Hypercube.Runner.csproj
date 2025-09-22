@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AllowEngineCoreUsage>true</AllowEngineCoreUsage>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>AllowEngineCoreUsage</_Parameter1>
+      <_Parameter2>$(AllowEngineCoreUsage)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hypercube.Analyzers\Hypercube.Analyzers.csproj" />
+    <ProjectReference Include="..\Hypercube.Core\Hypercube.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hypercube.Analyzers\Hypercube.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hypercube.Mathematics" Version="1.0.5" />
+    <PackageReference Include="Hypercube.ModLoader" Version="1.0.1" />
+    <PackageReference Include="Hypercube.Utilities" Version="1.0.8" />
+  </ItemGroup>
+
+</Project>

@@ -56,7 +56,7 @@ public sealed partial class RenderContext
             font.Texture.GpuBind(_renderingApi);
         
         // Starting position for rendering
-        var penPosition = position;
+        var pen = position;
 
         // Using a texture shader and font as a texture
         _renderingApi.EnsureBatch(PrimitiveTopology.TriangleList, _renderingApi.TexturingShaderProgram.Handle, font.Texture.Gpu?.Handle);
@@ -69,13 +69,13 @@ public sealed partial class RenderContext
             if (c == '\n')
             {
                 // Move to next line
-                penPosition = new Vector2(position.X, penPosition.Y - font.LineHeight * scale) ;
-                baselineY = penY - font.Baseline * fontToPx;
+                pen = new Vector2(position.X, pen.Y - font.Info.LineHeight * scale) ;
+                //baselineY = pen.Y - font.Info.Baseline * scale;
                 // prev = '\0';
                 continue;
             }
             
-            if (!font.Glyphs.TryGetValue(c, out var glyph))
+            if (!font.Info.Glyphs.TryGetValue(c, out var glyph))
             {
                 // Can be replaced by a space or skip
                 continue;
@@ -84,8 +84,8 @@ public sealed partial class RenderContext
             // Calculate glyph size and position
             var glyphSize = glyph.SourceRect.Size * scale;
             var glyphPosition = new Vector2(
-                penPosition.X + glyph.Offset.X * scale,
-                penPosition.Y
+                pen.X + glyph.Offset.X * scale,
+                pen.Y
             );
 
             // Glyph square in local coordinates
@@ -104,7 +104,7 @@ public sealed partial class RenderContext
             AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, quad, uv, color);
 
             // Shift the stylus to Advance (horizontal shift)
-            penPosition = new Vector2(penPosition.X + glyph.Advance * scale, penPosition.Y);
+            pen = new Vector2(pen.X + glyph.Advance * scale, pen.Y);
         }
     }
 

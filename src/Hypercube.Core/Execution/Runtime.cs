@@ -14,6 +14,7 @@ using Hypercube.Core.Resources;
 using Hypercube.Core.Utilities.Helpers;
 using Hypercube.Core.Windowing.Manager;
 using Hypercube.Core.Windowing.Settings;
+using Hypercube.Utilities.Arguments;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
@@ -35,9 +36,13 @@ public sealed class Runtime
 
     private readonly ConsoleLogger _logger = new();
     private readonly Dictionary<EntryPointLevel, List<MethodInfo>> _entryPoints = [];
-    
-    public void Start()
+    private readonly ArgumentParser _parser = new ArgumentParser()
+        .AddFlag(RuntimeArguments.ConfigDontInit);
+
+    public void Start(string[] args) 
     {
+        _parser.Parse(args);
+        
         Thread.CurrentThread.Name = "Main";
         
         InitPrimaryDependencies();
@@ -47,7 +52,8 @@ public sealed class Runtime
         
         InitDependencies();
 
-        _configManager.Init();
+        if (!_parser.Get<bool>(RuntimeArguments.ConfigDontInit))
+            _configManager.Init();
         
         _logger.Info("Dependency initialization is complete!");
         _logger.Info("Preparing for the execution of entry points...");

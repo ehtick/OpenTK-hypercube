@@ -2,11 +2,12 @@
 
 namespace Hypercube.Core;
 
+[PublicAPI]
 public static class FrameworkEntering
 {
     public static void Start(string[] args)
     {
         var runtime = new Runtime();
-        runtime.Start();
+        runtime.Start(args);
     }
 }

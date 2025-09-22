@@ -1,4 +1,4 @@
-﻿namespace Hypercube.Core.Graphics.UI;
+﻿namespace Hypercube.Core.UI;
 
 public class UIManager : IUIManager
 {

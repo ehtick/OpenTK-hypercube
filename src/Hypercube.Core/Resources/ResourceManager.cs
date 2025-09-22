@@ -172,7 +172,7 @@ public sealed class ResourceManager : IResourceManager, IDisposable
     private static List<IResourceLoader> GetAllLoaders(IDependenciesContainer? container)
     {
         var result = new List<IResourceLoader>();
-        var types = ReflectionHelper.GetAllInstantiableSubclassOf(typeof(IResourceLoader));
+        var types = ReflectionHelper.GetInstantiableSubclasses<IResourceLoader>();
         
         foreach (var type in types)
         {
