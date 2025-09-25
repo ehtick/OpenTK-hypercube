@@ -2,6 +2,7 @@
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
+using Hypercube.Core.Graphics.Texturing;
 using Hypercube.Core.Windowing;
 using Hypercube.Mathematics.Shapes;
 
@@ -59,8 +60,8 @@ public interface IRenderingApi
     /// </returns>
     IShaderProgram CreateShaderProgram(string source);
     
-    uint CreateTexture(int width, int height, int channels, byte[] data);
-    void DeleteTexture(uint handle);
+    TextureHandle CreateTexture(int width, int height, int channels, byte[] data);
+    void DeleteTexture(TextureHandle handle);
     
     void SetScissor(bool value);
     void SetScissorRect(Rect2i rect);

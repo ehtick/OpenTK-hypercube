@@ -52,7 +52,7 @@ public interface IWindow : IEquatable<IWindow>, IContextInfo, IDisposable
     /// This property is intended for engine-level access only.
     /// </remarks>
     [EngineInternal]
-    nint Handle { get; }
+    WindowHandle Handle { get; }
     
     /// <summary>
     /// Gets the current graphics context associated with this window.
@@ -61,7 +61,7 @@ public interface IWindow : IEquatable<IWindow>, IContextInfo, IDisposable
     /// This property is intended for engine-level access only.
     /// </remarks>
     [EngineInternal]
-    nint CurrentContext { get; }
+    WindowHandle Context { get; }
 
     /// <summary>
     /// Gets the windowing backend type used to manage this window (e.g., Glfw, Sdl, Headless).

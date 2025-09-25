@@ -3,6 +3,7 @@ using System.Text;
 using Hypercube.Core.Graphics.Rendering.Api.Handlers;
 using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
+using Hypercube.Core.Graphics.Texturing;
 using Hypercube.Core.Graphics.Utilities.Extensions;
 using Hypercube.Core.Graphics.Viewports;
 using Hypercube.Core.Resources;
@@ -57,7 +58,7 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         set => _gl = value;
     }
 
-    public override unsafe uint CreateTexture(int width, int height, int channels, byte[] data)
+    public override unsafe TextureHandle CreateTexture(int width, int height, int channels, byte[] data)
     {
         var handle = Gl.GenTexture();
         Gl.BindTexture(TextureTarget.Texture2D, handle);
@@ -90,11 +91,14 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         
         Gl.BindTexture(TextureTarget.Texture2D, 0);
         
-        return handle;
+        return new TextureHandle(handle);
     }
 
-    public override void DeleteTexture(uint handle)
+    public override void DeleteTexture(TextureHandle handle)
     {
+        if (!handle.HasValue)
+            return;
+        
         Gl.DeleteTexture(handle);
     }
 

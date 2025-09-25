@@ -37,7 +37,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
 
     protected Thread? Thread { get; private set; }
 
-    public nint ContextCurrent
+    public WindowHandle Context
     {
         get => InternalGetCurrentContext();
         set => InternalMakeContextCurrent(value);
@@ -108,17 +108,17 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         InternalSwapInterval(value);
     }
     
-    public void WindowSetTitle(nint window, string title)
+    public void WindowSetTitle(WindowHandle window, string title)
     {
         Execute(new CommandWindowSetTitle(window, title, Thread.CurrentThread));
     }
     
-    public void WindowSetPosition(nint window, Vector2i position)
+    public void WindowSetPosition(WindowHandle window, Vector2i position)
     {
         Execute(new CommandWindowSetPosition(window, position));
     }
     
-    public void WindowSetSize(nint window, Vector2i size)
+    public void WindowSetSize(WindowHandle window, Vector2i size)
     {
         Execute(new CommandWindowSetSize(window, size));
     }
@@ -128,9 +128,9 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         Execute(new CommandWindowCreate(settings));
     }
 
-    public nint WindowCreateSync(WindowCreateSettings settings)
+    public WindowHandle WindowCreateSync(WindowCreateSettings settings)
     {
-        var tempContext = ContextCurrent;
+        var tempContext = Context;
         
         try
         {
@@ -138,29 +138,29 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
             var command = new CommandWindowCreateSync(settings, tcs, Thread.CurrentThread);
         
             Execute(command);
-            var context =  WaitCommand(tcs);
+            var context = new WindowHandle(WaitCommand(tcs));
 
-            ContextCurrent = context;
+            Context = context;
             SwapInterval(settings.VSync.ToInt());
 
             return context;
         }
         finally
         {
-            ContextCurrent = tempContext;
+            Context = tempContext;
         }
     }
 
-    public void WindowDestroy(nint window)
+    public void WindowDestroy(WindowHandle window)
     {
         InternalWindowDestroy(window);
     }
 
-    public void WindowSwapBuffers(nint window)
+    public void WindowSwapBuffers(WindowHandle window)
     {
         InternalSwapBuffers(window);
     }
-    
+
     public nint GetProcAddress(string name)
     {
         return InternalGetProcAddress(name);
@@ -192,6 +192,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         InternalWaitEventsTimeout(_waitEventsTimeout);
     }
     
+    [PublicAPI]
     private void WaitCommand(TaskCompletionSource tsc)
     {
         if (_eventBridge is null)

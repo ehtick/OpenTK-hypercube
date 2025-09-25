@@ -12,14 +12,19 @@ namespace Hypercube.Core.Windowing.Manager;
 public class WindowManager : IWindowManager
 {
     [Dependency] private readonly ILogger _logger = default!;
-
+    
     /// <inheritdoc/>
     public event Action<Vector2i>? OnMainWindowResized;
+    public event Action<IWindow>? OnWindowCreated;
     
+    private readonly List<IWindow> _windows = [];
     private IWindowingApi? _api;
 
     /// <inheritdoc/>
     public bool Ready => Api.Ready;
+    
+    /// <inheritdoc/>
+    public IReadOnlyList<IWindow> Windows => _windows;
     
     /// <inheritdoc/>
     public IWindowingApi Api => _api ?? throw new WindowingNotInitializedException();
@@ -70,11 +75,19 @@ public class WindowManager : IWindowManager
     /// <inheritdoc/>
     public IWindow Create(WindowCreateSettings settings)
     {
-        var handle = Api.WindowCreateSync(settings);
-        var window = new Window(Api, handle, settings);
+        var window = new Window(Api, Api.WindowCreateSync(settings), settings);
+
+        window.OnDisposed += () =>
+        {
+            _windows.Remove(window);
+        };
+        
+        _windows.Add(window);
+        OnWindowCreated?.Invoke(window);
+        
         return window;
     }
-
+    
     /// <inheritdoc/>
     public void Dispose()
     {

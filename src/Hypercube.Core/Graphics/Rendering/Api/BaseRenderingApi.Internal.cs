@@ -1,12 +1,13 @@
 ﻿using Hypercube.Core.Graphics.Rendering.Shaders;
+using Hypercube.Core.Graphics.Texturing;
 using Hypercube.Core.Windowing;
 
 namespace Hypercube.Core.Graphics.Rendering.Api;
 
 public abstract partial class BaseRenderingApi
 {
-    public abstract uint CreateTexture(int width, int height, int channels, byte[] data);
-    public abstract void DeleteTexture(uint handle);
+    public abstract TextureHandle CreateTexture(int width, int height, int channels, byte[] data);
+    public abstract void DeleteTexture(TextureHandle handle);
     
     protected abstract string InternalInfo { get; }
     

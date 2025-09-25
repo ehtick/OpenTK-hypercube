@@ -35,33 +35,33 @@ public sealed class HeadlessWindowingApi : BaseWindowingApi
     {
     }
 
-    public override void InternalMakeContextCurrent(nint window)
+    public override void InternalMakeContextCurrent(WindowHandle window)
     {
     }
 
-    public override nint InternalGetCurrentContext()
+    public override WindowHandle InternalGetCurrentContext()
     {
-        return nint.Zero;
+        return WindowHandle.Zero;
     }
 
-    public override nint InternalWindowCreate(WindowCreateSettings settings)
+    public override WindowHandle InternalWindowCreate(WindowCreateSettings settings)
     {
-        return nint.Zero;
+        return WindowHandle.Zero;
     }
 
-    public override void InternalWindowDestroy(nint window)
-    {
-    }
-
-    public override void InternalWindowSetTitle(nint window, string title)
+    public override void InternalWindowDestroy(WindowHandle window)
     {
     }
 
-    public override void InternalWindowSetPosition(nint window, Vector2i position)
+    public override void InternalWindowSetTitle(WindowHandle window, string title)
     {
     }
 
-    public override void InternalWindowSetSize(nint window, Vector2i size)
+    public override void InternalWindowSetPosition(WindowHandle window, Vector2i position)
+    {
+    }
+
+    public override void InternalWindowSetSize(WindowHandle window, Vector2i size)
     {
     }
 
@@ -70,7 +70,7 @@ public sealed class HeadlessWindowingApi : BaseWindowingApi
         return nint.Zero;
     }
 
-    public override void InternalSwapBuffers(nint window)
+    public override void InternalSwapBuffers(WindowHandle window)
     {
     }
 

@@ -8,7 +8,7 @@ public sealed class GpuTexture : IGpuTexture
     private readonly IRenderingApi _api;
 
     /// <inheritdoc/>
-    public uint Handle { get; }
+    public TextureHandle Handle { get; }
 
     /// <inheritdoc/>
     public int Width { get; }

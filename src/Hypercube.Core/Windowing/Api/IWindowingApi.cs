@@ -27,7 +27,7 @@ public interface  IWindowingApi : IDisposable
     event WindowChar? OnWindowChar;
     
     bool Ready { get; }
-    nint ContextCurrent { get; set; }
+    WindowHandle Context { get; set; }
     
     void Init(WindowingApiSettings settings);
     void EnterLoop();
@@ -36,13 +36,12 @@ public interface  IWindowingApi : IDisposable
 
     void SwapInterval(int value);
     
-    void WindowSetTitle(nint window, string title);
-    void WindowSetPosition(nint window, Vector2i position);
-    void WindowSetSize(nint window, Vector2i size);
+    void WindowSetTitle(WindowHandle window, string title);
+    void WindowSetPosition(WindowHandle window, Vector2i position);
+    void WindowSetSize(WindowHandle window, Vector2i size);
     void WindowCreate(WindowCreateSettings settings);
-    nint WindowCreateSync(WindowCreateSettings settings);
-    void WindowDestroy(nint window);
-    void WindowSwapBuffers(nint window);
-
+    WindowHandle WindowCreateSync(WindowCreateSettings settings);
+    void WindowDestroy(WindowHandle window);
+    void WindowSwapBuffers(WindowHandle window);
     nint GetProcAddress(string name);
 }

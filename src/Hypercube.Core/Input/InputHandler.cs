@@ -65,7 +65,7 @@ public sealed class InputHandler : IInputHandler
 
     public bool IsKeyState(Key key, KeyState state)
     {
-        return IsKeyState(WindowingApi.ContextCurrent, key, state);
+        return IsKeyState(WindowingApi.Context, key, state);
     }
 
     public bool IsKeyHeld(Key key)
@@ -85,7 +85,7 @@ public sealed class InputHandler : IInputHandler
 
     public void Simulate(KeyStateChangedArgs state)
     {
-        Simulate(WindowingApi.ContextCurrent, state);
+        Simulate(WindowingApi.Context, state);
     }
 
     public void Simulate(nint window, KeyStateChangedArgs state)

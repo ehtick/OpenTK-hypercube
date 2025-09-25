@@ -2,6 +2,7 @@
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
+using Hypercube.Core.Graphics.Texturing;
 using Hypercube.Core.Windowing;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
@@ -65,12 +66,12 @@ public sealed class HeadlessRenderingApi : IRenderingApi
         return new ShaderProgram();
     }
 
-    public uint CreateTexture(int width, int height, int channels, byte[] data)
+    public TextureHandle CreateTexture(int width, int height, int channels, byte[] data)
     {
-        return 0;
+        return TextureHandle.Zero;
     }
 
-    public void DeleteTexture(uint handle)
+    public void DeleteTexture(TextureHandle handle)
     {
     }
 

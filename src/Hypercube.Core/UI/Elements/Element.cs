@@ -2,10 +2,11 @@
 
 namespace Hypercube.Core.UI.Elements;
 
+[PublicAPI]
 public class Element
 {
-    public event Action<Element>? ChildAdded; 
-    public event Action<Element>? ChildRemoved; 
+    public event Action<Element>? OnChildAdded; 
+    public event Action<Element>? OnChildRemoved; 
     
     public string? Name;
     public Element? Parent { get; private set; }
@@ -60,7 +61,7 @@ public class Element
         _children.Add(element);
         element.Parent = this;
         
-        ChildAdded?.Invoke(element);
+        OnChildAdded?.Invoke(element);
     }
 
     public void RemoveChild(Element element)
@@ -74,7 +75,7 @@ public class Element
         _children.Remove(element);
         element.Parent = null;
         
-        ChildRemoved?.Invoke(element);
+        OnChildRemoved?.Invoke(element);
     }
     
     public override string ToString()

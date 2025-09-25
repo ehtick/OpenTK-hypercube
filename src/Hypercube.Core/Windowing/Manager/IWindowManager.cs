@@ -18,7 +18,13 @@ public interface IWindowManager : IDisposable
     /// It reflects the actual change reported by the windowing backend.
     /// </summary>
     event Action<Vector2i>? OnMainWindowResized;
+    event Action<IWindow>? OnWindowCreated;
 
+    /// <summary>
+    /// ...
+    /// </summary>
+    IReadOnlyList<IWindow> Windows { get; }
+    
     /// <summary>
     /// Gets the internal windowing API implementation used to create and manage windows.
     /// </summary>

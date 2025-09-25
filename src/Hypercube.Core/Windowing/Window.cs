@@ -7,7 +7,7 @@ namespace Hypercube.Core.Windowing;
 
 /// <inheritdoc/>
 [EngineInternal]
-public class Window : IWindow
+public sealed class Window : IWindow
 {
     /// <inheritdoc/>
     public event Action<string>? OnChangedTitle;
@@ -17,6 +17,12 @@ public class Window : IWindow
     
     /// <inheritdoc/>
     public event Action<Vector2i>? OnChangedSize;
+    
+    public event Action? OnDisposed;
+    
+    private readonly WindowHandle _handle;
+
+    #region Cached
     
     // I think it is worth explaining.
     // When the engine is running in thread mode for window processing
@@ -36,19 +42,24 @@ public class Window : IWindow
     // when stream processing is turned off.
     //
     // (And yes, we can't use _glfw.GetWindowSize since technically GLFW is in a different thread)
-
+    
     private string _cachedTitle;
     private Vector2i _cachedSize;
     private Vector2i _cachedPosition;
+    
+    #endregion
+
+    private bool _disposed;
+    private bool _destroyed;
 
     /// <inheritdoc/>
     public IWindowingApi Api { get; }
     
     /// <inheritdoc/>
-    public nint Handle { get; }
+    public WindowHandle Handle => _destroyed ? throw new InvalidOperationException() : _handle;
 
     /// <inheritdoc/>
-    public nint CurrentContext => Api.ContextCurrent;
+    public WindowHandle Context => Api.Context;
 
     /// <inheritdoc/>
     public WindowingApi Type => Api.Type;
@@ -74,10 +85,11 @@ public class Window : IWindow
         set => Api.WindowSetSize(Handle, value);
     }
 
-    public Window(IWindowingApi api, nint handle, WindowCreateSettings settings)
+    public Window(IWindowingApi api, WindowHandle handle, WindowCreateSettings settings)
     {
         Api = api;
-        Handle = handle;
+        
+        _handle = handle;
 
         _cachedTitle = settings.Title;
         _cachedSize = settings.Size;
@@ -87,10 +99,15 @@ public class Window : IWindow
         Api.OnWindowSize += OnSize;
     }
 
+    ~Window()
+    {
+        Dispose(false);
+    }
+
     /// <inheritdoc/>
     public void MakeCurrent()
     {
-        Api.ContextCurrent = Handle;
+        Api.Context = Handle;
     }
 
     /// <inheritdoc/>
@@ -107,13 +124,29 @@ public class Window : IWindow
 
     public void Dispose()
     {
-        Api.OnWindowTitle -= OnTitle;
-        Api.OnWindowPosition -= OnPosition;
-        Api.OnWindowSize -= OnSize;
-
-        Api.WindowDestroy(Handle);
-        
+        Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            // Managed
+            Api.OnWindowTitle -= OnTitle;
+            Api.OnWindowPosition -= OnPosition;
+            Api.OnWindowSize -= OnSize;
+        }
+        
+        // Unmanaged
+        Destroy();
+        
+        OnDisposed?.Invoke();
+        
+        _disposed = true;
     }
 
     public bool Equals(IWindow? other)
@@ -161,6 +194,12 @@ public class Window : IWindow
 
        _cachedSize = size;
        OnChangedSize?.Invoke(size);
+    }
+
+    private void Destroy()
+    {
+        Api.WindowDestroy(Handle);
+        _destroyed = true;
     }
 
     public static bool operator ==(Window left, Window right)

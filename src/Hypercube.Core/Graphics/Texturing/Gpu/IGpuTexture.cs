@@ -9,7 +9,7 @@ public interface IGpuTexture : IDisposable
     /// Gets the native GPU handle (identifier) for this texture.
     /// This handle is used to bind or manipulate the texture in GPU operations.
     /// </summary>
-    uint Handle { get; }
+    TextureHandle Handle { get; }
     
     /// <summary>
     /// Gets the width of the texture in pixels.

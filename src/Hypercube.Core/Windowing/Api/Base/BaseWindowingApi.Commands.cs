@@ -34,13 +34,13 @@ public abstract partial class BaseWindowingApi
     private readonly record struct CommandTerminate
         : ICommand;
 
-    private readonly record struct CommandWindowSetTitle(nint Window, string Title, Thread Thread)
+    private readonly record struct CommandWindowSetTitle(WindowHandle Window, string Title, Thread Thread)
         : ICommand;
 
-    private readonly record struct CommandWindowSetPosition(nint Window, Vector2i Position)
+    private readonly record struct CommandWindowSetPosition(WindowHandle Window, Vector2i Position)
         : ICommand;
 
-    private readonly record struct CommandWindowSetSize(nint Window, Vector2i Size)
+    private readonly record struct CommandWindowSetSize(WindowHandle Window, Vector2i Size)
         : ICommand;
 
     private readonly record struct CommandWindowCreate(WindowCreateSettings Settings)

@@ -15,16 +15,16 @@ public abstract partial class BaseWindowingApi : IWindowingApiInternal
     public abstract void InternalWaitEvents();
     
     public abstract void InternalWaitEventsTimeout(double timeout);
-    public abstract void InternalMakeContextCurrent(nint window);
-    public abstract nint InternalGetCurrentContext();
+    public abstract void InternalMakeContextCurrent(WindowHandle window);
+    public abstract WindowHandle InternalGetCurrentContext();
     
-    public abstract nint InternalWindowCreate(WindowCreateSettings settings);
-    public abstract void InternalWindowDestroy(nint window);
-    public abstract void InternalWindowSetTitle(nint window, string title);
-    public abstract void InternalWindowSetPosition(nint window, Vector2i position);
-    public abstract void InternalWindowSetSize(nint window, Vector2i size);
+    public abstract WindowHandle InternalWindowCreate(WindowCreateSettings settings);
+    public abstract void InternalWindowDestroy(WindowHandle window);
+    public abstract void InternalWindowSetTitle(WindowHandle window, string title);
+    public abstract void InternalWindowSetPosition(WindowHandle window, Vector2i position);
+    public abstract void InternalWindowSetSize(WindowHandle window, Vector2i size);
 
     public abstract nint InternalGetProcAddress(string name);
     public abstract void InternalSwapInterval(int interval);
-    public abstract void InternalSwapBuffers(nint window);
+    public abstract void InternalSwapBuffers(WindowHandle window);
 }

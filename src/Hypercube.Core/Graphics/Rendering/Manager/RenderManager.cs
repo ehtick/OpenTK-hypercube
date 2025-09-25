@@ -5,6 +5,7 @@ using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Rendering.Shaders;
 using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Manager;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 
@@ -15,6 +16,7 @@ namespace Hypercube.Core.Graphics.Rendering.Manager;
 public sealed class RenderManager : IRenderManager, IRenderManagerInternal
 {
     [Dependency] private readonly DependenciesContainer _dependenciesContainer = default!;
+    [Dependency] private readonly IWindowManager _windowManager = default!;
     [Dependency] private readonly ILogger _logger = default!;
     [Dependency] private readonly IRenderContext _context = default!;
 
@@ -50,7 +52,7 @@ public sealed class RenderManager : IRenderManager, IRenderManagerInternal
         
         Api.Init(context, settings);
         
-        _context.Init(Api);
+        _context.Init(Api, _windowManager.Api);
 
         StartupFrameTime();
     }

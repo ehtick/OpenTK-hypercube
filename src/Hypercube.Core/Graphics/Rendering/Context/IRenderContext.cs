@@ -1,5 +1,7 @@
 ﻿using Hypercube.Core.Graphics.Rendering.Api;
 using Hypercube.Core.Graphics.Resources;
+using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Api;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Quaternions;
 using Hypercube.Mathematics.Shapes;
@@ -16,8 +18,9 @@ public interface IRenderContext
     /// <summary>
     /// Initializes the rendering context with the given rendering API.
     /// </summary>
-    /// <param name="api">An instance of the rendering API providing low-level drawing functionality.</param>
-    void Init(IRenderingApi api);
+    /// <param name="renderingApi">An instance of the rendering API providing low-level drawing functionality.</param>
+    /// <param name="windowingApi">An instance of the windowing API providing low-level window manager functionality.</param>
+    void Init(IRenderingApi renderingApi, IWindowingApi windowingApi);
 
     /// <summary>
     /// Draws a 3D model at a given position, with rotation, scale, and optional texture override.
@@ -82,4 +85,5 @@ public interface IRenderContext
     
     void Scissor(bool value);
     void Scissor(Rect2i rect);
+    IDisposable UseContextScope(IWindow window);
 }

@@ -7,6 +7,7 @@ using Silk.NET.GLFW;
 using SilkGlfw = Silk.NET.GLFW.Glfw;
 using SilkWindowHandle = Silk.NET.GLFW.WindowHandle;
 using ContextApi = Hypercube.Core.Windowing.Settings.ContextApi;
+using SilkMonitor = Silk.NET.GLFW.Monitor;
 
 namespace Hypercube.Core.Windowing.Api.Realisations.Glfw;
 
@@ -61,14 +62,14 @@ public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
         _glfw.PostEmptyEvent();
     }
 
-    public override void InternalMakeContextCurrent(nint window)
+    public override void InternalMakeContextCurrent(WindowHandle window)
     {
-        _glfw.MakeContextCurrent((SilkWindowHandle*) window);
+        _glfw.MakeContextCurrent((SilkWindowHandle*) (nint) window);
     }
 
-    public override nint InternalGetCurrentContext()
+    public override WindowHandle InternalGetCurrentContext()
     {
-        return (nint) _glfw.GetCurrentContext();
+        return new WindowHandle((nint) _glfw.GetCurrentContext());
     }
 
     public override void InternalWaitEvents()
@@ -81,12 +82,12 @@ public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
         _glfw.WaitEventsTimeout(timeout);
     }
 
-    public override IntPtr InternalWindowCreate(WindowCreateSettings settings)
+    public override WindowHandle InternalWindowCreate(WindowCreateSettings settings)
     {
         var size = settings.Size;
         var title = settings.Title;
-        var monitor = settings.MonitorShare;
-        var share = settings.ContextShare;
+        var monitor = (SilkMonitor*) settings.MonitorShare;
+        var share = (SilkWindowHandle*) settings.ContextShare;
         
         // Hint
         _glfw.WindowHint(WindowHintClientApi.ClientApi, ToClientApi(settings.Api));
@@ -104,7 +105,7 @@ public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
             _glfw.WindowHint(WindowHintOpenGlProfile.OpenGlProfile, ToGlProfile(settings.Api));
 
         // Creation
-        var windowHandle = _glfw.CreateWindow(size.X, size.Y, title, null, null);
+        var windowHandle = _glfw.CreateWindow(size.X, size.Y, title, monitor, share);
 
         // Sync
         _glfw.GetWindowPos(windowHandle, out var positionX, out var positionY);
@@ -123,27 +124,27 @@ public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
         _glfw.SetWindowPosCallback(windowHandle, OnWindowPositionCallback);
         _glfw.SetWindowFocusCallback(windowHandle, OnWindowFocusCallback);
         
-        return (nint) windowHandle;
+        return new WindowHandle((nint) windowHandle);
     }
 
-    public override void InternalWindowDestroy(IntPtr window)
+    public override void InternalWindowDestroy(WindowHandle window)
     {
-        _glfw.DestroyWindow((SilkWindowHandle*) window);
+        _glfw.DestroyWindow((SilkWindowHandle*) (nint) window);
     }
 
-    public override void InternalWindowSetTitle(nint window, string title)
+    public override void InternalWindowSetTitle(WindowHandle window, string title)
     {
-        _glfw.SetWindowTitle((SilkWindowHandle*) window, title);
+        _glfw.SetWindowTitle((SilkWindowHandle*) (nint) window, title);
     }
 
-    public override void InternalWindowSetPosition(nint window, Vector2i position)
+    public override void InternalWindowSetPosition(WindowHandle window, Vector2i position)
     {
-        _glfw.SetWindowPos((SilkWindowHandle*) window, position.X, position.Y);
+        _glfw.SetWindowPos((SilkWindowHandle*) (nint) window, position.X, position.Y);
     }
 
-    public override void InternalWindowSetSize(nint window, Vector2i size)
+    public override void InternalWindowSetSize(WindowHandle window, Vector2i size)
     {
-        _glfw.SetWindowSize((SilkWindowHandle*) window, size.X, size.Y);
+        _glfw.SetWindowSize((SilkWindowHandle*) (nint) window, size.X, size.Y);
     }
 
     public override nint InternalGetProcAddress(string name)
@@ -156,8 +157,8 @@ public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
         _glfw.SwapInterval(interval);
     }
 
-    public override void InternalSwapBuffers(nint window)
+    public override void InternalSwapBuffers(WindowHandle window)
     {
-        _glfw.SwapBuffers((SilkWindowHandle*) window);
+        _glfw.SwapBuffers((SilkWindowHandle*) (nint) window);
     }
 }
