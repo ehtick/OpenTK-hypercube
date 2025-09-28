@@ -16,17 +16,17 @@ namespace Hypercube.Core.Input;
 /// which is an add-on on top of the current implementation.
 /// </summary>
 [UsedImplicitly]
-public sealed class InputHandler : IInputHandler
+public sealed class InputHandler : IInputHandler, IPostInject
 {
     [Dependency] private readonly IWindowManager _window = default!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
     [Dependency] private readonly ILogger _logger = default!;
     
     private readonly Dictionary<nint, Keys> _key = new();
-    
-    private IWindowingApi WindowingApi => _window.Api;
 
-    public InputHandler()
+    private IWindowingApi WindowingApi => _window.Api;
+    
+    public void OnPostInject()
     {
         _runtimeLoop.Actions.Add(OnUpdate, (int) EngineUpdatePriority.InputHandler); 
         
@@ -42,12 +42,12 @@ public sealed class InputHandler : IInputHandler
             keys.Released.Clear();
         }
     }
-    
+
     public bool IsKeyState(nint window, Key key, KeyState state)
     {
         return _key.TryGetValue(window, out var keys) && keys[state].Contains(key);
     }
-    
+
     public bool IsKeyHeld(nint window, Key key)
     {
         return IsKeyState(window, key, KeyState.Held);
@@ -97,7 +97,7 @@ public sealed class InputHandler : IInputHandler
     {
         Clear();
     }
-    
+
     private void OnKeyUpdate(nint window, KeyStateChangedArgs state)
     {
         var keys = _key.GetOrInstantiate(window);
@@ -127,7 +127,7 @@ public sealed class InputHandler : IInputHandler
     {
         
     }
-    
+
     private readonly struct Keys
     {
         public readonly List<Key> Released = [];

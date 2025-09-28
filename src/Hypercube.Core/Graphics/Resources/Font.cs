@@ -15,7 +15,7 @@ public class Font : Resource
     public Font(Texture texture, FontInfo info)
     {
         Texture = texture;
-        Info = Info;
+        Info = info;
     }
     
     public override void Dispose()

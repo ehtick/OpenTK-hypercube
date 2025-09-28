@@ -7,7 +7,7 @@ namespace Hypercube.Core.Ecs.Core.Systems;
 
 [EngineInternal]
 [UsedImplicitly]
-public sealed class EntitySystemManager : IEntitySystemManager
+public sealed class EntitySystemManager : IEntitySystemManager, IPostInject
 {
     [Dependency] private readonly DependenciesContainer _container = default!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
@@ -18,8 +18,8 @@ public sealed class EntitySystemManager : IEntitySystemManager
     private readonly NumPool<int> _worldIdPool = new();
 
     private IWorld[] _worlds = [];
-
-    public EntitySystemManager()
+    
+    public void OnPostInject()
     {
         _runtimeLoop.Actions.Add(OnUpdate, (int) EngineUpdatePriority.EntitySystemManager);
     }

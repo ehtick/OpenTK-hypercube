@@ -27,7 +27,7 @@
   <ItemGroup>
     <PackageReference Include="Hypercube.Mathematics" Version="1.0.5" />
     <PackageReference Include="Hypercube.ModLoader" Version="1.0.1" />
-    <PackageReference Include="Hypercube.Utilities" Version="1.0.8" />
+    <PackageReference Include="Hypercube.Utilities" Version="1.1.2" />
   </ItemGroup>
 
 </Project>

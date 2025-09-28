@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Analyzers", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Runner", "src\Hypercube.Runner\Hypercube.Runner.csproj", "{ACFF78DF-9D20-4630-9902-8AB01796955E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Editor", "Hypercube.Editor\Hypercube.Editor.csproj", "{28CCC0B6-D9D0-49ED-8213-B12F2948A3FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Editor", "src\Hypercube.Editor\Hypercube.Editor.csproj", "{28CCC0B6-D9D0-49ED-8213-B12F2948A3FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

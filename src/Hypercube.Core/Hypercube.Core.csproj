@@ -37,7 +37,7 @@
   <ItemGroup>
     <PackageReference Include="Hypercube.Mathematics" Version="1.0.5" />
     <PackageReference Include="Hypercube.ModLoader" Version="1.0.1" />
-    <PackageReference Include="Hypercube.Utilities" Version="1.0.9" />
+    <PackageReference Include="Hypercube.Utilities" Version="1.1.2" />
     
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
     

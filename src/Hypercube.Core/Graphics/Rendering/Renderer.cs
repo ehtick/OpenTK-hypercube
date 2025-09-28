@@ -12,7 +12,7 @@ namespace Hypercube.Core.Graphics.Rendering;
 
 [UsedImplicitly]
 [EngineInternal]
-public class Renderer : IRenderer
+public class Renderer : IRenderer, IPostInject
 {
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
     [Dependency] private readonly IWindowManager _windowManager = default!;
@@ -26,7 +26,7 @@ public class Renderer : IRenderer
     private RendererSettings _settings;
     private IWindow? _window;
 
-    public Renderer()
+    public void OnPostInject()
     {
         _runtimeLoop.Actions.Add(_ => Update(), (int) EngineUpdatePriority.RendererUpdate);
         _runtimeLoop.Actions.Add(_ => Render(), (int) EngineUpdatePriority.RendererRender);
