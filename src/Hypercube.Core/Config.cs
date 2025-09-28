@@ -73,6 +73,13 @@ public static class Config
         new("WindowingThreadEventBridgeBufferSize", 32);
     
     /**
+     * Fonts
+     */
+    
+    public static readonly ConfigField<char> FontDefaultChar =
+        new("FontDefaultChar", '\ufffd');
+    
+    /**
      * Main window
      */
 

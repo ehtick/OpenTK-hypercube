@@ -78,7 +78,8 @@ public sealed partial class RenderContext
             if (!font.Info.Glyphs.TryGetValue(c, out var glyph))
             {
                 // Can be replaced by a space or skip
-                continue;
+                if (!font.Info.Glyphs.TryGetValue(Config.FontDefaultChar, out glyph))
+                    continue;
             }
 
             // Calculate glyph size and position
