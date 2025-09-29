@@ -69,16 +69,16 @@ public sealed partial class RenderContext
             if (c == '\n')
             {
                 // Move to next line
-                pen = new Vector2(position.X, pen.Y - font.Info.LineHeight * scale) ;
-                //baselineY = pen.Y - font.Info.Baseline * scale;
+                pen = new Vector2(position.X, pen.Y - font.LineHeight * scale) ;
+                //baselineY = pen.Y - font.Baseline * scale;
                 // prev = '\0';
                 continue;
             }
             
-            if (!font.Info.Glyphs.TryGetValue(c, out var glyph))
+            if (!font.Glyphs.TryGetValue(c, out var glyph))
             {
                 // Can be replaced by a space or skip
-                if (!font.Info.Glyphs.TryGetValue(Config.FontDefaultChar, out glyph))
+                if (!font.Glyphs.TryGetValue(Config.FontDefaultChar, out glyph))
                     continue;
             }
 
