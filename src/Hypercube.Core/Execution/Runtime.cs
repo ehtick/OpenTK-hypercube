@@ -46,7 +46,8 @@ public sealed class Runtime
         Thread.CurrentThread.Name = "Main";
         
         InitPrimaryDependencies();
-        
+
+        _logger.LogLevel = Config.LoggingLevel;
         _logger.Echo(EngineInfo.WelcomeMessage);
         _logger.Info("Dependency initialization...");
         
@@ -109,12 +110,12 @@ public sealed class Runtime
     private void InitPrimaryDependencies()
     {
         _dependencies.RegisterSingleton<ILogger>(_logger);
+        _dependencies.Register<IConfigManager, ConfigManager>();
     }
     
     private void InitDependencies()
     {
         // Core
-        _dependencies.Register<IConfigManager, ConfigManager>();
         _dependencies.Register<IRuntimeLoop, RuntimeLoop>();
         _dependencies.Register<IEntitySystemManager, EntitySystemManager>();
 

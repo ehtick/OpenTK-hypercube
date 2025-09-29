@@ -2,6 +2,7 @@
 using Hypercube.Core.Graphics.Rendering.Api;
 using Hypercube.Mathematics;
 using Hypercube.Utilities.Configuration;
+using Hypercube.Utilities.Debugging.Logger;
 
 namespace Hypercube.Core;
 
@@ -103,4 +104,11 @@ public static class Config
     
     //public static readonly ConfigField<Vector2i> MainWindowSize =
     //    new("MainWindowSize", new Vector2i(800, 600));
+
+    /**
+     * Logging
+     */
+
+    public static readonly ConfigField<LogLevel> LoggingLevel =
+        new("LoggingLevel", LogLevel.Trace);
 }
