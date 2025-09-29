@@ -3,10 +3,18 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Graphics.Fonts;
 
-public struct Glyph
+public readonly struct Glyph
 {
-    public char Character;
-    public Rect2 SourceRect;
-    public Vector2 Offset;
-    public float Advance;
+    public readonly char Character;
+    public readonly Rect2 SourceRect;
+    public readonly Vector2 Offset;
+    public readonly float Advance;
+
+    public Glyph(char character, Rect2 sourceRect, Vector2 offset, float advance)
+    {
+        Character = character;
+        SourceRect = sourceRect;
+        Offset = offset;
+        Advance = advance;
+    }
 }

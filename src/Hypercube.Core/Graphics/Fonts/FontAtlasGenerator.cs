@@ -21,15 +21,12 @@ public static class FontAtlasGenerator
         var cellSize = fontSize + padding;
 
         var chars = StbTrueTypeHelper.GetFontChars(font);
-        
-        var columns = (int) MathF.Ceiling(MathF.Sqrt(chars.Count));
-        var rows = (int) MathF.Ceiling(chars.Count / (float) columns);
-        
-        var grid = new Vector2i(columns, rows);
+
+        var grid = GetGrid(chars.Count);
         var atlasSize = grid * cellSize;
 
         // RGBA image
-        var pixelData = new byte[atlasSize.X * atlasSize.Y * 4];
+        var atlasData = new byte[atlasSize.X * atlasSize.Y * 4];
         var x = 0;
         var y = 0;
 
@@ -54,23 +51,22 @@ public static class FontAtlasGenerator
                     var dstY = y + j;
                     var dstIndex = (dstY * atlasSize.X + dstX) * 4;
                     
-                    pixelData[dstIndex + 0] = byte.MaxValue;
-                    pixelData[dstIndex + 1] = byte.MaxValue;
-                    pixelData[dstIndex + 2] = byte.MaxValue;
-                    pixelData[dstIndex + 3] = value;
+                    atlasData[dstIndex + 0] = byte.MaxValue;
+                    atlasData[dstIndex + 1] = byte.MaxValue;
+                    atlasData[dstIndex + 2] = byte.MaxValue;
+                    atlasData[dstIndex + 3] = value;
                 }
             }
 
             StbTrueTypeHelper.FreeBitmap(bitmap);
             StbTrueTypeHelper.GetGlyphHMetrics(font, index, out var advanceWidth, out _);
             
-            glyphs.Add(character, new Glyph
-            {
-                Character = character,
-                SourceRect = new Rect2(x, y, x + bitmapSize.X, y + bitmapSize.Y),
-                Offset = offset,
-                Advance = advanceWidth * scale
-            });
+            glyphs.Add(character, new Glyph(
+                character,
+                new Rect2(x, y, x + bitmapSize.X, y + bitmapSize.Y),
+                offset,
+                advanceWidth * scale
+            ));
 
             x += cellSize;
             
@@ -81,11 +77,6 @@ public static class FontAtlasGenerator
             y += cellSize;
         }
 
-        var stream = new MemoryStream();
-        var writer = new ImageWriter();
-        
-        writer.WritePng(pixelData, atlasSize.X, atlasSize.Y, ColorComponents.RedGreenBlueAlpha, stream);
-
         info = new FontInfo(
             glyphs.ToFrozenDictionary(),
             0,
@@ -94,7 +85,27 @@ public static class FontAtlasGenerator
             lineGap
         );
         
+        return CreateImageStream(atlasData, atlasSize);
+    }
+
+    private static Vector2i GetGrid(int count)
+    {
+        var columns = (int) MathF.Ceiling(MathF.Sqrt(count));
+        var rows = (int) MathF.Ceiling(count / (float) columns);
+        
+        var grid = new Vector2i(columns, rows);
+
+        return grid;
+    }
+    
+    private static MemoryStream CreateImageStream(byte[] data, Vector2i size)
+    {
+        var stream = new MemoryStream();
+        var writer = new ImageWriter();
+        
+        writer.WritePng(data, size.X, size.Y, ColorComponents.RedGreenBlueAlpha, stream);
         stream.Position = 0;
+
         return stream;
     }
 }
