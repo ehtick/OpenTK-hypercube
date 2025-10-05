@@ -63,7 +63,7 @@ public static class FontAtlasGenerator
             
             glyphs.Add(character, new Glyph(
                 character,
-                new Rect2(x, y, x + bitmapSize.X, y + bitmapSize.Y),
+                Rect2.FromSize(new Vector2(x, y), bitmapSize),
                 offset,
                 advanceWidth * scale
             ));

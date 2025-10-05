@@ -10,15 +10,23 @@ public readonly struct Vertex
     public const int Size = 12;
 
     public readonly Vector3 Position;
-    public readonly Color Color;
+    public readonly Vector4 Color;
     public readonly Vector2 UVCoords;
     public readonly Vector3 Normal;
 
-    public Vertex(Vector2 position, Vector2 uvCoords, Color color, Vector3 normal = new())
+    public Vertex(Vector3 position, Vector2 uvCoords, Color color, Vector3 normal)
+    {
+        Position = position;
+        UVCoords = uvCoords;
+        Color = color.Vec4;
+        Normal = normal;
+    }
+    
+    public Vertex(Vector2 position, Vector2 uvCoords, Color color)
     {
         Position = new Vector3(position);
         UVCoords = uvCoords;
-        Color = color;
-        Normal = normal;
+        Color = color.Vec4;
+        Normal = Vector3.Zero;
     }
 }

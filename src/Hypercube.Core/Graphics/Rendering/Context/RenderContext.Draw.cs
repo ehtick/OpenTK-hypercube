@@ -26,14 +26,14 @@ public sealed partial class RenderContext
         
         foreach (var (v, vt, vn) in model.Indices)
         {
-            var pos = matrix.Transform(model.Vertices[v]);
+            var vertexPosition = matrix.Transform(model.Vertices[v]);
             
             var uv = vt >= 0 && vt < model.UVs.Length ? model.UVs[vt] : Vector2.Zero;;
             var normal = vn >= 0 && vn < model.Normals.Length
                 ? matrix.Transform(model.Normals[vn]).Normalized
                 : Vector3.UnitZ;
     
-            _renderingApi.PushVertex(new Vertex(pos, uv, color, normal));
+            _renderingApi.PushVertex(new Vertex(vertexPosition.Xy, uv, color, normal));
         }
         
         for (var i = 0; i < model.Indices.Length; i += 3)

@@ -32,8 +32,10 @@ public static class Config
     public static readonly ConfigField<RenderingApi> Rendering =
         new("Rendering", RenderingApi.OpenGl);
 
-    public static readonly ConfigField<Color> RenderingClearColor =
-        new("RenderingClearColor", Color.Black);
+    public static readonly Color RenderingClearColor = Color.Black;
+    
+    // public static readonly ConfigField<Color> RenderingClearColor =
+    //     new("RenderingClearColor", Color.Black);
     
     public static readonly ConfigField<int> RenderingMaxVertices =
         new("RenderingMaxVertices", 65532);    
