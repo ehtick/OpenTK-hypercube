@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Windowing.Settings;
+﻿using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Settings;
 
 namespace Hypercube.Core.Graphics.Rendering;
 
@@ -10,5 +11,5 @@ public interface IRenderer
     void Update();
     void Draw();
     void Render();
-    void CreateMainWindow(WindowCreateSettings settings);
+    IWindow CreateMainWindow(WindowCreateSettings settings);
 }

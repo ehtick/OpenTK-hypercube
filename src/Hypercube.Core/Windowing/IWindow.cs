@@ -36,6 +36,8 @@ public interface IWindow : IEquatable<IWindow>, IContextInfo, IDisposable
     /// </remarks>
     event Action<Vector2i>? OnChangedSize;
 
+    event Action OnClose;
+
     /// <summary>
     /// Gets the internal windowing API implementation.
     /// </summary>

@@ -2,7 +2,7 @@
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 
-namespace Hypercube.Core.Execution;
+namespace Hypercube.Core.Execution.LifeCycle;
 
 [UsedImplicitly]
 public sealed class RuntimeLoop : IRuntimeLoop
@@ -15,6 +15,7 @@ public sealed class RuntimeLoop : IRuntimeLoop
 
     public ISubscribableOrderedActions<FrameEventArgs> Actions => _actions;
 
+    /// <inheritdoc/>    
     public void Run()
     {
         if (Running)

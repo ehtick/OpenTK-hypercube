@@ -17,7 +17,9 @@ public sealed class Window : IWindow
     
     /// <inheritdoc/>
     public event Action<Vector2i>? OnChangedSize;
-    
+
+    public event Action? OnClose;
+
     public event Action? OnDisposed;
     
     private readonly WindowHandle _handle;
@@ -94,9 +96,10 @@ public sealed class Window : IWindow
         _cachedTitle = settings.Title;
         _cachedSize = settings.Size;
 
-        Api.OnWindowTitle += OnTitle;
-        Api.OnWindowPosition += OnPosition;
-        Api.OnWindowSize += OnSize;
+        Api.OnWindowTitle += OnApiTitle;
+        Api.OnWindowPosition += OnApiPosition;
+        Api.OnWindowSize += OnApiSize;
+        Api.OnWindowClose += OnApiClose;
     }
 
     ~Window()
@@ -136,9 +139,9 @@ public sealed class Window : IWindow
         if (disposing)
         {
             // Managed
-            Api.OnWindowTitle -= OnTitle;
-            Api.OnWindowPosition -= OnPosition;
-            Api.OnWindowSize -= OnSize;
+            Api.OnWindowTitle -= OnApiTitle;
+            Api.OnWindowPosition -= OnApiPosition;
+            Api.OnWindowSize -= OnApiSize;
         }
         
         // Unmanaged
@@ -169,7 +172,7 @@ public sealed class Window : IWindow
         return $"{Handle} ({Enum.GetName(Type)})";
     }
 
-    private void OnTitle(nint window, string title)
+    private void OnApiTitle(nint window, string title)
     {
         if (window != Handle)
             return;
@@ -178,7 +181,7 @@ public sealed class Window : IWindow
         OnChangedTitle?.Invoke(title);
     }
 
-    private void OnPosition(nint window, Vector2i position)
+    private void OnApiPosition(nint window, Vector2i position)
     {
         if (window != Handle)
             return;
@@ -187,13 +190,21 @@ public sealed class Window : IWindow
         OnChangedPosition?.Invoke(position);
     }
 
-    private void OnSize(nint window, Vector2i size)
+    private void OnApiSize(nint window, Vector2i size)
     {
        if (window != Handle)
            return;
 
        _cachedSize = size;
        OnChangedSize?.Invoke(size);
+    }
+
+    private void OnApiClose(nint window)
+    {
+        if (window != Handle)
+            return;
+        
+        OnClose?.Invoke();
     }
 
     private void Destroy()

@@ -1,29 +1,17 @@
-﻿using System.Reflection;
-using Hypercube.Core.Audio.Manager;
+﻿using Hypercube.Core.Audio.Manager;
 using Hypercube.Core.Ecs;
-using Hypercube.Core.Ecs.Core.Systems;
-using Hypercube.Core.Execution.Attributes;
 using Hypercube.Core.Execution.Enums;
-using Hypercube.Core.Graphics.Patching;
+using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Core.Graphics.Rendering;
-using Hypercube.Core.Graphics.Rendering.Context;
-using Hypercube.Core.Graphics.Rendering.Manager;
-using Hypercube.Core.Graphics.Viewports;
-using Hypercube.Core.Input;
 using Hypercube.Core.Resources;
-using Hypercube.Core.Utilities.Helpers;
-using Hypercube.Core.Windowing.Manager;
-using Hypercube.Core.Windowing.Settings;
-using Hypercube.Utilities.Arguments;
+using Hypercube.Core.Utilities.Extensions;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
-using Hypercube.Utilities.Extensions;
-using Hypercube.Utilities.Helpers;
 
 namespace Hypercube.Core.Execution;
 
-public sealed class Runtime
+public sealed partial class Runtime
 {
     private readonly DependenciesContainer _dependencies = new();
 
@@ -35,152 +23,70 @@ public sealed class Runtime
     [Dependency] private readonly IAudioManager _audioManager = default!;
 
     private readonly ConsoleLogger _logger = new();
-    private readonly Dictionary<EntryPointLevel, List<MethodInfo>> _entryPoints = [];
-    private readonly ArgumentParser _parser = new ArgumentParser()
-        .AddFlag(RuntimeArguments.ConfigDontInit);
 
     public void Start(string[] args) 
     {
         _parser.Parse(args);
-        
+        InitCore();
+        InitConfig();
+        InitModules();
+        RunApplication();
+        ShutdownApplication();;
+    }
+    
+    private void InitCore()
+    {
         Thread.CurrentThread.Name = "Main";
-        
         InitPrimaryDependencies();
-
+        
         _logger.LogLevel = Config.LoggingLevel;
         _logger.Echo(EngineInfo.WelcomeMessage);
-        _logger.Info("Dependency initialization...");
         
+        _logger.Info("Dependency initialization...");
         InitDependencies();
-
+    }
+    
+    private void InitConfig()
+    {
         if (!_parser.Get<bool>(RuntimeArguments.ConfigDontInit))
             _configManager.Init();
-        
+
         _logger.Info("Dependency initialization is complete!");
         _logger.Info("Preparing for the execution of entry points...");
 
         EntryPointsLoad();
         EntryPointsExecute(EntryPointLevel.BeforeInit);
-        
+
         _resourceManager.Mount(Config.MountFolders);
-        
+    }
+    
+    private void InitModules()
+    {
         _logger.Info("The entry points are called!");
         _logger.Info("Initialization of internal modules...");
-        
-        _renderer.Init(new RendererSettings
-        {
-            Thread = WindowingThreadSettingsHelper.FromConfig(),
-            WindowingApi = WindowingApiSettingsHelper.FromConfig(),
-            RenderingApi = RenderingApiSettingsHelper.FromConfig(),
-            ReadySleepDelay = Config.WindowingThreadReadySleepDelay
-        });
-        
-        _renderer.CreateMainWindow(new WindowCreateSettings
-        {
-            Api = new ApiSettings
-            {
-                Api = ContextApi.OpenGl,
-                Flags = ContextFlags.Debug,
-                Profile = ContextProfile.Core,
-                Version = new Version(4, 6)
-            },
-            Title = Config.MainWindowTitle,
-            Resizable = Config.MainWindowResizable,
-            Decorated = Config.MainWindowDecorated,
-            Floating = Config.MainWindowFloating,
-            Visible = Config.MainWindowVisible,
-            TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
-        });
-        
+
+        _renderer.Init();
+        var mainWindow = _renderer.CreateMainWindow();
+        mainWindow.OnClose += () => _runtimeLoop.Shutdown();
+
         _audioManager.Init();
-        
         _resourceManager.AddAllLoaders();
-        
         _renderer.Load();
 
         InitDependentsDependencies();
-        
         _entitySystemManager.CrateMainWorld();
 
         _logger.Info("Preparation is complete, start the main application cycle");
+    }
+    
+    private void RunApplication()
+    {
         EntryPointsExecute(EntryPointLevel.AfterInit);
         _runtimeLoop.Run();
     }
 
-    private void InitPrimaryDependencies()
+    private void ShutdownApplication()
     {
-        _dependencies.RegisterSingleton<ILogger>(_logger);
-        _dependencies.Register<IConfigManager, ConfigManager>();
-    }
-    
-    private void InitDependencies()
-    {
-        // Core
-        _dependencies.Register<IRuntimeLoop, RuntimeLoop>();
-        _dependencies.Register<IEntitySystemManager, EntitySystemManager>();
-
-        // Resources
-        _dependencies.RegisterSingleton<IResourceManager>(new ResourceManager(container: _dependencies));
-        
-        // Windowing
-        _dependencies.Register<IWindowManager, WindowManager>();
-        
-        // Graphics
-        _dependencies.Register<ICameraManager, CameraManager>();
-        _dependencies.Register<IRenderContext, RenderContext>();
-        _dependencies.Register<IRenderManager, RenderManager>();
-        _dependencies.Register<IPatchManager, PatchManager>();
-        _dependencies.Register<IRenderer, Renderer>();
-        
-        // Audio
-        _dependencies.Register<IAudioManager, AudioManager>();
-
-        _dependencies.ResolveAll();
-        _dependencies.Inject(this);
-    }
-    
-    private void InitDependentsDependencies()
-    {
-        // Input
-        _dependencies.Register<IInputHandler, InputHandler>();
-        _dependencies.ResolveAll();
-    }
-
-    private void EntryPointsLoad()
-    {
-        var methods = ReflectionHelper.GetExecutableMethodsWithAttributeFromAllAssemblies<EntryPointAttribute>(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-        foreach (var method in methods)
-        {
-            if (!method.IsStatic)
-                throw new InvalidOperationException();
-            
-            var attribute = method.GetCustomAttribute<EntryPointAttribute>()!;
-            _entryPoints.GetOrInstantiate(attribute.Level).Add(method);
-            
-            _logger.Debug($"Loaded {method.Name} entry point");
-        }
-    }
-    
-    private void EntryPointsExecute(EntryPointLevel level)
-    {
-        if (!_entryPoints.TryGetValue(level, out var entryPoints))
-            return;
-        
-        foreach (var method in entryPoints)
-        {
-            var parameters = method.GetParameters();
-            if (parameters.Length == 1)
-            {
-                if (parameters[0].ParameterType == typeof(DependenciesContainer))
-                {
-                    method.Invoke(null, [_dependencies]);
-                    continue;
-                }
-                
-                throw new InvalidOperationException();
-            }
-            
-            method.Invoke(null, null);
-        }
+        _renderer.Shutdown();
     }
 }

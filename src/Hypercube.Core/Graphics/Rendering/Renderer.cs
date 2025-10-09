@@ -1,4 +1,5 @@
 ﻿using Hypercube.Core.Execution;
+using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Rendering.Manager;
@@ -28,8 +29,8 @@ public class Renderer : IRenderer, IPostInject
 
     public void OnPostInject()
     {
-        _runtimeLoop.Actions.Add(_ => Update(), (int) EngineUpdatePriority.RendererUpdate);
-        _runtimeLoop.Actions.Add(_ => Render(), (int) EngineUpdatePriority.RendererRender);
+        _runtimeLoop.Actions.Add(_ => Update(), EngineUpdatePriority.RendererUpdate);
+        _runtimeLoop.Actions.Add(_ => Render(), EngineUpdatePriority.RendererRender);
     }
 
     public void Init(RendererSettings settings)
@@ -69,15 +70,16 @@ public class Renderer : IRenderer, IPostInject
         _renderManager.Render(_window);
     }
 
-    public void CreateMainWindow(WindowCreateSettings settings)
+    public IWindow CreateMainWindow(WindowCreateSettings settings)
     {
         if (_window is not null)
             throw new Exception();
         
         _window = _windowManager.Create(settings);
-       
         _window.MakeCurrent();
         _renderManager.Init(_window, _settings.RenderingApi);
+
+        return _window;
     }
 
     private Task InitAsync(RendererSettings settings)

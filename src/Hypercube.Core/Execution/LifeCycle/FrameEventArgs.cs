@@ -1,4 +1,4 @@
-﻿namespace Hypercube.Core.Execution;
+﻿namespace Hypercube.Core.Execution.LifeCycle;
 
 public readonly struct FrameEventArgs
 {

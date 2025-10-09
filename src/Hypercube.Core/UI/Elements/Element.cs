@@ -1,10 +1,16 @@
 ﻿using Hypercube.Core.Graphics.Rendering.Context;
+using Hypercube.Core.UI.Alignment;
+using Hypercube.Mathematics.Shapes;
+using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.UI.Elements;
 
 [PublicAPI]
 public class Element
 {
+    private const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Stretch;
+    private const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Stretch;
+    
     public event Action<Element>? OnChildAdded; 
     public event Action<Element>? OnChildRemoved; 
     
@@ -16,8 +22,75 @@ public class Element
     public IReadOnlyList<Element> Children => _children;
     public int Count => _children.Count;
 
+    public HorizontalAlignment HorizontalAlignment = DefaultHorizontalAlignment;
+    public VerticalAlignment VerticalAlignment = DefaultVerticalAlignment;
+    public Vector2 Position;
+    public bool Visible = true;
+
+    public Vector2 Size;
+    public Vector2 MinSize = Vector2.Zero;
+    public Vector2 MaxSize = Vector2.PositiveInfinity;
+
+    public Rect2 Margin;
+
     public virtual void Render(IRenderContext context)
     {
+    }
+
+    public void Arrange(in Rect2 parentRect)
+    {
+        if (!Visible)
+            return;
+
+        var baseRect = parentRect;
+        var baseSize = baseRect.Size;
+        
+        var origin = parentRect.TopLeft;
+        var size = parentRect.Size;
+
+        // Constraints
+        size = size.Clamp(MinSize, MaxSize);
+        
+        switch (HorizontalAlignment)
+        {
+            case HorizontalAlignment.Left:
+                // Skip because origin by default left
+                break;
+            
+            case HorizontalAlignment.Right:
+                origin = origin.WithX(baseSize.X - size.X);
+                break;
+
+            case HorizontalAlignment.Stretch:
+            case HorizontalAlignment.Center:
+                origin = origin.WithX((baseSize.X - size.X) / 2);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        switch (VerticalAlignment)
+        {
+            case VerticalAlignment.Top:
+                // Skip because origin by default top
+                break;
+
+            case VerticalAlignment.Bottom:
+                origin = origin.WithY(baseSize.Y - size.Y);
+                break;
+            
+            case VerticalAlignment.Stretch:
+            case VerticalAlignment.Center:
+                origin = origin.WithY((baseSize.Y - size.Y) / 2);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        Position = origin;
+        Size = size;
     }
     
     public Element Find(string name)

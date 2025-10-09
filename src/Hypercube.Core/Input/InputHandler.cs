@@ -1,7 +1,6 @@
-﻿using Hypercube.Core.Execution;
+﻿using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Core.Windowing.Api;
 using Hypercube.Core.Windowing.Manager;
-using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;
 
@@ -28,7 +27,7 @@ public sealed class InputHandler : IInputHandler, IPostInject
     
     public void OnPostInject()
     {
-        _runtimeLoop.Actions.Add(OnUpdate, (int) EngineUpdatePriority.InputHandler); 
+        _runtimeLoop.Actions.Add(OnUpdate, EngineUpdatePriority.InputHandler); 
         
         WindowingApi.OnWindowKey += OnKeyUpdate;
         WindowingApi.OnWindowMouseButton += OnMouseButtonUpdate;

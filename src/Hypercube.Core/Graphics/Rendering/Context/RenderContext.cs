@@ -1,5 +1,4 @@
 ﻿using Hypercube.Core.Graphics.Rendering.Api;
-using Hypercube.Core.Windowing;
 using Hypercube.Core.Windowing.Api;
 using Hypercube.Mathematics.Shapes;
 

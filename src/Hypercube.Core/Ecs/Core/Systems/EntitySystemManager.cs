@@ -1,5 +1,6 @@
 ﻿using Hypercube.Core.Ecs.Utilities;
 using Hypercube.Core.Execution;
+using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Utilities.Collections;
 using Hypercube.Utilities.Dependencies;
 
@@ -21,7 +22,7 @@ public sealed class EntitySystemManager : IEntitySystemManager, IPostInject
     
     public void OnPostInject()
     {
-        _runtimeLoop.Actions.Add(OnUpdate, (int) EngineUpdatePriority.EntitySystemManager);
+        _runtimeLoop.Actions.Add(OnUpdate, EngineUpdatePriority.EntitySystemManager);
     }
 
     public void CrateMainWorld()
