@@ -110,19 +110,19 @@ public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
         // Sync
         _glfw.GetWindowPos(windowHandle, out var positionX, out var positionY);
         
-        OnWindowSizeCallback(windowHandle, settings.Size.X, settings.Size.Y);
-        OnWindowPositionCallback(windowHandle, positionX, positionY);
+        WindowSizeCallback(windowHandle, settings.Size.X, settings.Size.Y);
+        WindowPositionCallback(windowHandle, positionX, positionY);
 
         // Callbacks
-        _glfw.SetKeyCallback(windowHandle, OnWindowKey);
-        _glfw.SetScrollCallback(windowHandle, OnWindowScroll);
-        _glfw.SetMouseButtonCallback(windowHandle, OnWindowMouseButton);
-        _glfw.SetCursorPosCallback(windowHandle, OnWindowCursor);
+        _glfw.SetKeyCallback(windowHandle, WindowKeyCallback);
+        _glfw.SetScrollCallback(windowHandle, WindowScrollCallback);
+        _glfw.SetMouseButtonCallback(windowHandle, WindowMouseButtonCallback);
+        _glfw.SetCursorPosCallback(windowHandle, WindowCursorCallback);
         
-        _glfw.SetWindowCloseCallback(windowHandle, OnWindowCloseCallback);
-        _glfw.SetWindowSizeCallback(windowHandle, OnWindowSizeCallback);
-        _glfw.SetWindowPosCallback(windowHandle, OnWindowPositionCallback);
-        _glfw.SetWindowFocusCallback(windowHandle, OnWindowFocusCallback);
+        _glfw.SetWindowCloseCallback(windowHandle, WindowCloseCallback);
+        _glfw.SetWindowSizeCallback(windowHandle, WindowSizeCallback);
+        _glfw.SetWindowPosCallback(windowHandle, WindowPositionCallback);
+        _glfw.SetWindowFocusCallback(windowHandle, WindowFocusCallback);
         
         return new WindowHandle((nint) windowHandle);
     }

@@ -40,9 +40,8 @@ public struct WindowCreateSettings
     /// <summary>
     /// The window handle of another window that will be used to share the context with the current window.
     /// </summary>
-    public nint? ContextShare { get; init; } = null;
-    
-    public nint? MonitorShare { get; init; } = null;
+    public nint ContextShare { get; init; } = nint.Zero;
+    public nint MonitorShare { get; init; } = nint.Zero;
     public bool VSync { get; init; } = false;
     
     public WindowCreateSettings()

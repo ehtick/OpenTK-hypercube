@@ -13,10 +13,12 @@ namespace Hypercube.Core.Graphics.Rendering.Api.Realisations.Headless;
 
 public sealed class HeadlessRenderingApi : IRenderingApi
 {
+#pragma warning disable CS0067
     public event InitHandler? OnInit;
     public event DrawHandler? OnDraw;
     public event DebugInfoHandler? OnDebugInfo;
-
+#pragma warning restore CS0067
+    
     public IShaderProgram? PrimitiveShaderProgram => null;
     public IShaderProgram? TexturingShaderProgram => null;
 

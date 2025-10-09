@@ -1,4 +1,5 @@
 ﻿using Hypercube.Core.Audio.Api;
+using Hypercube.Core.Audio.Api.Realisations.Headless;
 using Hypercube.Core.Audio.Api.Realisations.OpenAl;
 using Hypercube.Core.Audio.Exceptions;
 using Hypercube.Utilities.Debugging.Logger;
@@ -20,7 +21,19 @@ public sealed class AudioManager : IAudioManager
     {
         _api = new OpenAlAudioApi();
         _api.OnError += OnError;
-        _api.Init();
+        
+        if (!_api.Init())
+        {
+            _api.OnError -= OnError;
+            
+            _logger.Warning("Audio Manager failed to initialize API. Switch to headless mode");
+            
+            _api = new HeadlessAudioApi();
+            
+            // It doesn't really matter,
+            // but in fact it's correct
+            _api.Init();
+        }
         
         _logger.Info($"Audio Api (OpenAL) info:\n{_api.Info}");
     }

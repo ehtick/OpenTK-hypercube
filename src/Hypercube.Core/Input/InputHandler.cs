@@ -20,7 +20,7 @@ public sealed class InputHandler : IInputHandler, IPostInject
 {
     [Dependency] private readonly IWindowManager _window = default!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
-    [Dependency] private readonly ILogger _logger = default!;
+    // [Dependency] private readonly ILogger _logger = default!;
     
     private readonly Dictionary<nint, Keys> _key = new();
 

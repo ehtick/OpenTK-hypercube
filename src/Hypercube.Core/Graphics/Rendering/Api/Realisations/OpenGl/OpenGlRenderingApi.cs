@@ -119,7 +119,7 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         if (Gl.HasErrors())
             return false;
 
-        Gl.DebugMessageCallback(DebugProcCallback, nint.Zero);
+        Gl.DebugMessageCallback(DebugProcCallback, in nint.Zero);
         
         Gl.Enable(EnableCap.DebugOutput);
         Gl.Enable(EnableCap.DebugOutputSynchronous);

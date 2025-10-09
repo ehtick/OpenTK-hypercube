@@ -8,7 +8,7 @@ namespace Hypercube.Core.Systems.Physics;
 [RegisterEntitySystem]
 public class PhysicsSystem : EntitySystem
 {
-    [Dependency] private readonly TransformSystem _transform = default!;
+    // [Dependency] private readonly TransformSystem _transform = default!;
 
     public override void Update(float deltaTime)
     {
