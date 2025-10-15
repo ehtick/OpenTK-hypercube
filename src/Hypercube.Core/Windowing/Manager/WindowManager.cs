@@ -21,28 +21,29 @@ public class WindowManager : IWindowManager
     private IWindowingApi? _api;
 
     /// <inheritdoc/>
-    public bool Ready => Api.Ready;
+    public bool Ready => Api.Initialized;
     
     /// <inheritdoc/>
     public IReadOnlyList<IWindow> Windows => _windows;
-    
+
+    public IWindow? MainWindow { get; }
+
     /// <inheritdoc/>
     public IWindowingApi Api => _api ?? throw new WindowingNotInitializedException();
 
     /// <inheritdoc/>
     public void Init(WindowingApiSettings settings)
     {
-        _api = ApiFactory.Get(settings.Api);
+        _api = ApiFactory.Get(settings.Api, settings);
         
         _api.OnInit += OnInit; 
         _api.OnError += OnError;
-        
-        _api.Init(settings);
-
         _api.OnWindowSize += (_, size) =>
         {
             OnMainWindowResized?.Invoke(size);
         };
+
+        _api.Init();
     }
 
     /// <inheritdoc/>

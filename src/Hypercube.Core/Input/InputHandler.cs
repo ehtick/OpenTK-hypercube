@@ -1,4 +1,5 @@
 ﻿using Hypercube.Core.Execution.LifeCycle;
+using Hypercube.Core.Windowing;
 using Hypercube.Core.Windowing.Api;
 using Hypercube.Core.Windowing.Manager;
 using Hypercube.Utilities.Dependencies;
@@ -42,22 +43,22 @@ public sealed class InputHandler : IInputHandler, IPostInject
         }
     }
 
-    public bool IsKeyState(nint window, Key key, KeyState state)
+    public bool IsKeyState(WindowHandle window, Key key, KeyState state)
     {
         return _key.TryGetValue(window, out var keys) && keys[state].Contains(key);
     }
 
-    public bool IsKeyHeld(nint window, Key key)
+    public bool IsKeyHeld(WindowHandle window, Key key)
     {
         return IsKeyState(window, key, KeyState.Held);
     }
 
-    public bool IsKeyPressed(nint window, Key key)
+    public bool IsKeyPressed(WindowHandle window, Key key)
     {
         return IsKeyState(window, key, KeyState.Pressed);
     }
 
-    public bool IsKeyReleased(nint window, Key key)
+    public bool IsKeyReleased(WindowHandle window, Key key)
     {
         return IsKeyState(window, key, KeyState.Pressed);
     }
@@ -87,7 +88,7 @@ public sealed class InputHandler : IInputHandler, IPostInject
         Simulate(WindowingApi.Context, state);
     }
 
-    public void Simulate(nint window, KeyStateChangedArgs state)
+    public void Simulate(WindowHandle window, KeyStateChangedArgs state)
     {
         OnKeyUpdate(window, state);
     }
@@ -97,7 +98,7 @@ public sealed class InputHandler : IInputHandler, IPostInject
         Clear();
     }
 
-    private void OnKeyUpdate(nint window, KeyStateChangedArgs state)
+    private void OnKeyUpdate(WindowHandle window, KeyStateChangedArgs state)
     {
         var keys = _key.GetOrInstantiate(window);
         switch (state.State)
@@ -122,7 +123,7 @@ public sealed class InputHandler : IInputHandler, IPostInject
         }
     }
 
-    private void OnMouseButtonUpdate(nint window, MouseButtonChangedArgs state)
+    private void OnMouseButtonUpdate(WindowHandle window, MouseButtonChangedArgs state)
     {
         
     }

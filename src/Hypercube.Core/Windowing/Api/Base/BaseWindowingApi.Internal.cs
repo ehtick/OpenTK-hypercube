@@ -3,9 +3,9 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Windowing.Api.Base;
 
-public abstract partial class BaseWindowingApi : IWindowingApiInternal
+public abstract partial class BaseWindowingApi
 {
-    protected abstract string InternalInfo { get; }
+    protected abstract string Info { get; }
     
     public abstract bool InternalInit();
     public abstract void InternalTerminate();
@@ -23,8 +23,6 @@ public abstract partial class BaseWindowingApi : IWindowingApiInternal
     public abstract void InternalWindowSetTitle(WindowHandle window, string title);
     public abstract void InternalWindowSetPosition(WindowHandle window, Vector2i position);
     public abstract void InternalWindowSetSize(WindowHandle window, Vector2i size);
-
-    public abstract nint InternalGetProcAddress(string name);
-    public abstract void InternalSwapInterval(int interval);
+    
     public abstract void InternalSwapBuffers(WindowHandle window);
 }

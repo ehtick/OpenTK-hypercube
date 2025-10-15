@@ -96,6 +96,8 @@ public interface IWindow : IEquatable<IWindow>, IContextInfo, IDisposable
     /// The getter returns the last known (cached) size, which updates before <see cref="OnChangedSize"/> is raised.
     /// </remarks>
     Vector2i Size { get; set; }
+    
+    bool IsMain { get; set; }
 
     /// <summary>
     /// Makes this window's graphics context the current one for rendering.

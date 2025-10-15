@@ -25,6 +25,8 @@ public interface IWindowManager : IDisposable
     /// </summary>
     IReadOnlyList<IWindow> Windows { get; }
     
+    IWindow? MainWindow { get; }
+    
     /// <summary>
     /// Gets the internal windowing API implementation used to create and manage windows.
     /// </summary>

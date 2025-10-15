@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Graphics;
+﻿using System.Runtime.CompilerServices;
+using Hypercube.Core.Graphics;
 using Hypercube.Core.Windowing.Api;
 using Hypercube.Core.Windowing.Settings;
 using Hypercube.Mathematics.Vectors;
@@ -9,6 +10,8 @@ namespace Hypercube.Core.Windowing;
 [EngineInternal]
 public sealed class Window : IWindow
 {
+    #region Public Events
+
     /// <inheritdoc/>
     public event Action<string>? OnChangedTitle;
     
@@ -21,6 +24,8 @@ public sealed class Window : IWindow
     public event Action? OnClose;
 
     public event Action? OnDisposed;
+
+    #endregion
     
     private readonly WindowHandle _handle;
 
@@ -87,6 +92,8 @@ public sealed class Window : IWindow
         set => Api.WindowSetSize(Handle, value);
     }
 
+    public bool IsMain { get; set; }
+    
     public Window(IWindowingApi api, WindowHandle handle, WindowCreateSettings settings)
     {
         Api = api;
@@ -148,7 +155,6 @@ public sealed class Window : IWindow
         Destroy();
         
         OnDisposed?.Invoke();
-        
         _disposed = true;
     }
 
@@ -172,7 +178,7 @@ public sealed class Window : IWindow
         return $"{Handle} ({Enum.GetName(Type)})";
     }
 
-    private void OnApiTitle(nint window, string title)
+    private void OnApiTitle(WindowHandle window, string title)
     {
         if (window != Handle)
             return;
@@ -181,7 +187,7 @@ public sealed class Window : IWindow
         OnChangedTitle?.Invoke(title);
     }
 
-    private void OnApiPosition(nint window, Vector2i position)
+    private void OnApiPosition(WindowHandle window, Vector2i position)
     {
         if (window != Handle)
             return;
@@ -190,7 +196,7 @@ public sealed class Window : IWindow
         OnChangedPosition?.Invoke(position);
     }
 
-    private void OnApiSize(nint window, Vector2i size)
+    private void OnApiSize(WindowHandle window, Vector2i size)
     {
        if (window != Handle)
            return;
@@ -199,7 +205,7 @@ public sealed class Window : IWindow
        OnChangedSize?.Invoke(size);
     }
 
-    private void OnApiClose(nint window)
+    private void OnApiClose(WindowHandle window)
     {
         if (window != Handle)
             return;
@@ -213,11 +219,13 @@ public sealed class Window : IWindow
         _destroyed = true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(Window left, Window right)
     {
         return left.Equals(right);
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(Window left, Window right)
     {
         return !left.Equals(right);

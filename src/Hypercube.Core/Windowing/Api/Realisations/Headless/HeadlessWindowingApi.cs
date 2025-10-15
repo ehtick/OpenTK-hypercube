@@ -8,8 +8,13 @@ namespace Hypercube.Core.Windowing.Api.Realisations.Headless;
 public sealed class HeadlessWindowingApi : BaseWindowingApi
 {
     public override WindowingApi Type => WindowingApi.Headless;
-    protected override string InternalInfo => string.Empty;
-    
+
+    protected override string Info => string.Empty;
+
+    public HeadlessWindowingApi(WindowingApiSettings settings) : base(settings)
+    {
+    }
+
     public override bool InternalInit()
     {
         return true;
@@ -65,16 +70,16 @@ public sealed class HeadlessWindowingApi : BaseWindowingApi
     {
     }
 
-    public override nint InternalGetProcAddress(string name)
-    {
-        return nint.Zero;
-    }
-
     public override void InternalSwapBuffers(WindowHandle window)
     {
     }
-
-    public override void InternalSwapInterval(int interval)
+    
+    public override void SwapInterval(int interval)
     {
+    }
+
+    public override nint GetProcAddress(string name)
+    {
+        return nint.Zero;
     }
 }

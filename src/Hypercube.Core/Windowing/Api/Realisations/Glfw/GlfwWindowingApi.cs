@@ -14,11 +14,11 @@ namespace Hypercube.Core.Windowing.Api.Realisations.Glfw;
 [EngineInternal]
 public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
 {
-    public override WindowingApi Type => WindowingApi.Glfw;
-    
     private SilkGlfw _glfw = default!;
+    
+    public override WindowingApi Type => WindowingApi.Glfw;
 
-    protected override string InternalInfo
+    protected override string Info
     {
         get
         {
@@ -32,7 +32,11 @@ public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
             return result.ToString();
         }
     }
-    
+
+    public GlfwWindowingApi(WindowingApiSettings settings) : base(settings)
+    {
+    }
+
     public override bool InternalInit()
     {
         _glfw = SilkGlfw.GetApi();
@@ -43,7 +47,6 @@ public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
 
         _glfw.SetMonitorCallback(OnMonitorCallback);
         _glfw.SetJoystickCallback(OnJoystickCallback);
-        
         return true;
     }
 
@@ -147,18 +150,18 @@ public sealed unsafe partial class GlfwWindowingApi : BaseWindowingApi
         _glfw.SetWindowSize((SilkWindowHandle*) (nint) window, size.X, size.Y);
     }
 
-    public override nint InternalGetProcAddress(string name)
+    public override void InternalSwapBuffers(WindowHandle window)
     {
-        return _glfw.GetProcAddress(name);
+        _glfw.SwapBuffers((SilkWindowHandle*) (nint) window);
     }
 
-    public override void InternalSwapInterval(int interval)
+    public override void SwapInterval(int interval)
     {
         _glfw.SwapInterval(interval);
     }
 
-    public override void InternalSwapBuffers(WindowHandle window)
+    public override nint GetProcAddress(string name)
     {
-        _glfw.SwapBuffers((SilkWindowHandle*) (nint) window);
+        return _glfw.GetProcAddress(name);
     }
 }

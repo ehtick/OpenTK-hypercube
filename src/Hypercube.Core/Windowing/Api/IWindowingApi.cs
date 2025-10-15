@@ -8,10 +8,12 @@ namespace Hypercube.Core.Windowing.Api;
 /// A layer between the API for handling windows, events, input and context and the engine.
 /// </summary>
 [PublicAPI]
-public interface  IWindowingApi : IDisposable
+public interface IWindowingApi : IDisposable
 {
     WindowingApi Type { get; }
-    
+
+    #region Events
+
     event InitHandler? OnInit;
     event ErrorHandler? OnError; 
     event MonitorHandler? OnMonitor;
@@ -25,23 +27,38 @@ public interface  IWindowingApi : IDisposable
     event WindowScroll? OnWindowScroll;
     event WindowMouseButton? OnWindowMouseButton;
     event WindowChar? OnWindowChar;
+
+    #endregion
     
-    bool Ready { get; }
+    bool Initialized { get; }
+    bool Terminated { get; }
+    
     WindowHandle Context { get; set; }
-    
-    void Init(WindowingApiSettings settings);
+
+    #region Life cycle
+
+    void Init();
     void EnterLoop();
     void PollEvents();
     void Terminate();
-
-    void SwapInterval(int value);
     
+    #endregion
+
+    #region Window
+
     void WindowSetTitle(WindowHandle window, string title);
     void WindowSetPosition(WindowHandle window, Vector2i position);
     void WindowSetSize(WindowHandle window, Vector2i size);
-    void WindowCreate(WindowCreateSettings settings);
+    
     WindowHandle WindowCreateSync(WindowCreateSettings settings);
-    void WindowDestroy(WindowHandle window);
+    WindowHandle WindowCreateMainSync(WindowCreateSettings settings);
+    
     void WindowSwapBuffers(WindowHandle window);
+    
+    void WindowDestroy(WindowHandle window);
+
+    #endregion
+    
+    void SwapInterval(int interval);
     nint GetProcAddress(string name);
 }

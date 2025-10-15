@@ -8,14 +8,18 @@ using Hypercube.Utilities.Threads;
 
 namespace Hypercube.Core.Windowing.Api.Base;
 
-public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInternal
+public abstract partial class BaseWindowingApi : IWindowingApi
 {
     public abstract WindowingApi Type { get; }
     
+    #region Events
+    
     public event InitHandler? OnInit;
     public event ErrorHandler? OnError;
+    
     public event MonitorHandler? OnMonitor;
     public event JoystickHandler? OnJoystick;
+    
     public event WindowCloseHandler? OnWindowClose;
     public event WindowTitleHandler? OnWindowTitle;
     public event WindowPositionHandler? OnWindowPosition;
@@ -26,16 +30,25 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
     public event WindowMouseButton? OnWindowMouseButton;
     public event WindowChar? OnWindowChar;
     
-    private ThreadBridge<ICommand>? _commandBridge;
-    private ThreadBridge<IEvent>? _eventBridge;
+    #endregion
 
+    #region Thread
+
+    private readonly ThreadBridge<IEvent>? _eventBridge;
+    private readonly ThreadBridge<ICommand> _commandBridge;
+    
+    protected Thread? Thread { get; private set; }
+    
+    #endregion
+
+    private readonly float _waitEventsTimeout;
     private bool _running;
     
-    private float _waitEventsTimeout;
+    public bool Initialized { get; private set; }
+    public bool Terminated { get; private set; }
 
-    public bool Ready => Thread is not null;
-
-    protected Thread? Thread { get; private set; }
+    public readonly List<WindowHandle> Windows = [];
+    public WindowHandle? MainWindow { get; protected set; }
 
     public WindowHandle Context
     {
@@ -43,15 +56,9 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         set => InternalMakeContextCurrent(value);
     }
 
-    public void Init(WindowingApiSettings settings)
+    protected BaseWindowingApi(WindowingApiSettings settings)
     {
         _waitEventsTimeout = settings.WaitEventsTimeout;
-        
-        _commandBridge = new ThreadBridge<ICommand>(new UnboundedChannelOptions
-        {
-            SingleReader = true,
-            SingleWriter = false
-        });
         
         _eventBridge = new ThreadBridge<IEvent>(new BoundedChannelOptions(settings.EventBridgeBufferSize)
         {
@@ -61,12 +68,22 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
             AllowSynchronousContinuations = true
         });
         
+        _commandBridge = new ThreadBridge<ICommand>(new UnboundedChannelOptions
+        {
+            SingleReader = true,
+            SingleWriter = false
+        });
+    }
+
+    public void Init()
+    {
         if (!InternalInit())
-            throw new Exception();
+            throw new WindowingApiInitializationException();
         
         Thread = Thread.CurrentThread;
+        Initialized = true;
         
-        OnInit?.Invoke(InternalInfo);
+        OnInit?.Invoke(Info);
     }
 
     public void EnterLoop()
@@ -93,39 +110,43 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
     
     public void Terminate()
     {
-        if (_commandBridge is null)
+        if (!Initialized)
             throw new WindowingApiNotInitializedException();
+
+        if (!Terminated)
+            throw new Exception();
         
+        // By doing this, we will effectively cause:
+        // Stop();
+        // InternalTerminate();
+        
+        // But we don't do it here, because of multithreading,
+        // we need to kill the API in
+        // the thread where it was initialized
         Execute(new CommandTerminate());
         
-        // That's last command whose need send 
+        // After sending the command to terminate,
+        // we can no longer send any commands,
+        // so we close the bridge
         _commandBridge.CompleteWrite();
-        Thread = null;
+        
+        // Prohibition of repeated termination
+        Terminated = true;
     }
 
-    public void SwapInterval(int value)
-    {
-        InternalSwapInterval(value);
-    }
-    
     public void WindowSetTitle(WindowHandle window, string title)
     {
         Execute(new CommandWindowSetTitle(window, title, Thread.CurrentThread));
     }
-    
+
     public void WindowSetPosition(WindowHandle window, Vector2i position)
     {
         Execute(new CommandWindowSetPosition(window, position));
     }
-    
+
     public void WindowSetSize(WindowHandle window, Vector2i size)
     {
         Execute(new CommandWindowSetSize(window, size));
-    }
-
-    public void WindowCreate(WindowCreateSettings settings)
-    {
-        Execute(new CommandWindowCreate(settings));
     }
 
     public WindowHandle WindowCreateSync(WindowCreateSettings settings)
@@ -138,12 +159,14 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
             var command = new CommandWindowCreateSync(settings, tcs, Thread.CurrentThread);
         
             Execute(command);
-            var context = new WindowHandle(WaitCommand(tcs));
+            var window = new WindowHandle(WaitCommand(tcs));
 
-            Context = context;
+            Windows.Add(window);
+            
+            Context = window;
             SwapInterval(settings.VSync.ToInt());
 
-            return context;
+            return window;
         }
         finally
         {
@@ -151,8 +174,18 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         }
     }
 
+    public WindowHandle WindowCreateMainSync(WindowCreateSettings settings)
+    {
+        if (MainWindow is not null)
+            throw new Exception();
+        
+        MainWindow = WindowCreateSync(settings);
+        return MainWindow.Value;
+    }
+
     public void WindowDestroy(WindowHandle window)
     {
+        Windows.Remove(window);
         InternalWindowDestroy(window);
     }
 
@@ -161,16 +194,15 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         InternalSwapBuffers(window);
     }
 
-    public nint GetProcAddress(string name)
-    {
-        return InternalGetProcAddress(name);
-    }
-
     public void Dispose()
     {
         InternalTerminate();
         GC.SuppressFinalize(this);
     }
+
+    public abstract void SwapInterval(int interval);
+
+    public abstract nint GetProcAddress(string name);
 
     private void Stop()
     {
@@ -180,7 +212,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
         _running = false;
         _eventBridge.CompleteWrite();
     }
-    
+
     private void WaitEvents()
     {
         if (_waitEventsTimeout == 0)
@@ -191,7 +223,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
 
         InternalWaitEventsTimeout(_waitEventsTimeout);
     }
-    
+
     [PublicAPI]
     private void WaitCommand(TaskCompletionSource tsc)
     {
@@ -204,7 +236,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi, IWindowingApiInt
             ProcessEvents(single: true);
         }
     }
-    
+
     private TResult WaitCommand<TResult>(TaskCompletionSource<TResult> tsc)
     {
         if (_eventBridge is null)

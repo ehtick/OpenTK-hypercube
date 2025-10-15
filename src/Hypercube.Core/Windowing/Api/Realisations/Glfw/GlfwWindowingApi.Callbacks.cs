@@ -1,6 +1,7 @@
 ﻿using Hypercube.Core.Input;
 using Hypercube.Mathematics.Vectors;
 using Silk.NET.GLFW;
+
 using KeyModifiers = Hypercube.Core.Input.KeyModifiers;
 using MouseButton = Hypercube.Core.Input.MouseButton;
 using SilkKeyModifiers = Silk.NET.GLFW.KeyModifiers;
@@ -29,41 +30,41 @@ public unsafe partial class GlfwWindowingApi
 
     private void WindowCloseCallback(SilkWindowHandle* window)
     {   
-        Raise(new EventWindowClose((nint) window));
+        Raise(new EventWindowClose(new WindowHandle((nint) window)));
     }
 
     private void WindowSizeCallback(SilkWindowHandle* window, int width, int height)
     {
-        Raise(new EventWindowSize((nint) window, new Vector2i(width, height)));
+        Raise(new EventWindowSize(new WindowHandle((nint) window), new Vector2i(width, height)));
     }
 
     private void WindowPositionCallback(SilkWindowHandle* window, int x, int y)
     {
-        Raise(new EventWindowPosition((nint) window, new Vector2i(x, y)));
+        Raise(new EventWindowPosition(new WindowHandle((nint) window), new Vector2i(x, y)));
     }
 
     private void WindowFocusCallback(SilkWindowHandle* window, bool focused)
     {
-        Raise(new EventWindowFocus((nint) window, focused));
+        Raise(new EventWindowFocus(new WindowHandle((nint) window), focused));
     }
 
     private void WindowKeyCallback(SilkWindowHandle* window, Keys key, int scancode, InputAction action, SilkKeyModifiers mods)
     {
-        Raise(new EventWindowKey((nint) window, (Key) key, scancode, (KeyState) action, (KeyModifiers) mods));
+        Raise(new EventWindowKey(new WindowHandle((nint) window), (Key) key, scancode, (KeyState) action, (KeyModifiers) mods));
     }
 
     private void WindowCursorCallback(SilkWindowHandle* window, double x, double y)
     {
-        Raise(new EventWindowCursorPosition((nint) window, new Vector2d(x, y)));
+        Raise(new EventWindowCursorPosition(new WindowHandle((nint) window), new Vector2d(x, y)));
     }
 
     private void WindowMouseButtonCallback(SilkWindowHandle* window, SilkMouseButton button, InputAction action, SilkKeyModifiers mods)
     {
-        Raise(new EventWindowMouseButton((nint) window, (MouseButton) button, (KeyState) action, (KeyModifiers) mods));
+        Raise(new EventWindowMouseButton(new WindowHandle((nint) window), (MouseButton) button, (KeyState) action, (KeyModifiers) mods));
     }
 
     private void WindowScrollCallback(SilkWindowHandle* window, double x, double y)
     {
-        Raise(new EventWindowScroll((nint) window, new Vector2d(x, y)));
+        Raise(new EventWindowScroll(new WindowHandle((nint) window), new Vector2d(x, y)));
     }
 }

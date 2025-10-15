@@ -11,6 +11,12 @@ public abstract partial class BaseWindowingApi
     //       it would be good to make performance
     //       checks for a large number of commands.
     
+    /// <summary>
+    /// If it works in multithreaded mode,<br/>
+    /// it runs in a separate thread!!! (not the main one)<br/>
+    /// In which all GLFW commands work
+    /// </summary>
+    /// <param name="command"></param>
     private void Process(ICommand command)
     {
         switch (command)
@@ -33,13 +39,8 @@ public abstract partial class BaseWindowingApi
                 InternalWindowSetSize(windowSetSize.Window, windowSetSize.Size);
                 break;
             
-            case CommandWindowCreate windowCreate:
-                InternalWindowCreate(windowCreate.Settings);
-                break;
-            
             case CommandWindowCreateSync windowCreateSync:
-                var window = InternalWindowCreate(windowCreateSync.Settings);
-                Raise(new EventSync<nint>(windowCreateSync.Task, window), windowCreateSync.Thread != Thread);
+                Raise(new EventSync<nint>(windowCreateSync.Task, InternalWindowCreate(windowCreateSync.Settings)), windowCreateSync.Thread != Thread);
                 break;
         }
     }

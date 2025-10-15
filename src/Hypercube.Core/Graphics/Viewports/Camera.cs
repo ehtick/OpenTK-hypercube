@@ -53,7 +53,7 @@ public class Camera : ICamera
         {
             _scale = value;
             UpdateView();
-        }
+        } 
     }
 
     public float ZFar { get; }

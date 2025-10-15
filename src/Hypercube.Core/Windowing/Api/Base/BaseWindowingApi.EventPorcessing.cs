@@ -5,64 +5,86 @@ namespace Hypercube.Core.Windowing.Api.Base;
 
 public abstract partial class BaseWindowingApi
 {
-    private void Process(IEvent ev)
+    private void Process(IEvent processed)
     {
-        switch (ev)
+        switch (processed)
         {
-            case EventSync evSync:
-                evSync.Command.TrySetResult();
+            case EventSync @event:
+                @event.Command.TrySetResult();
                 break;
             
-            case EventSync<nint> evSync:
-                evSync.Command.TrySetResult(evSync.Result);
+            case EventSync<nint> @event:
+                @event.Command.TrySetResult(@event.Result);
                 break;
             
-            case EventError evError:
-                OnError?.Invoke(evError.Description);
+            case EventError @event:
+                OnError?.Invoke(@event.Description);
                 break;
 
-            case EventMonitor evMonitor:
-                OnMonitor?.Invoke(evMonitor.Monitor, evMonitor.State);
+            case EventMonitor @event:
+                OnMonitor?.Invoke(@event.Monitor, @event.State);
                 break;
             
-            case EventJoystick evJoystick:
-                OnJoystick?.Invoke(evJoystick.Joystick, evJoystick.State);
+            case EventJoystick @event:
+                OnJoystick?.Invoke(@event.Joystick, @event.State);
                 break;
             
-            case EventWindowClose evWindowClose:
-                OnWindowClose?.Invoke(evWindowClose.Window);
+            case EventWindowCursorPosition @event:
                 break;
             
-            case EventWindowTitle evWindowTitle:
-                OnWindowTitle?.Invoke(evWindowTitle.Window, evWindowTitle.Title);
+            case EventCursorEnter @event:
                 break;
             
-            case EventWindowSize evWindowSize:
-                OnWindowSize?.Invoke(evWindowSize.Window, evWindowSize.Size);
+            case EventWindowClose @event:
+                OnWindowClose?.Invoke(@event.Window);
                 break;
             
-            case EventWindowPosition evWindowPosition:
-                OnWindowPosition?.Invoke(evWindowPosition.Window, evWindowPosition.Position);
+            case EventWindowTitle @event:
+                OnWindowTitle?.Invoke(@event.Window, @event.Title);
                 break;
             
-            case EventWindowFocus evWindowFocus:
-                OnWindowFocus?.Invoke(evWindowFocus.Window, evWindowFocus.Focused);
+            case EventWindowSize @event:
+                OnWindowSize?.Invoke(@event.Window, @event.Size);
                 break;
             
-            case EventWindowKey evWindowKey:
-                OnWindowKey?.Invoke(evWindowKey.Window, new KeyStateChangedArgs(evWindowKey.Key, evWindowKey.State, evWindowKey.Modifier, evWindowKey.ScanCode));
+            case EventWindowPosition @event:
+                OnWindowPosition?.Invoke(@event.Window, @event.Position);
                 break;
             
-            case EventWindowScroll evWindowScroll:
-                OnWindowScroll?.Invoke(evWindowScroll.Window, evWindowScroll.Offset);
+            case EventWindowContentScale @event:
                 break;
             
-            case EventWindowMouseButton evWindowMouseButton:
-                OnWindowMouseButton?.Invoke(evWindowMouseButton.Window, new MouseButtonChangedArgs(evWindowMouseButton.Button, evWindowMouseButton.State, evWindowMouseButton.Modifier));
+            case EventWindowIconify @event:
                 break;
             
-            case EventWindowChar evWindowChar:
-                OnWindowChar?.Invoke(evWindowChar.Window, evWindowChar.CodePoint);
+            case EventWindowFocus @event:
+                OnWindowFocus?.Invoke(@event.Window, @event.Focused);
+                break;
+            
+            case EventMonitorDestroy @event:
+                break;
+            
+            case EventWindowKey @event:
+                OnWindowKey?.Invoke(@event.Window, new KeyStateChangedArgs(@event.Key, @event.State, @event.Modifier, @event.ScanCode));
+                break;
+            
+            case EventWindowScroll @event:
+                OnWindowScroll?.Invoke(@event.Window, @event.Offset);
+                break;
+            
+            case EventWindowMouseButton @event:
+                OnWindowMouseButton?.Invoke(
+                    @event.Window,
+                    new MouseButtonChangedArgs(
+                        @event.Button,
+                        @event.State,
+                        @event.Modifier
+                    )
+                );
+                break;
+            
+            case EventWindowChar @event:
+                OnWindowChar?.Invoke(@event.Window, @event.CodePoint);
                 break;
         }
     }

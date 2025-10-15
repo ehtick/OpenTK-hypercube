@@ -1,4 +1,6 @@
-﻿namespace Hypercube.Core.Input;
+﻿using Hypercube.Core.Windowing;
+
+namespace Hypercube.Core.Input;
 
 /// <summary>
 /// Interface for handling and simulating keyboard input states across one or multiple windows.
@@ -18,7 +20,7 @@ public interface IInputHandler
     /// <param name="key">The key to query.</param>
     /// <param name="state">The key state to compare against.</param>
     /// <returns>True if the key is in the specified state; otherwise, false.</returns>
-    bool IsKeyState(nint window, Key key, KeyState state);
+    bool IsKeyState(WindowHandle window, Key key, KeyState state);
     
     /// <summary>
     /// Returns whether the specified key is currently held down in the given window.
@@ -26,7 +28,7 @@ public interface IInputHandler
     /// <param name="window">The native window handle.</param>
     /// <param name="key">The key to query.</param>
     /// <returns>True if the key is held; otherwise, false.</returns>
-    bool IsKeyHeld(nint window, Key key);
+    bool IsKeyHeld(WindowHandle window, Key key);
     
     /// <summary>
     /// Returns whether the specified key was pressed during the current frame in the given window.
@@ -34,7 +36,7 @@ public interface IInputHandler
     /// <param name="window">The native window handle.</param>
     /// <param name="key">The key to query.</param>
     /// <returns>True if the key was pressed this frame; otherwise, false.</returns>
-    bool IsKeyPressed(nint window, Key key);
+    bool IsKeyPressed(WindowHandle window, Key key);
     
     /// <summary>
     /// Returns whether the specified key was released during the current frame in the given window.
@@ -42,7 +44,7 @@ public interface IInputHandler
     /// <param name="window">The native window handle.</param>
     /// <param name="key">The key to query.</param>
     /// <returns>True if the key was released this frame; otherwise, false.</returns>
-    bool IsKeyReleased(nint window, Key key);
+    bool IsKeyReleased(WindowHandle window, Key key);
     
     /// <summary>
     /// Checks if the specified key in the currently active window is in the given state.
@@ -86,5 +88,5 @@ public interface IInputHandler
     /// </summary>
     /// <param name="window">The native handle of the window to simulate the event for.</param>
     /// <param name="state">The key state change to simulate.</param>
-    void Simulate(nint window, KeyStateChangedArgs state);
+    void Simulate(WindowHandle window, KeyStateChangedArgs state);
 }

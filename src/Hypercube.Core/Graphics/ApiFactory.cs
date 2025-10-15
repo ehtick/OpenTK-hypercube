@@ -17,16 +17,17 @@ public static class ApiFactory
     /// Creates and returns an instance of <see cref="IWindowingApi"/> corresponding to the specified <see cref="WindowingApi"/> type.
     /// </summary>
     /// <param name="windowingApi">The windowing API type to instantiate.</param>
+    /// <param name="settings"></param>
     /// <returns>An instance of <see cref="IWindowingApi"/> implementing the specified windowing backend.</returns>
     /// <exception cref="NotImplementedException">
     /// Thrown when the requested <see cref="WindowingApi"/> is not yet implemented.
     /// </exception>
-    public static IWindowingApi Get(WindowingApi windowingApi)
+    public static IWindowingApi Get(WindowingApi windowingApi, WindowingApiSettings settings)
     {
         return windowingApi switch
         {
-            WindowingApi.Headless => new HeadlessWindowingApi(),
-            WindowingApi.Glfw => new GlfwWindowingApi(),
+            WindowingApi.Headless => new HeadlessWindowingApi(settings),
+            WindowingApi.Glfw => new GlfwWindowingApi(settings),
             WindowingApi.Sdl => throw new NotImplementedException("SDL windowing API is not implemented yet."),
             _ => throw new NotImplementedException($"Windowing API '{windowingApi}' is not supported.")
         };

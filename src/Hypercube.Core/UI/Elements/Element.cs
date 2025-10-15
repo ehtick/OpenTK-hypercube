@@ -88,8 +88,7 @@ public class Element
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        Position = origin;
+       Position = origin;
         Size = size;
     }
     
