@@ -42,7 +42,7 @@ public sealed class RenderManager : IRenderManager, IRenderManagerInternal
     
     public void Init(IContextInfo context, RenderingApiSettings settings)
     {
-        Api = ApiFactory.Get(settings.Api);
+        Api = ApiFactory.Get(settings.Api, settings, _windowManager.Api);
         
         _dependenciesContainer.Inject(Api);
 
@@ -50,16 +50,16 @@ public sealed class RenderManager : IRenderManager, IRenderManagerInternal
         Api.OnDebugInfo += OnDebugInfo;
         Api.OnDraw += OnDraw;
         
-        Api.Init(context, settings);
+        Api.Init(context);
         
         _context.Init(Api, _windowManager.Api);
 
         StartupFrameTime();
     }
 
-    private void OnInit(string info, RenderingApiSettings settings)
+    private void OnInit(string info)
     {
-        _logger.Info($"Render Api ({Enum.GetName(settings.Api)}) info:\n\r{info}");
+        _logger.Info($"Render Api ({Enum.GetName(Api.Type)}) info:\n\r{info}");
     }
 
     private void OnDebugInfo(string info)

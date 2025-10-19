@@ -7,7 +7,7 @@ namespace Hypercube.Core.Graphics.Rendering.Batching;
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct Vertex
 {
-    public const int Size = 12;
+    public const int Size = 12 * sizeof(float);
 
     public readonly Vector3 Position;
     public readonly Vector4 Color;

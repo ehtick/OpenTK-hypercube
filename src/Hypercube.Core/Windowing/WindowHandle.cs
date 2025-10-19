@@ -1,5 +1,8 @@
-﻿namespace Hypercube.Core.Windowing;
+﻿using System.Runtime.InteropServices;
 
+namespace Hypercube.Core.Windowing;
+
+[StructLayout(LayoutKind.Sequential)]
 public readonly struct WindowHandle : IEquatable<WindowHandle>
 {
     public static readonly WindowHandle Zero = new(nint.Zero);

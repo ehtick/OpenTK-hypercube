@@ -47,4 +47,20 @@ public struct WindowCreateSettings
     public WindowCreateSettings()
     {
     }
+
+    public WindowCreateSettings(WindowCreateSettings settings)
+    {
+        Api = settings.Api;
+        Title = settings.Title;
+        Size = settings.Size;
+        FullScreen = settings.FullScreen;
+        Resizable = settings.Resizable;
+        Visible = settings.Visible;
+        Decorated = settings.Decorated;
+        TransparentFramebuffer = settings.TransparentFramebuffer;
+        Floating = settings.Floating;
+        ContextShare = settings.ContextShare;
+        MonitorShare = settings.MonitorShare;
+        VSync = settings.VSync;
+    }
 }

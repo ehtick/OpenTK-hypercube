@@ -10,6 +10,8 @@ namespace Hypercube.Core.Graphics.Rendering.Api;
 
 public interface IRenderingApi
 {
+    RenderingApi Type { get; }
+    
     event InitHandler? OnInit;
     event DrawHandler? OnDraw;
     
@@ -27,7 +29,7 @@ public interface IRenderingApi
     int BatchCount { get; }
     int VerticesCount { get; }
     
-    void Init(IContextInfo context, RenderingApiSettings settings);
+    void Init(IContextInfo context);
     void Load();
     
     void Terminate();

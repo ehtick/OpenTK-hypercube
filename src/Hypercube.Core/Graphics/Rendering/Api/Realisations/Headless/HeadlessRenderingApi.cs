@@ -4,15 +4,19 @@ using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
 using Hypercube.Core.Graphics.Texturing;
 using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Api;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Shapes;
 using Hypercube.Mathematics.Vectors;
+using InitHandler = Hypercube.Core.Graphics.Rendering.Api.Handlers.InitHandler;
 
 namespace Hypercube.Core.Graphics.Rendering.Api.Realisations.Headless;
 
 public sealed class HeadlessRenderingApi : IRenderingApi
 {
+    public RenderingApi Type => RenderingApi.Headless;
+    
 #pragma warning disable CS0067
     public event InitHandler? OnInit;
     public event DrawHandler? OnDraw;
@@ -27,7 +31,13 @@ public sealed class HeadlessRenderingApi : IRenderingApi
     public int BatchCount => 0;
     public int VerticesCount => 0;
 
-    public void Init(IContextInfo context, RenderingApiSettings settings)
+    public HeadlessRenderingApi(RenderingApiSettings settings, IWindowingApi windowingApi)
+    {
+        _ = settings;
+        _ = windowingApi;
+    }
+
+    public void Init(IContextInfo context)
     {
     }
 

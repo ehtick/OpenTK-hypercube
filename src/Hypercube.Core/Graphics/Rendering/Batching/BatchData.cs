@@ -1,5 +1,8 @@
-﻿namespace Hypercube.Core.Graphics.Rendering.Batching;
+﻿using System.Runtime.InteropServices;
 
+namespace Hypercube.Core.Graphics.Rendering.Batching;
+
+[StructLayout(LayoutKind.Sequential)]
 public readonly struct BatchData : IEquatable<BatchData>
 {
     public readonly int Start;

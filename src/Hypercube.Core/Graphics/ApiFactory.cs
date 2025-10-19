@@ -1,6 +1,7 @@
 ﻿using Hypercube.Core.Graphics.Rendering.Api;
 using Hypercube.Core.Graphics.Rendering.Api.Realisations.Headless;
 using Hypercube.Core.Graphics.Rendering.Api.Realisations.OpenGl;
+using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Windowing.Api;
 using Hypercube.Core.Windowing.Api.Realisations.Glfw;
 using Hypercube.Core.Windowing.Api.Realisations.Headless;
@@ -41,12 +42,12 @@ public static class ApiFactory
     /// <exception cref="NotImplementedException">
     /// Thrown when the requested <see cref="RenderingApi"/> is not yet implemented.
     /// </exception>
-    public static IRenderingApi Get(RenderingApi renderingApi)
+    public static IRenderingApi Get(RenderingApi renderingApi, RenderingApiSettings settings, IWindowingApi windowingApi)
     {
         return renderingApi switch
         {
-            RenderingApi.Headless => new HeadlessRenderingApi(),
-            RenderingApi.OpenGl => new OpenGlRenderingApi(),
+            RenderingApi.Headless => new HeadlessRenderingApi(settings, windowingApi),
+            RenderingApi.OpenGl => new OpenGlRenderingApi(settings, windowingApi),
             RenderingApi.Vulkan => throw new NotImplementedException("Vulkan rendering API is not implemented yet."),
             _ => throw new NotImplementedException($"Rendering API '{renderingApi}' is not supported.")
         };

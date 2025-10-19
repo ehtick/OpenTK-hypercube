@@ -4,14 +4,18 @@ using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
 using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Api;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Shapes;
+using InitHandler = Hypercube.Core.Graphics.Rendering.Api.Handlers.InitHandler;
 
 namespace Hypercube.Core.Graphics.Rendering.Api;
 
 public abstract partial class BaseRenderingApi : IRenderingApi
 {
+    public abstract RenderingApi Type { get; }
+    
     public event InitHandler? OnInit;
     public abstract event DrawHandler? OnDraw;
     public abstract event DebugInfoHandler? OnDebugInfo;
@@ -21,29 +25,31 @@ public abstract partial class BaseRenderingApi : IRenderingApi
     public int BatchVerticesIndex { get; protected set; }
     public int BatchIndicesIndex { get; protected set; }
 
-    protected Color ClearColor { get; private set; } = Color.Black;
+    protected readonly IWindowingApi WindowingApi;
     protected readonly List<Batch> Batches = [];
-    protected Vertex[] BatchVertices = [];
-    protected uint[] BatchIndices = [];
-
-    private int _batchCount;
-    private int _verticesCount;
+    protected readonly Vertex[] BatchVertices;
+    protected readonly uint[] BatchIndices;
     private BatchData? _currentBatchData;
 
-    public int BatchCount => _batchCount;
-    public int VerticesCount => _verticesCount;
-    
-    public void Init(IContextInfo context, RenderingApiSettings settings)
+    protected Color ClearColor { get; private set; }
+
+    public int BatchCount { get; private set; }
+    public int VerticesCount { get; private set; }
+
+    protected BaseRenderingApi(RenderingApiSettings settings, IWindowingApi windowingApi)
     {
         ClearColor = settings.ClearColor;
-        
         BatchVertices = new Vertex[settings.MaxVertices];
         BatchIndices = new uint[settings.MaxIndices];
+        WindowingApi = windowingApi;
+    }
 
+    public void Init(IContextInfo context)
+    {
         if (!InternalInit(context))
             throw new Exception();
         
-        OnInit?.Invoke(InternalInfo, settings);
+        OnInit?.Invoke(InternalInfo);
     }
 
     public void Load()
@@ -119,8 +125,8 @@ public abstract partial class BaseRenderingApi : IRenderingApi
 
     protected void UpdateBatchCount()
     {
-        _batchCount = Batches.Count;
-        _verticesCount = BatchVerticesIndex;
+        BatchCount = Batches.Count;
+        VerticesCount = BatchVerticesIndex;
     }
     
     protected void Clear()
@@ -149,7 +155,9 @@ public abstract partial class BaseRenderingApi : IRenderingApi
             currentIndex - data.Start,
             data.Texture,
             data.PrimitiveTopology,
-            Matrix4x4.Identity);
+            Matrix4x4.Identity,
+            WindowingApi.Context
+        );
 
         Batches.Add(batch);
     }

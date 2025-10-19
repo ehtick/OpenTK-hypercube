@@ -8,22 +8,22 @@ public sealed partial class OpenGlRenderingApi
 {
     private ArrayObject GenArrayObject()
     {
-        return new ArrayObject(Gl);
+        return new ArrayObject(_gl);
     }
     
     private ArrayObject GenArrayObject(string label)
     {
-        return new ArrayObject(Gl, label);
+        return new ArrayObject(_gl, label);
     }
 
     private BufferObject GenBufferObject(BufferTargetARB target)
     {
-        return new BufferObject(Gl, target);
+        return new BufferObject(_gl, target);
     }
     
     private BufferObject GenBufferObject(BufferTargetARB target, string label)
     {
-        return new BufferObject(Gl, target, label);
+        return new BufferObject(_gl, target, label);
     }
 
     [DebuggerDisplay("VertexArray {_handle}")]
