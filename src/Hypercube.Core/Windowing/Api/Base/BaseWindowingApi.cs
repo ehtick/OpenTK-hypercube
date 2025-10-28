@@ -41,15 +41,15 @@ public abstract partial class BaseWindowingApi : IWindowingApi
     
     #endregion
 
+    private readonly List<WindowHandle> _windows = [];
     private readonly float _waitEventsTimeout;
     private bool _running;
-    
+
     public bool Initialized { get; private set; }
     public bool Terminated { get; private set; }
 
-    public readonly List<WindowHandle> Windows = [];
-    public WindowHandle? MainWindow { get; protected set; }
-
+    public IReadOnlyList<WindowHandle> Windows => _windows;
+    public WindowHandle? MainWindow { get; private set; }
     public WindowHandle Context
     {
         get => InternalGetCurrentContext();
@@ -113,8 +113,8 @@ public abstract partial class BaseWindowingApi : IWindowingApi
         if (!Initialized)
             throw new WindowingApiNotInitializedException();
 
-        if (!Terminated)
-            throw new Exception();
+        if (Terminated)
+            return;
         
         // By doing this, we will effectively cause:
         // Stop();
@@ -161,7 +161,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi
             Execute(command);
             var window = new WindowHandle(WaitCommand(tcs));
 
-            Windows.Add(window);
+            _windows.Add(window);
             
             Context = window;
             SwapInterval(settings.VSync.ToInt());
@@ -185,7 +185,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi
 
     public void WindowDestroy(WindowHandle window)
     {
-        Windows.Remove(window);
+        _windows.Remove(window);
         InternalWindowDestroy(window);
     }
 

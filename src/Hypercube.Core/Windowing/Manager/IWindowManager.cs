@@ -25,6 +25,9 @@ public interface IWindowManager : IDisposable
     /// </summary>
     IReadOnlyList<IWindow> Windows { get; }
     
+    /// <summary>
+    /// ...
+    /// </summary>
     IWindow? MainWindow { get; }
     
     /// <summary>
@@ -42,7 +45,7 @@ public interface IWindowManager : IDisposable
     /// <summary>
     /// Gets a value indicating whether the windowing system is fully initialized and ready to use.
     /// </summary>
-    bool Ready { get; }
+    bool Initialized { get; }
     
     /// <summary>
     /// Initializes the windowing system using the specified configuration settings.

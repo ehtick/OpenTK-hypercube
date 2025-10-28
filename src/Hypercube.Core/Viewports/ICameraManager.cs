@@ -1,4 +1,4 @@
-﻿namespace Hypercube.Core.Graphics.Viewports;
+﻿namespace Hypercube.Core.Viewports;
 
 public interface ICameraManager
 {

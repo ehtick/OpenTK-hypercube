@@ -15,18 +15,21 @@ public class WindowManager : IWindowManager
     
     /// <inheritdoc/>
     public event Action<Vector2i>? OnMainWindowResized;
+    
+    /// <inheritdoc/>
     public event Action<IWindow>? OnWindowCreated;
     
-    private readonly List<IWindow> _windows = [];
+    private readonly Dictionary<WindowHandle, IWindow> _windows = [];
     private IWindowingApi? _api;
 
     /// <inheritdoc/>
-    public bool Ready => Api.Initialized;
+    public bool Initialized => Api.Initialized;
     
     /// <inheritdoc/>
-    public IReadOnlyList<IWindow> Windows => _windows;
+    public IReadOnlyList<IWindow> Windows => _windows.Values.ToList();
 
-    public IWindow? MainWindow { get; }
+    /// <inheritdoc/>
+    public IWindow? MainWindow => Api.MainWindow is null ? null : _windows.TryGetValue(Api.MainWindow.Value, out var window) ? window : null;
 
     /// <inheritdoc/>
     public IWindowingApi Api => _api ?? throw new WindowingNotInitializedException();
@@ -49,7 +52,7 @@ public class WindowManager : IWindowManager
     /// <inheritdoc/>
     public void WaitInit(int sleepDelay)
     {
-        while (!Ready)
+        while (!Initialized)
         {
             Thread.Sleep(sleepDelay);
         }
@@ -80,10 +83,10 @@ public class WindowManager : IWindowManager
 
         window.OnDisposed += () =>
         {
-            _windows.Remove(window);
+            _windows.Remove(window.Handle);
         };
         
-        _windows.Add(window);
+        _windows.Add(window.Handle, window);
         OnWindowCreated?.Invoke(window);
         
         return window;
@@ -93,7 +96,6 @@ public class WindowManager : IWindowManager
     public void Dispose()
     {
         _api?.Dispose();
-        
         GC.SuppressFinalize(this);
     }
 

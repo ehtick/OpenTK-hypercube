@@ -1,6 +1,7 @@
 ﻿using Hypercube.Core.Graphics;
 using Hypercube.Core.Graphics.Rendering.Api;
 using Hypercube.Mathematics;
+using Hypercube.Mathematics.Vectors;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
 
@@ -107,6 +108,12 @@ public static class Config
     //public static readonly ConfigField<Vector2i> MainWindowSize =
     //    new("MainWindowSize", new Vector2i(800, 600));
 
+    /**
+     * Cameras
+     */
+    
+    // public static readonly ConfigField<Vector2>
+    
     /**
      * Logging
      */

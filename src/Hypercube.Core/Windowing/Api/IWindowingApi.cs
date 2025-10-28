@@ -33,6 +33,8 @@ public interface IWindowingApi : IDisposable
     bool Initialized { get; }
     bool Terminated { get; }
     
+    IReadOnlyList<WindowHandle> Windows { get; }
+    WindowHandle? MainWindow { get; }
     WindowHandle Context { get; set; }
 
     #region Life cycle

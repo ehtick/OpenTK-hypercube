@@ -2,7 +2,7 @@
 using Hypercube.Mathematics.Vectors;
 using Hypercube.Utilities.Dependencies;
 
-namespace Hypercube.Core.Graphics.Viewports;
+namespace Hypercube.Core.Viewports;
 
 [UsedImplicitly]
 public class CameraManager : ICameraManager, IPostInject

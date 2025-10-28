@@ -2,7 +2,7 @@
 using Hypercube.Mathematics.Quaternions;
 using Hypercube.Mathematics.Vectors;
 
-namespace Hypercube.Core.Graphics.Viewports;
+namespace Hypercube.Core.Viewports;
 
 [PublicAPI]
 public class Camera : ICamera
