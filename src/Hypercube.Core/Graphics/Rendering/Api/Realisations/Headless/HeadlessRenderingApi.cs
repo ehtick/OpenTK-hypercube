@@ -141,7 +141,7 @@ public sealed class HeadlessRenderingApi : IRenderingApi
         {
         }
 
-        protected override void InternalUseProgram(uint handle)
+        protected override void InternalUseProgram(ShaderProgramHandle handle)
         {
         }
 
@@ -149,7 +149,7 @@ public sealed class HeadlessRenderingApi : IRenderingApi
         {
         }
 
-        protected override void InternalDelete(uint handle)
+        protected override void InternalDelete(ShaderProgramHandle handle)
         {
         }
 

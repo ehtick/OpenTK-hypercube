@@ -13,7 +13,7 @@ public sealed class Shader : Resource, IShaderProgram
 {
     private readonly IShaderProgram _program;
     
-    public uint Handle => _program.Handle;
+    public ShaderProgramHandle Handle => _program.Handle;
     
     public Shader(IShaderProgram program)
     {

@@ -9,7 +9,7 @@ public sealed class OpenGlShader : BaseShader
 {
     private readonly GL _gl;
         
-    public OpenGlShader(GL gl, uint handle, ShaderType type, string source) : base(handle, type)
+    public OpenGlShader(GL gl, ShaderHandle handle, ShaderType type, string source) : base(handle, type)
     {
         _gl = gl;
         _gl.ShaderSource(Handle, source);

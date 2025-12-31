@@ -6,6 +6,6 @@
 /// </summary>
 public interface IShader : IDisposable
 {
-    uint Handle { get; }
+    ShaderHandle Handle { get; }
     ShaderType Type { get; }
 }

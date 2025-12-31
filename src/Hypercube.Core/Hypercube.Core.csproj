@@ -5,7 +5,7 @@
     <AssemblyTitle>HypercubeEngine</AssemblyTitle>
     <Version>2.0.0</Version>
     <FileVersion>2.0.0</FileVersion>
-
+  
     <AllowEngineCoreUsage>true</AllowEngineCoreUsage>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -21,11 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Serialization\Yaml\SourceGenerator\" />
-    <Folder Include="Serialization\Yaml\Utilities\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="$(SolutionDir)libs/**" Link="%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     <None Include="$(SolutionDir)resources/**" Link="resources/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
@@ -38,12 +33,12 @@
     <PackageReference Include="Hypercube.Mathematics" Version="1.1.1" />
     <PackageReference Include="Hypercube.ModLoader" Version="1.0.1" />
     <PackageReference Include="Hypercube.Utilities" Version="1.1.2" />
-    
+
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
-    
+
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.12.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
-    
+
     <PackageReference Include="Silk.NET.GLFW" Version="2.22.0" />
     <PackageReference Include="Silk.NET.OpenAL" Version="2.22.0" />
     <PackageReference Include="Silk.NET.OpenAL.Extensions.Creative" Version="2.22.0" />
@@ -53,7 +48,7 @@
     <PackageReference Include="Silk.NET.OpenAL.Soft.Native" Version="1.23.1" />
     <PackageReference Include="Silk.NET.OpenGL" Version="2.22.0" />
     <PackageReference Include="Silk.NET.SDL" Version="2.22.0" />
-    
+
     <PackageReference Include="StbImageSharp" Version="2.30.15" />
     <PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
     <PackageReference Include="StbTrueTypeSharp" Version="1.26.12" />

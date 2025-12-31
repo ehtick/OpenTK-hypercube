@@ -1,15 +1,16 @@
 ﻿using System.Collections.Immutable;
 using System.Composition;
+using Hypercube.Analyzers.Analyzers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Hypercube.Analyzers;
+namespace Hypercube.Analyzers.CodeFix;
 
-[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NullEqualityCodeFixProvider))]
 [Shared]
+[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NullEqualityCodeFixProvider))]
 public sealed class NullEqualityCodeFixProvider : CodeFixProvider
 {
     public override ImmutableArray<string> FixableDiagnosticIds => [NullEqualityAnalyzer.DiagnosticId];

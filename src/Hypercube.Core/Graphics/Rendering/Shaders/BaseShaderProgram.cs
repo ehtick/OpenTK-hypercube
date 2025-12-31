@@ -8,9 +8,9 @@ namespace Hypercube.Core.Graphics.Rendering.Shaders;
 [DebuggerDisplay("ShaderProgram {Handle}")]
 public abstract partial class BaseShaderProgram : IShaderProgram
 {
-    public uint Handle { get; }
+    public ShaderProgramHandle Handle { get; }
 
-    protected BaseShaderProgram(uint handle)
+    protected BaseShaderProgram(ShaderProgramHandle handle)
     {
         Handle = handle;
     }

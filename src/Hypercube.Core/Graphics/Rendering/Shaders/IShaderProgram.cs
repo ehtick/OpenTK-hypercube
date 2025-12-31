@@ -9,7 +9,7 @@ public interface IShaderProgram : IDisposable
     /// <summary>
     /// Gets the handle for this shader program.
     /// </summary>
-    uint Handle { get; }
+    ShaderProgramHandle Handle { get; }
     
     void Use();
     void Stop();

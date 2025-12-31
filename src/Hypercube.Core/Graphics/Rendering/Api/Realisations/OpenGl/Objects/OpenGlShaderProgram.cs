@@ -13,7 +13,7 @@ public sealed class OpenGlShaderProgram : BaseShaderProgram
     private readonly GL _gl;
     private readonly FrozenDictionary<string, int> _uniformLocations;
     
-    public OpenGlShaderProgram(GL gl, uint handle, IEnumerable<IShader> shaders) : base(handle)
+    public OpenGlShaderProgram(GL gl, ShaderProgramHandle handle, IEnumerable<IShader> shaders) : base(handle)
     {
         _gl = gl;
         
@@ -119,7 +119,7 @@ public sealed class OpenGlShaderProgram : BaseShaderProgram
         _gl.Uniform4(_uniformLocations[name], value.R, value.G, value.B, value.A);
     }
 
-    protected override void InternalUseProgram(uint handle)
+    protected override void InternalUseProgram(ShaderProgramHandle handle)
     {
         _gl.UseProgram(handle);
     }
@@ -129,7 +129,7 @@ public sealed class OpenGlShaderProgram : BaseShaderProgram
         _gl.ObjectLabel(ObjectIdentifier.Program, Handle, name);
     }
 
-    protected override void InternalDelete(uint handle)
+    protected override void InternalDelete(ShaderProgramHandle handle)
     {
         _gl.DeleteProgram(handle);
     }
