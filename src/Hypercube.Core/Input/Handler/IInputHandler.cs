@@ -1,17 +1,22 @@
 ﻿using Hypercube.Core.Windowing;
 
-namespace Hypercube.Core.Input;
+namespace Hypercube.Core.Input.Handler;
 
 /// <summary>
 /// Interface for handling and simulating keyboard input states across one or multiple windows.
 /// Provides low-level access to key state queries and input simulation.
 /// </summary>
+[PublicAPI]
 public interface IInputHandler
 {
     /// <summary>
     /// Clears all recorded key input states (Held and Released keys) for all tracked windows.
     /// </summary>
     void Clear();
+
+    void ClearKeyState();
+    
+    void ClearMouseButtonState();
     
     /// <summary>
     /// Checks if the specified key in a given window is currently in the specified state.
@@ -80,7 +85,7 @@ public interface IInputHandler
     /// Typically used for testing or synthetic input events.
     /// </summary>
     /// <param name="state">The key state change to simulate.</param>
-    void Simulate(KeyStateChangedArgs state);
+    void SimulateMouseButton(KeyStateChangedArgs state);
     
     /// <summary>
     /// Simulates a key state change event in a specific window.
@@ -88,5 +93,16 @@ public interface IInputHandler
     /// </summary>
     /// <param name="window">The native handle of the window to simulate the event for.</param>
     /// <param name="state">The key state change to simulate.</param>
-    void Simulate(WindowHandle window, KeyStateChangedArgs state);
+    void SimulateMouseButton(WindowHandle window, KeyStateChangedArgs state);
+
+    bool IsMouseButtonHeld(MouseButton button);
+    bool IsMouseButtonPressed(MouseButton button);
+    bool IsMouseButtonReleased(MouseButton button);
+    bool IsMouseButtonState(MouseButton button, KeyState state);
+    void SimulateMouseButton(MouseButtonChangedArgs state);
+    bool IsMouseButtonHeld(WindowHandle window, MouseButton button);
+    bool IsMouseButtonPressed(WindowHandle window, MouseButton button);
+    bool IsMouseButtonReleased(WindowHandle window, MouseButton button);
+    bool IsMouseButtonState(WindowHandle window, MouseButton button, KeyState state);
+    void SimulateMouseButton(WindowHandle window, MouseButtonChangedArgs state);
 }

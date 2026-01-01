@@ -2,7 +2,6 @@
 
 namespace Hypercube.Core;
 
-[PublicAPI]
 public static class FrameworkEntering
 {
     public static void Start(string[] args)
