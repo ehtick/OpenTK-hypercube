@@ -8,6 +8,7 @@ using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Input;
 using Hypercube.Core.Input.Handler;
+using Hypercube.Core.Input.Manager;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Viewports;
 using Hypercube.Core.Windowing.Manager;
@@ -54,6 +55,8 @@ public partial class Runtime
     {
         // Input
         _dependencies.Register<IInputHandler, InputHandler>();
+        _dependencies.Register<IInputManager, InputManager>();
+        
         _dependencies.ResolveAll();
     }
 }

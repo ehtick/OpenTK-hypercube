@@ -11,7 +11,5 @@ public enum MouseButton
     Button5 = 4,
     Button6 = 5,
     Button7 = 6,
-    Button8 = 7,
-    
-    Last = Button8,
+    Button8 = 7
 }

@@ -1,4 +1,6 @@
 ﻿using Hypercube.Core.Execution.LifeCycle;
+using Hypercube.Core.Input.Args;
+using Hypercube.Core.Input.Manager;
 using Hypercube.Core.Windowing;
 using Hypercube.Core.Windowing.Api;
 using Hypercube.Core.Windowing.Manager;
@@ -43,7 +45,7 @@ public sealed partial class InputHandler : IInputHandler, IPostInject
         Clear();
     }
 
-    private void OnKeyUpdate(WindowHandle window, KeyStateChangedArgs state)
+    private void OnKeyUpdate(WindowHandle window, KeyChangedArgs state)
     {
         GetKeySateBuffer(window).Apply(state);
     }

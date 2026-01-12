@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Windowing;
+﻿using Hypercube.Core.Input.Args;
+using Hypercube.Core.Windowing;
 
 namespace Hypercube.Core.Input.Handler;
 

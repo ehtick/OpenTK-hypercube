@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Windowing;
+﻿using Hypercube.Core.Input.Args;
+using Hypercube.Core.Windowing;
 
 namespace Hypercube.Core.Input.Handler;
 
@@ -26,7 +27,7 @@ public sealed partial class InputHandler
     public bool IsKeyState(Key key, KeyState state) =>
         IsKeyState(Api.Context, key, state);
 
-    public void SimulateMouseButton(KeyStateChangedArgs state) =>
+    public void SimulateMouseButton(KeyChangedArgs state) =>
         SimulateMouseButton(Api.Context, state);
 
     public bool IsKeyHeld(WindowHandle window, Key key) =>
@@ -41,7 +42,7 @@ public sealed partial class InputHandler
     public bool IsKeyState(WindowHandle window, Key key, KeyState state) =>
         _keys.TryGetValue(window, out var buffer) && buffer[state].Contains(key);
 
-    public void SimulateMouseButton(WindowHandle window, KeyStateChangedArgs state) =>
+    public void SimulateMouseButton(WindowHandle window, KeyChangedArgs state) =>
         OnKeyUpdate(window, state);
 
     #endregion
@@ -73,7 +74,7 @@ public sealed partial class InputHandler
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
         };
 
-        public void Apply(KeyStateChangedArgs state)
+        public void Apply(KeyChangedArgs state)
         {
             switch (state.State)
             {

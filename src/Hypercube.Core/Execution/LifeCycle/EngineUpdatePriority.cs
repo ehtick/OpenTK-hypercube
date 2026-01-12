@@ -1,15 +1,22 @@
 ﻿using Hypercube.Core.Ecs;
 using Hypercube.Core.Graphics.Rendering.Manager;
-using Hypercube.Core.Input;
 using Hypercube.Core.Input.Handler;
+using Hypercube.Core.Input.Manager;
 using Hypercube.Utilities.Collections;
 
 namespace Hypercube.Core.Execution.LifeCycle;
 
 public enum EngineUpdatePriority
 {
+    #region Input
+    
     /// <see cref="IInputHandler"/>
     InputHandler,
+    
+    /// <see cref="IInputManager"/>
+    InputManager,
+    
+    #endregion
     
     /// <see cref="IRenderManager"/>
     RendererUpdate,

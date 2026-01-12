@@ -1,4 +1,5 @@
 ﻿using Hypercube.Core.Input;
+using Hypercube.Core.Input.Args;
 using Hypercube.Core.Windowing.Api.Exceptions;
 
 namespace Hypercube.Core.Windowing.Api.Base;
@@ -65,7 +66,7 @@ public abstract partial class BaseWindowingApi
                 break;
             
             case EventWindowKey @event:
-                OnWindowKey?.Invoke(@event.Window, new KeyStateChangedArgs(@event.Key, @event.State, @event.Modifier, @event.ScanCode));
+                OnWindowKey?.Invoke(@event.Window, new KeyChangedArgs(@event.Key, @event.State, @event.Modifier, @event.ScanCode));
                 break;
             
             case EventWindowScroll @event:
