@@ -2,6 +2,7 @@
 using Hypercube.Core.Ecs.Attributes;
 using Hypercube.Core.Ecs.Core.Query;
 using Hypercube.Core.Ecs.Events;
+using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Resources;
 using Hypercube.Core.Resources;
@@ -13,9 +14,9 @@ namespace Hypercube.Core.Systems.Rendering;
 [RegisterEntitySystem]
 public sealed class ModelSystem : PatchEntitySystem
 {
-    [Dependency] private readonly IResourceManager _resource = default!;
+    [Dependency] private readonly IResourceManager _resource = null!;
     
-    private EntityQuery _query = default!;
+    private EntityQuery _query = null!;
     
     public override void Startup()
     {
@@ -34,7 +35,7 @@ public sealed class ModelSystem : PatchEntitySystem
         component.Model = _resource.Load<Model>(component.Path);
     }
     
-    public override void Draw(IRenderContext renderer)
+    public override void Draw(IRenderContext renderer, DrawPayload payload)
     {
         var enumerator = _query.GetEnumerator;
         while (enumerator.MoveNext(out var entity))

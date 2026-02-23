@@ -1,14 +1,14 @@
 ﻿using Hypercube.Core.Ecs;
 using Hypercube.Core.Ecs.Attributes;
-using Hypercube.Mathematics;
 using Hypercube.Mathematics.Vectors;
+using Hypercube.Mathematics.Quaternions;
 
 namespace Hypercube.Core.Systems.Transform;
 
 [RegisterEntitySystem]
 public sealed class TransformSystem : EntitySystem
 {
-    public void SetLocalPosition(Entity entity, Vector2 position)
+    public void SetLocalPosition(Entity entity, Vector3 position)
     {
         if (!TryGetComponent<TransformComponent>(entity, out var component))
             return;
@@ -16,7 +16,7 @@ public sealed class TransformSystem : EntitySystem
         component.LocalPosition = position;
     }
     
-    public void SetLocalRotation(Entity entity, Angle rotation)
+    public void SetLocalRotation(Entity entity, Quaternion rotation)
     {
         if (!TryGetComponent<TransformComponent>(entity, out var component))
             return;
@@ -24,7 +24,7 @@ public sealed class TransformSystem : EntitySystem
         component.LocalRotation = rotation;
     }
     
-    public void SetLocalScale(Entity entity, Vector2 scale)
+    public void SetLocalScale(Entity entity, Vector3 scale)
     {
         if (!TryGetComponent<TransformComponent>(entity, out var component))
             return;

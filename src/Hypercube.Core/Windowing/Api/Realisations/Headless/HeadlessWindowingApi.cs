@@ -15,62 +15,66 @@ public sealed class HeadlessWindowingApi : BaseWindowingApi
     {
     }
 
-    public override bool InternalInit()
+    protected override bool InternalInit()
     {
         return true;
     }
 
-    public override void InternalTerminate()
+    protected override void InternalTerminate()
     {
     }
 
-    public override void InternalPollEvents()
+    protected override void InternalPollEvents()
     {
     }
 
-    public override void InternalPostEmptyEvent()
+    protected override void InternalPostEmptyEvent()
     {
     }
 
-    public override void InternalWaitEvents()
+    protected override void InternalWaitEvents()
     {
     }
 
-    public override void InternalWaitEventsTimeout(double timeout)
+    protected override void InternalWaitEventsTimeout(double timeout)
     {
     }
 
-    public override void InternalMakeContextCurrent(WindowHandle window)
+    protected override void InternalMakeContextCurrent(WindowHandle window)
     {
     }
 
-    public override WindowHandle InternalGetCurrentContext()
-    {
-        return WindowHandle.Zero;
-    }
-
-    public override WindowHandle InternalWindowCreate(WindowCreateSettings settings)
+    protected override WindowHandle InternalGetCurrentContext()
     {
         return WindowHandle.Zero;
     }
 
-    public override void InternalWindowDestroy(WindowHandle window)
+    protected override WindowHandle InternalWindowCreate(WindowCreateSettings settings)
+    {
+        return WindowHandle.Zero;
+    }
+
+    protected override void InternalWindowDestroy(WindowHandle window)
     {
     }
 
-    public override void InternalWindowSetTitle(WindowHandle window, string title)
+    protected override void InternalWindowSetTitle(WindowHandle window, string title)
     {
     }
 
-    public override void InternalWindowSetPosition(WindowHandle window, Vector2i position)
+    protected override void InternalWindowSetPosition(WindowHandle window, Vector2i position)
     {
     }
 
-    public override void InternalWindowSetSize(WindowHandle window, Vector2i size)
+    protected override void InternalWindowSetSize(WindowHandle window, Vector2i size)
     {
     }
 
-    public override void InternalSwapBuffers(WindowHandle window)
+    protected override void InternalWindowSetFramebufferSize(WindowHandle window, Vector2i size)
+    {
+    }
+
+    protected override void InternalSwapBuffers(WindowHandle window)
     {
     }
     

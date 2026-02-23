@@ -87,7 +87,7 @@ public interface IWindow : IEquatable<IWindow>, IContextInfo, IDisposable
     /// The getter returns the last known (cached) position, which updates before <see cref="OnChangedPosition"/> is raised.
     /// </remarks>
     Vector2i Position { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the window size.
     /// </summary>
@@ -96,7 +96,9 @@ public interface IWindow : IEquatable<IWindow>, IContextInfo, IDisposable
     /// The getter returns the last known (cached) size, which updates before <see cref="OnChangedSize"/> is raised.
     /// </remarks>
     Vector2i Size { get; set; }
-    
+
+    Vector2i FramebufferSize { get; set; }
+
     bool IsMain { get; set; }
 
     /// <summary>

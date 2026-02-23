@@ -15,21 +15,23 @@ public sealed partial class Runtime
 {
     private readonly DependenciesContainer _dependencies = new();
 
-    [Dependency] private readonly IConfigManager _configManager = default!;
-    [Dependency] private readonly IEntitySystemManager _entitySystemManager = default!;
-    [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
-    [Dependency] private readonly IResourceManager _resourceManager = default!;
-    [Dependency] private readonly IRenderer _renderer = default!;
-    [Dependency] private readonly IAudioManager _audioManager = default!;
+    [Dependency] private readonly IAudioManager _audioManager = null!;
+    [Dependency] private readonly IConfigManager _configManager = null!;
+    [Dependency] private readonly IEntitySystemManager _entitySystemManager = null!;
+    [Dependency] private readonly IResourceManager _resourceManager = null!;
+    [Dependency] private readonly IRenderer _renderer = null!;
+    [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
 
     private readonly ConsoleLogger _logger = new();
 
     public void Start(string[] args) 
     {
         _parser.Parse(args);
+        
         InitCore();
         InitConfig();
         InitModules();
+        
         RunApplication();
         ShutdownApplication();;
     }
@@ -41,8 +43,8 @@ public sealed partial class Runtime
         
         _logger.LogLevel = Config.LoggingLevel;
         _logger.Echo(EngineInfo.WelcomeMessage);
-        
         _logger.Info("Dependency initialization...");
+        
         InitDependencies();
     }
     
@@ -56,12 +58,12 @@ public sealed partial class Runtime
 
         EntryPointsLoad();
         EntryPointsExecute(EntryPointLevel.BeforeInit);
-
-        _resourceManager.Mount(Config.MountFolders);
     }
     
     private void InitModules()
     {
+        _resourceManager.Mount(Config.MountFolders);
+        
         _logger.Info("The entry points are called!");
         _logger.Info("Initialization of internal modules...");
 
@@ -74,6 +76,7 @@ public sealed partial class Runtime
         _renderer.Load();
 
         InitDependentsDependencies();
+        
         _entitySystemManager.CrateMainWorld();
 
         _logger.Info("Preparation is complete, start the main application cycle");

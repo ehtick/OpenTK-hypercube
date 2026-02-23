@@ -13,11 +13,11 @@ namespace Hypercube.Core.Ecs;
 /// </summary>
 public abstract class EntitySystem : IEntitySystem
 {
-    [Dependency] protected readonly ILogger Logger = default!;
+    [Dependency] protected readonly ILogger Logger = null!;
     
     /// <inheritdoc/>
     [UsedImplicitly(ImplicitUseKindFlags.Assign)]
-    public World World { get; private set; } = default!;
+    public World World { get; private set; } = null!;
 
     protected EntityQueryBuilder EntityQueryBuilder => World.EntityQueryBuilder;
 

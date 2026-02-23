@@ -1,4 +1,5 @@
 ﻿using Hypercube.Core.Graphics.Fonts;
+using Hypercube.Core.Graphics.Objects.Fonts;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Resources.FileSystems;
 using Hypercube.Core.Resources.Loaders;

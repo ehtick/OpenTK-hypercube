@@ -50,6 +50,11 @@ public abstract partial class BaseWindowingApi
         Vector2i Size
     ) : ICommand;
 
+    private readonly record struct CommandWindowSetFramebufferSize(
+        WindowHandle Window,
+        Vector2i Size
+    ) : ICommand;
+    
     private readonly record struct CommandWindowCreate(
         WindowCreateSettings Settings
     ) : ICommand;

@@ -14,17 +14,19 @@ namespace Hypercube.Core.Graphics.Rendering;
 [EngineInternal]
 public class Renderer : IRenderer, IPostInject
 {
-    [Dependency] private readonly IRuntimeLoop _runtimeLoop = default!;
-    [Dependency] private readonly IWindowManager _windowManager = default!;
-    [Dependency] private readonly IRenderManager _renderManager = default!;
-    [Dependency] private readonly IRenderContext _renderContext = default!;
-    [Dependency] private readonly IPatchManager _patchManager = default!;
+    [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
+    [Dependency] private readonly IWindowManager _windowManager = null!;
+    [Dependency] private readonly IRenderManager _renderManager = null!;
+    [Dependency] private readonly IRenderContext _renderContext = null!;
+    [Dependency] private readonly IPatchManager _patchManager = null!;
     
     private readonly ManualResetEvent _readyEvent = new(false);
     
     private Thread? _thread;
     private RendererSettings _settings;
     private IWindow? _window;
+
+    public IWindow MainWindow => _window!;
 
     public void OnPostInject()
     {
@@ -53,11 +55,11 @@ public class Renderer : IRenderer, IPostInject
         _windowManager.PollEvents();
     }
 
-    public void Draw()
+    public void Draw(DrawPayload payload)
     {
         foreach (var patch in _patchManager.Patches)
         {
-            patch.Draw(_renderContext);
+            patch.Draw(_renderContext, payload);
         }   
     }
 
@@ -108,7 +110,7 @@ public class Renderer : IRenderer, IPostInject
 
     private void OnThreadStart()
     {
-        if (_settings.Thread is not { } thread)
+        if (_settings.Thread is null)
             throw new InvalidOperationException();
         
         _windowManager.Init(_settings.WindowingApi);

@@ -39,6 +39,10 @@ public abstract partial class BaseWindowingApi
                 InternalWindowSetSize(windowSetSize.Window, windowSetSize.Size);
                 break;
             
+            case CommandWindowSetFramebufferSize windowSetFramebufferSize:
+                InternalWindowSetFramebufferSize(windowSetFramebufferSize.Window, windowSetFramebufferSize.Size);
+                break;
+            
             case CommandWindowCreateSync windowCreateSync:
                 Raise(new EventSync<nint>(windowCreateSync.Task, InternalWindowCreate(windowCreateSync.Settings)), windowCreateSync.Thread != Thread);
                 break;

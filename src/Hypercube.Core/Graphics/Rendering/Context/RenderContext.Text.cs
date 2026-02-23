@@ -27,18 +27,19 @@ public partial class RenderContext
 
         foreach (var c in text)
         {
-            if (c == '\r')
-                continue;
-            
-            if (c == '\n')
+            switch (c)
             {
-                // Move to next line
-                pen = new Vector2(position.X, pen.Y - font.LineHeight * scale) ;
-                //baselineY = pen.Y - font.Baseline * scale;
-                // prev = '\0';
-                continue;
+                case '\r':
+                    continue;
+               
+                case '\n':
+                    // Move to next line
+                    pen = new Vector2(position.X, pen.Y - font.LineHeight * scale) ;
+                    //baselineY = pen.Y - font.Baseline * scale;
+                    // prev = '\0';
+                    continue;
             }
-            
+
             if (!font.Glyphs.TryGetValue(c, out var glyph))
             {
                 // Can be replaced by a space or skip
@@ -49,8 +50,8 @@ public partial class RenderContext
             // Calculate glyph size and position
             var glyphSize = glyph.SourceRect.Size * scale;
             var glyphPosition = new Vector2(
-                pen.X + glyph.Offset.X * scale,
-                pen.Y
+                pen.X + glyph.Offset.X,
+                pen.Y - glyph.Offset.Y
             );
 
             // Glyph square in local coordinates
@@ -64,8 +65,11 @@ public partial class RenderContext
                 new Vector2(glyph.SourceRect.TopLeft.X / textureSize.X, glyph.SourceRect.TopLeft.Y / textureSize.Y),
                 new Vector2(glyph.SourceRect.BottomRight.X / textureSize.X, glyph.SourceRect.BottomRight.Y / textureSize.Y)
             );
-
+            
+            // DrawRectangle(quad, Color.Red, true);
+            
             // Adding a glyph to a patch
+            // _renderingApi.EnsureBatch(PrimitiveTopology.TriangleList, _renderingApi.TexturingShaderProgram.Handle, font.Texture.Gpu?.Handle);
             AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, quad, uv, color);
 
             // Shift the stylus to Advance (horizontal shift)

@@ -22,6 +22,7 @@ public interface IWindowingApi : IDisposable
     event WindowTitleHandler? OnWindowTitle; 
     event WindowPositionHandler? OnWindowPosition; 
     event WindowSizeHandler? OnWindowSize; 
+    event WindowFramebufferSizeHandler? OnWindowFramebufferSize; 
     event WindowFocusHandler? OnWindowFocus; 
     event WindowKey? OnWindowKey;
     event WindowScroll? OnWindowScroll;
@@ -51,6 +52,7 @@ public interface IWindowingApi : IDisposable
     void WindowSetTitle(WindowHandle window, string title);
     void WindowSetPosition(WindowHandle window, Vector2i position);
     void WindowSetSize(WindowHandle window, Vector2i size);
+    void WindowSetFramebufferSize(WindowHandle window, Vector2i size);
     
     WindowHandle WindowCreateSync(WindowCreateSettings settings);
     WindowHandle WindowCreateMainSync(WindowCreateSettings settings);

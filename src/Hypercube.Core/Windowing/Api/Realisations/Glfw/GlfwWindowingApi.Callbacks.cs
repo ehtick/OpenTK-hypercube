@@ -37,6 +37,11 @@ public unsafe partial class GlfwWindowingApi
     {
         Raise(new EventWindowSize(new WindowHandle((nint) window), new Vector2i(width, height)));
     }
+    
+    private void WindowFramebufferSizeCallback(SilkWindowHandle* window, int width, int height)
+    {
+        Raise(new EventWindowFramebufferSize(new WindowHandle((nint) window), new Vector2i(width, height)));
+    }
 
     private void WindowPositionCallback(SilkWindowHandle* window, int x, int y)
     {

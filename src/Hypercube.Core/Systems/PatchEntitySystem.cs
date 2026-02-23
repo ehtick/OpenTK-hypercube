@@ -1,5 +1,6 @@
 ﻿using Hypercube.Core.Ecs;
 using Hypercube.Core.Graphics.Patching;
+using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Utilities.Dependencies;
 
@@ -8,7 +9,7 @@ namespace Hypercube.Core.Systems;
 public abstract class PatchEntitySystem : EntitySystem, IPatch, IPostInject
 {
     [Dependency, PublicAPI]
-    protected readonly IPatchManager PatchManager = default!;
+    protected readonly IPatchManager PatchManager = null!;
 
     public virtual int Priority => 0;
 
@@ -17,5 +18,5 @@ public abstract class PatchEntitySystem : EntitySystem, IPatch, IPostInject
         PatchManager.AddPatch(this);
     }
 
-    public abstract void Draw(IRenderContext renderer);
+    public abstract void Draw(IRenderContext renderer, DrawPayload payload);
 }

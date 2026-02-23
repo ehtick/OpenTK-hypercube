@@ -5,11 +5,13 @@ namespace Hypercube.Core.Graphics.Rendering;
 
 public interface IRenderer
 {
+    IWindow MainWindow { get; }
+    
     void Init(RendererSettings settings);
     void Load();
     void Shutdown();
     void Update();
-    void Draw();
+    void Draw(DrawPayload payload);
     void Render();
     IWindow CreateMainWindow(WindowCreateSettings settings);
 }

@@ -1,5 +1,6 @@
 ﻿using Hypercube.Core.Ecs.Attributes;
 using Hypercube.Core.Ecs.Core.Query;
+using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Systems.Transform;
 
@@ -8,7 +9,7 @@ namespace Hypercube.Core.Systems.Rendering;
 [RegisterEntitySystem]
 public sealed class LightSystem : PatchEntitySystem
 {
-    private EntityQuery _lightQuery = default!;
+    private EntityQuery _lightQuery = null!;
 
     public override void Startup()
     {
@@ -18,7 +19,7 @@ public sealed class LightSystem : PatchEntitySystem
             .Build();
     }
 
-    public override void Draw(IRenderContext renderer)
+    public override void Draw(IRenderContext renderer, DrawPayload payload)
     {
         var query = _lightQuery.GetEnumerator;
         while (query.MoveNext(out var entity))

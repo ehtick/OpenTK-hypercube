@@ -6,28 +6,28 @@ namespace Hypercube.Core.Graphics.Rendering.Api.Realisations.OpenGl;
 
 public sealed partial class OpenGlRenderingApi
 {
-    private ArrayObject GenArrayObject()
+    public ArrayObject GenArrayObject()
     {
-        return new ArrayObject(_gl);
+        return new ArrayObject(Gl);
     }
     
-    private ArrayObject GenArrayObject(string label)
+    public ArrayObject GenArrayObject(string label)
     {
-        return new ArrayObject(_gl, label);
+        return new ArrayObject(Gl, label);
     }
 
-    private BufferObject GenBufferObject(BufferTargetARB target)
+    public BufferObject GenBufferObject(BufferTargetARB target)
     {
-        return new BufferObject(_gl, target);
+        return new BufferObject(Gl, target);
     }
     
-    private BufferObject GenBufferObject(BufferTargetARB target, string label)
+    public BufferObject GenBufferObject(BufferTargetARB target, string label)
     {
-        return new BufferObject(_gl, target, label);
+        return new BufferObject(Gl, target, label);
     }
 
     [DebuggerDisplay("VertexArray {_handle}")]
-    private class ArrayObject : IDisposable
+    public class ArrayObject : IDisposable
     {
         private const uint Null = 0;
 
@@ -136,23 +136,31 @@ public sealed partial class OpenGlRenderingApi
         public unsafe void SetData(int size, nint data, BufferUsageARB hint = BufferUsageARB.StaticDraw)
         {
             Bind();
+            
             _gl.BufferData(_target, (nuint) size, (void*) data, hint);
         }
-    
-        public unsafe void SetData<T>(T[] data, BufferUsageARB hint = BufferUsageARB.StaticDraw)
-            where T : unmanaged
+
+        public unsafe void SetSubData(int size, nint data)
         {
             Bind();
+            throw new NotImplementedException();
+        }
+    
+        public unsafe void SetData<T>(T[] data, BufferUsageARB hint = BufferUsageARB.StaticDraw) where T : unmanaged
+        {
+            Bind();
+            
             fixed (T* dataPtr = data)
                 _gl.BufferData(_target, (nuint) (data.Length * sizeof(T)), dataPtr, hint);
         }
         
+        [PublicAPI]
         public void Label(string name)
         {
             Bind();
             _gl.ObjectLabel(ObjectIdentifier.Buffer, _handle, name);
         }
-    
+
         public void Dispose()
         {
             Delete();

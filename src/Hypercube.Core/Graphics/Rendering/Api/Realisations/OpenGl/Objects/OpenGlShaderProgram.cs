@@ -104,14 +104,12 @@ public sealed class OpenGlShaderProgram : BaseShaderProgram
 
     public override unsafe void SetUniform(string name, Matrix3x3 value, bool transpose = false)
     {
-        var matrix = new Matrix3x3(value);
-        _gl.UniformMatrix3(_uniformLocations[name], 1, transpose, (float*) &matrix);
+        _gl.UniformMatrix3(_uniformLocations[name], 1, transpose, (float*) &value);
     }
 
     public override unsafe void SetUniform(string name, Matrix4x4 value, bool transpose = false)
     {
-        var matrix = new Matrix4x4(value);
-        _gl.UniformMatrix4(_uniformLocations[name], 1, transpose, (float*) &matrix);
+        _gl.UniformMatrix4(_uniformLocations[name], 1, transpose, (float*) &value);
     }
 
     public override void SetUniform(string name, Color value)

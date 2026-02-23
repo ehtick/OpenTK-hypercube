@@ -2,6 +2,7 @@
 using Hypercube.Core.Ecs.Attributes;
 using Hypercube.Core.Ecs.Core.Query;
 using Hypercube.Core.Ecs.Events;
+using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Resources;
@@ -14,10 +15,10 @@ namespace Hypercube.Core.Systems.Rendering;
 [RegisterEntitySystem]
 public sealed class SpriteSystem : PatchEntitySystem
 {
-    [Dependency] private readonly IRenderManager _render = default!;
-    [Dependency] private readonly IResourceManager _resource = default!;
+    [Dependency] private readonly IRenderManager _render = null!;
+    [Dependency] private readonly IResourceManager _resource = null!;
     
-    private EntityQuery _spriteQuery = default!;
+    private EntityQuery _spriteQuery = null!;
     
     public override void Startup()
     {
@@ -39,7 +40,7 @@ public sealed class SpriteSystem : PatchEntitySystem
             component.Texture.GpuBind(_render.Api);
     }
 
-    public override void Draw(IRenderContext renderer)
+    public override void Draw(IRenderContext renderer, DrawPayload payload)
     {
         var enumerator = _spriteQuery.GetEnumerator;
         while (enumerator.MoveNext(out var entity))
@@ -48,13 +49,13 @@ public sealed class SpriteSystem : PatchEntitySystem
             var spriteComponent = GetComponent<SpriteComponent>(entity);
 
             var position = transformComponent.LocalPosition + spriteComponent.Offset;
-            var rotation = transformComponent.LocalRotation + spriteComponent.Rotation;
+            var rotation = transformComponent.LocalRotation.ToEuler().Z + spriteComponent.Rotation;
             var scale = transformComponent.LocalScale * spriteComponent.Scale;
             
             if (spriteComponent.Texture is null)
                 continue;
             
-            renderer.DrawTexture(spriteComponent.Texture, position, rotation, scale, spriteComponent.Color);
+            renderer.DrawTexture(spriteComponent.Texture, position.Xy, rotation, scale.Xy, spriteComponent.Color);
         }
     }
 }

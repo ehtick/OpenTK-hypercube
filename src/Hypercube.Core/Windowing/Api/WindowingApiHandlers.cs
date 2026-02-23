@@ -13,6 +13,7 @@ public delegate void WindowCloseHandler(WindowHandle window);
 public delegate void WindowTitleHandler(WindowHandle window, string title);
 public delegate void WindowPositionHandler(WindowHandle window, Vector2i position);
 public delegate void WindowSizeHandler(WindowHandle window, Vector2i size);
+public delegate void WindowFramebufferSizeHandler(WindowHandle window, Vector2i size);
 public delegate void WindowFocusHandler(WindowHandle window, bool focused);
 
 public delegate void WindowKey(WindowHandle window, KeyChangedArgs state);

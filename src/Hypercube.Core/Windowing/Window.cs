@@ -21,6 +21,8 @@ public sealed class Window : IWindow
     /// <inheritdoc/>
     public event Action<Vector2i>? OnChangedSize;
 
+    public event Action<Vector2i>? OnChangedFramebufferSize;
+    
     public event Action? OnClose;
 
     public event Action? OnDisposed;
@@ -52,6 +54,7 @@ public sealed class Window : IWindow
     
     private string _cachedTitle;
     private Vector2i _cachedSize;
+    private Vector2i _cachedFramebufferSize;
     private Vector2i _cachedPosition;
     
     #endregion
@@ -92,6 +95,12 @@ public sealed class Window : IWindow
         set => Api.WindowSetSize(Handle, value);
     }
 
+    public Vector2i FramebufferSize
+    {
+        get => _cachedFramebufferSize;
+        set => Api.WindowSetFramebufferSize(Handle, value);
+    }
+
     public bool IsMain { get; set; }
     
     public Window(IWindowingApi api, WindowHandle handle, WindowCreateSettings settings)
@@ -106,6 +115,7 @@ public sealed class Window : IWindow
         Api.OnWindowTitle += OnApiTitle;
         Api.OnWindowPosition += OnApiPosition;
         Api.OnWindowSize += OnApiSize;
+        Api.OnWindowFramebufferSize += OnApiFramebufferSize;
         Api.OnWindowClose += OnApiClose;
     }
 
@@ -203,6 +213,15 @@ public sealed class Window : IWindow
 
        _cachedSize = size;
        OnChangedSize?.Invoke(size);
+    }
+
+    private void OnApiFramebufferSize(WindowHandle window, Vector2i size)
+    {
+        if (window != Handle)
+            return;
+
+        _cachedFramebufferSize = size;
+        OnChangedFramebufferSize?.Invoke(size);
     }
 
     private void OnApiClose(WindowHandle window)

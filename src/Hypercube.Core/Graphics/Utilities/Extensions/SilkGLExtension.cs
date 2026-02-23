@@ -15,6 +15,18 @@ namespace Hypercube.Core.Graphics.Utilities.Extensions;
 public static class SilkGLExtension
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void TexStorage2D(this GL gl, TextureTarget target, uint levels, SizedInternalFormat internalFormat, int width, int height)
+    {
+        gl.TexStorage2D(target, levels, internalFormat, (uint) width, (uint) height);
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void UnbindTexture(this GL gl, TextureTarget target)
+    {
+        gl.BindTexture(TextureTarget.Texture2D, 0);
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void SetBlend(this GL gl, bool value)
     {
         gl.SetEnableCap(EnableCap.Blend, value);
@@ -29,7 +41,7 @@ public static class SilkGLExtension
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Viewport(this GL gl, IWindow window)
     {
-        Viewport(gl, window.Size);
+        gl.Viewport(window.Size);
     }
     
     [PublicAPI]
@@ -62,6 +74,20 @@ public static class SilkGLExtension
     public static bool HasErrors(this GL gl)
     {
         return gl.GetError() != (int) ErrorCode.NoError;
+    }
+
+    public static string HasErrors(this GL gl, string title)
+    {
+        var error = gl.GetError();
+        var result = string.Empty;
+        
+        while (error != (int) ErrorCode.NoError)
+        {
+            result += $"{title}: {error}{Environment.NewLine}";
+            error = gl.GetError();
+        }
+
+        return result;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

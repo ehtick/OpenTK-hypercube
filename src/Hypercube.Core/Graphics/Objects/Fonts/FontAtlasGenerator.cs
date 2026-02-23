@@ -1,11 +1,12 @@
 ﻿using System.Collections.Frozen;
+using Hypercube.Core.Graphics.Fonts;
 using Hypercube.Core.Graphics.Utilities.Helpers;
 using Hypercube.Mathematics.Shapes;
 using Hypercube.Mathematics.Vectors;
 using StbImageWriteSharp;
 using StbTrueTypeSharp;
 
-namespace Hypercube.Core.Graphics.Fonts;
+namespace Hypercube.Core.Graphics.Objects.Fonts;
 
 public static class FontAtlasGenerator
 {
@@ -59,7 +60,7 @@ public static class FontAtlasGenerator
             }
 
             StbTrueTypeHelper.FreeBitmap(bitmap);
-            StbTrueTypeHelper.GetGlyphHMetrics(font, index, out var advanceWidth, out _);
+            StbTrueTypeHelper.GetGlyphHMetrics(font, index, out var advanceWidth, out var bearingX);
             
             glyphs.Add(character, new Glyph(
                 character,
@@ -82,7 +83,8 @@ public static class FontAtlasGenerator
             0,
             ascent,
             descent,
-            lineGap
+            lineGap,
+            scale
         );
         
         return CreateImageStream(atlasData, atlasSize);

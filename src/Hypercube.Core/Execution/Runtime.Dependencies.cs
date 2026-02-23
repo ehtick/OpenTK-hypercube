@@ -6,7 +6,6 @@ using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Rendering.Manager;
-using Hypercube.Core.Input;
 using Hypercube.Core.Input.Handler;
 using Hypercube.Core.Input.Manager;
 using Hypercube.Core.Resources;
@@ -56,6 +55,8 @@ public partial class Runtime
         // Input
         _dependencies.Register<IInputHandler, InputHandler>();
         _dependencies.Register<IInputManager, InputManager>();
+        
+        // Utilities
         
         _dependencies.ResolveAll();
     }

@@ -136,7 +136,13 @@ public abstract partial class BaseWindowingApi
         WindowHandle Window,
         Vector2i Size
     ) : IEvent;
-
+    
+    protected record struct EventWindowFramebufferSize
+    (
+        WindowHandle Window,
+        Vector2i Size
+    ) : IEvent;
+    
     /// <summary>
     /// Represents a window position change event.<br/>
     /// GLFW reference: <a href="https://www.glfw.org/docs/latest/group__window.html#ga63d282e0cf4d1e62198dfd36573b0da0">glfwSetWindowPosCallback</a>.

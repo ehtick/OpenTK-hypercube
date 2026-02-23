@@ -24,6 +24,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi
     public event WindowTitleHandler? OnWindowTitle;
     public event WindowPositionHandler? OnWindowPosition;
     public event WindowSizeHandler? OnWindowSize;
+    public event WindowFramebufferSizeHandler? OnWindowFramebufferSize;
     public event WindowFocusHandler? OnWindowFocus;
     public event WindowKey? OnWindowKey;
     public event WindowScroll? OnWindowScroll;
@@ -147,6 +148,11 @@ public abstract partial class BaseWindowingApi : IWindowingApi
     public void WindowSetSize(WindowHandle window, Vector2i size)
     {
         Execute(new CommandWindowSetSize(window, size));
+    }
+
+    public void WindowSetFramebufferSize(WindowHandle window, Vector2i size)
+    {
+        Execute(new CommandWindowSetFramebufferSize(window, size));
     }
 
     public WindowHandle WindowCreateSync(WindowCreateSettings settings)

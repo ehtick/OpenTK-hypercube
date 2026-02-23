@@ -14,35 +14,39 @@ using Hypercube.Core.Windowing.Api;
 using Hypercube.Mathematics.Shapes;
 using Hypercube.Utilities.Dependencies;
 using Silk.NET.OpenGL;
+
 using Shader = Hypercube.Core.Graphics.Resources.Shader;
 using ShaderType = Hypercube.Core.Graphics.Rendering.Shaders.ShaderType;
 
 namespace Hypercube.Core.Graphics.Rendering.Api.Realisations.OpenGl;
 
 [EngineInternal]
-public sealed partial class OpenGlRenderingApi : BaseRenderingApi
+public sealed partial class OpenGlRenderingApi : BaseRenderingApi, IOpenGlRenderingApi
 {
     public override RenderingApi Type => RenderingApi.OpenGl;
     
-    [Dependency] private readonly ICameraManager _cameraManager = default!;
-    [Dependency] private readonly IResourceManager _resource = default!;
+    [Dependency] private readonly ICameraManager _cameraManager = null!;
+    [Dependency] private readonly IResourceManager _resource = null!;
 
     public override event DrawHandler? OnDraw;
     public override event DebugInfoHandler? OnDebugInfo;
 
-    private GL _gl = default!;
-    private ArrayObject _vao = default!;
-    private BufferObject _vbo = default!;
-    private BufferObject _ebo = default!;
+    public event Action? OnBeforeBufferSwap;
+    
+    private ArrayObject _vao = null!;
+    private BufferObject _vbo = null!;
+    private BufferObject _ebo = null!;
+
+    public GL Gl { get; private set; } = null!;
 
     protected override string InternalInfo
     {
         get
         {
-            var vendor = _gl.GetStringExt(StringName.Vendor);
-            var renderer = _gl.GetStringExt(StringName.Renderer);
-            var version = _gl.GetStringExt(StringName.Version);
-            var shading = _gl.GetStringExt(StringName.ShadingLanguageVersion);
+            var vendor = Gl.GetStringExt(StringName.Vendor);
+            var renderer = Gl.GetStringExt(StringName.Renderer);
+            var version = Gl.GetStringExt(StringName.Version);
+            var shading = Gl.GetStringExt(StringName.ShadingLanguageVersion);
 
             var result = new StringBuilder();
 
@@ -63,8 +67,8 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
 
     public override unsafe TextureHandle CreateTexture(int width, int height, int channels, byte[] data)
     {
-        var handle = _gl.GenTexture();
-        _gl.BindTexture(TextureTarget.Texture2D, handle);
+        var handle = Gl.GenTexture();
+        Gl.BindTexture(TextureTarget.Texture2D, handle);
 
         var internalFormat = channels switch
         {
@@ -85,14 +89,14 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         };
         
         fixed (byte* dataPointer = data)
-            _gl.TexImage2D(TextureTarget.Texture2D, 0, (int) internalFormat, (uint) width, (uint) height, 0, format, PixelType.UnsignedByte, dataPointer);
+            Gl.TexImage2D(TextureTarget.Texture2D, 0, (int) internalFormat, (uint) width, (uint) height, 0, format, PixelType.UnsignedByte, dataPointer);
         
-        _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Nearest);
-        _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Nearest);
-        _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
-        _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.ClampToEdge);
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Nearest);
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Nearest);
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
+        Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.ClampToEdge);
         
-        _gl.BindTexture(TextureTarget.Texture2D, 0);
+        Gl.BindTexture(TextureTarget.Texture2D, 0);
         
         return new TextureHandle(handle);
     }
@@ -102,30 +106,30 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         if (!handle.HasValue)
             return;
         
-        _gl.DeleteTexture(handle);
+        Gl.DeleteTexture(handle);
     }
 
     public override void SetScissor(bool value)
     {
-        _gl.SetScissor(value);
+        Gl.SetScissor(value);
     }
 
     public override void SetScissorRect(Rect2i rect)
     {
-        _gl.Scissor(rect.Left, rect.Top, (uint) rect.Width, (uint) rect.Height);
+        Gl.Scissor(rect.Left, rect.Top, (uint) rect.Width, (uint) rect.Height);
     }
 
     protected override bool InternalInit(IContextInfo contextInfo)
     {
-        _gl = GL.GetApi(contextInfo.GetProcAddress);
+        Gl = GL.GetApi(contextInfo.GetProcAddress);
 
-        if (_gl.HasErrors())
+        if (Gl.HasErrors())
             return false;
 
-        _gl.DebugMessageCallback(DebugProcCallback, in nint.Zero);
+        Gl.DebugMessageCallback(DebugProcCallback, in nint.Zero);
         
-        _gl.Enable(EnableCap.DebugOutput);
-        _gl.Enable(EnableCap.DebugOutputSynchronous);
+        Gl.Enable(EnableCap.DebugOutput);
+        Gl.Enable(EnableCap.DebugOutputSynchronous);
         
         _vao = GenArrayObject("Main VAO");
         _vbo = GenBufferObject(BufferTargetARB.ArrayBuffer, "Main VBO");
@@ -138,29 +142,29 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         var pointer = nint.Zero;
         
         // aPos
-        _gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, Vertex.Size, pointer);
-        _gl.EnableVertexAttribArray(0);
+        Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, Vertex.Size, pointer);
+        Gl.EnableVertexAttribArray(0);
         
         // aPos offset
         pointer += 3 * sizeof(float);
 
         // aColor
-        _gl.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, Vertex.Size, pointer);
-        _gl.EnableVertexAttribArray(1);
+        Gl.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, Vertex.Size, pointer);
+        Gl.EnableVertexAttribArray(1);
         
         // aColor offset
         pointer += 4 * sizeof(float);
 
         // aTexCoords
-        _gl.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, Vertex.Size, pointer);
-        _gl.EnableVertexAttribArray(2);
+        Gl.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, Vertex.Size, pointer);
+        Gl.EnableVertexAttribArray(2);
         
         // aTexCoords offset
         pointer += 2 * sizeof(float);
         
         // aNormal
-        _gl.VertexAttribPointer(3, 3, VertexAttribPointerType.Float, false, Vertex.Size, pointer);
-        _gl.EnableVertexAttribArray(3);
+        Gl.VertexAttribPointer(3, 3, VertexAttribPointerType.Float, false, Vertex.Size, pointer);
+        Gl.EnableVertexAttribArray(3);
         
         // aNormal offset
         pointer += 3 * sizeof(float);
@@ -189,22 +193,22 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
     {
         Clear();
 
-        _gl.Viewport(window);
-        _gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+        Gl.Viewport(window);
+        Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         
-        OnDraw?.Invoke();
+        OnDraw?.Invoke(new DrawPayload(window, _cameraManager.MainCamera));
 
         BreakCurrentBatch();
         UpdateBatchCount();
 
-        _gl.Enable(EnableCap.Blend);
-        _gl.Disable(EnableCap.ScissorTest);
+        Gl.Enable(EnableCap.Blend);
+        Gl.Disable(EnableCap.ScissorTest);
 
-        _gl.BlendEquation(BlendEquationModeEXT.FuncAdd);
-        _gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        Gl.BlendEquation(BlendEquationModeEXT.FuncAdd);
+        Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-        _gl.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Fill);
-        _gl.ClearColor(ClearColor);
+        Gl.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Fill);
+        Gl.ClearColor(ClearColor);
         
         _vao.Bind();
         _vbo.SetData(BatchVertices);
@@ -219,6 +223,8 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         _vbo.Unbind();
         _ebo.Unbind();
         
+        OnBeforeBufferSwap?.Invoke();
+        
         window.SwapBuffers();
     }
 
@@ -228,8 +234,8 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         
         if (batch.TextureHandle is not null)
         {
-            _gl.ActiveTexture(TextureUnit.Texture0);
-            _gl.BindTexture(TextureTarget.Texture2D, batch.TextureHandle.Value);
+            Gl.ActiveTexture(TextureUnit.Texture0);
+            Gl.BindTexture(TextureTarget.Texture2D, batch.TextureHandle.Value);
             shader = TexturingShaderProgram;
         }
         
@@ -241,29 +247,29 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi
         shader.SetUniform("view", _cameraManager.MainCamera.View);
         shader.SetUniform("projection", _cameraManager.MainCamera.Projection);
 
-        _gl.DrawElements(batch.PrimitiveTopology, batch.Size, DrawElementsType.UnsignedInt, batch.Start * sizeof(uint));
+        Gl.DrawElements(batch.PrimitiveTopology, batch.Size, DrawElementsType.UnsignedInt, batch.Start * sizeof(uint));
 
         shader.Stop();
         
-        _gl.BindTexture(TextureTarget.Texture2D, 0);
+        Gl.BindTexture(TextureTarget.Texture2D, 0);
     }
 
     protected override IShader InternalCreateShader(string source, ShaderType type)
     {
-        var handle = _gl.CreateShader(type);
-        return new OpenGlShader(_gl, handle, type, source);
+        var handle = Gl.CreateShader(type);
+        return new OpenGlShader(Gl, handle, type, source);
     }
 
     protected override IShaderProgram InternalCreateShaderProgram(IEnumerable<IShader> shaders)
     {
-        var handle = _gl.CreateProgram();
-        return new OpenGlShaderProgram(_gl, handle, shaders);
+        var handle = Gl.CreateProgram();
+        return new OpenGlShaderProgram(Gl, handle, shaders);
     }
 
     protected override IShaderProgram InternalCreateShaderProgram(List<IShader> shaders)
     {
-        var handle = _gl.CreateProgram();
-        return new OpenGlShaderProgram(_gl, handle, shaders);
+        var handle = Gl.CreateProgram();
+        return new OpenGlShaderProgram(Gl, handle, shaders);
     }
 
     private void DebugProcCallback(GLEnum source, GLEnum type, int id, GLEnum severity, int length, nint message, nint userParam)

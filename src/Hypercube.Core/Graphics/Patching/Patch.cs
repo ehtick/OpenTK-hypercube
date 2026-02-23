@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Graphics.Rendering.Context;
+﻿using Hypercube.Core.Graphics.Rendering;
+using Hypercube.Core.Graphics.Rendering.Context;
 
 namespace Hypercube.Core.Graphics.Patching;
 
@@ -9,5 +10,5 @@ public abstract class Patch : IPatch
     public virtual int Priority => 0;
     
     /// <inheritdoc/>
-    public abstract void Draw(IRenderContext renderer);
+    public abstract void Draw(IRenderContext renderer, DrawPayload payload);
 }

@@ -34,27 +34,30 @@ public readonly struct FontInfo
     /// </summary>
     public readonly int LineGap;
 
+    public readonly float Scale;
+
     #endregion
-    
+
     /// <summary>
     /// Total line height in pixels (ascent - descent + line gap).
     /// </summary>
-    public float LineHeight => Ascent - Descent + LineGap;
-    
+    public float LineHeight => (Ascent - Descent + LineGap) * Scale;
+
     /// <summary>
     /// Distance from the top of the line to the baseline in pixels.
     /// </summary>
     public float Baseline => Ascent;
-    
-    public FontInfo(FrozenDictionary<char, Glyph> glyphs, int unitsPerEm, int ascent, int descent, int lineGap)
+
+    public FontInfo(FrozenDictionary<char, Glyph> glyphs, int unitsPerEm, int ascent, int descent, int lineGap, float scale)
     {
         Glyphs = glyphs;
         UnitsPerEm = unitsPerEm;
         Ascent = ascent;
         Descent = descent;
         LineGap = lineGap;
+        Scale = scale;
     }
-    
+
     /// <summary>
     /// Tries to get a glyph for a given character.
     /// </summary>

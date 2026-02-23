@@ -1,4 +1,6 @@
-﻿using Hypercube.Core.Graphics.Rendering.Context;
+﻿using Hypercube.Core.Graphics.Rendering;
+using Hypercube.Core.Graphics.Rendering.Context;
+using Hypercube.Core.Windowing;
 
 namespace Hypercube.Core.Graphics.Patching;
 
@@ -19,5 +21,5 @@ public interface IPatch
     /// Renders the patch using the provided rendering context.
     /// </summary>
     /// <param name="renderer">The rendering context used to draw the patch.</param>
-    void Draw(IRenderContext renderer);
+    void Draw(IRenderContext renderer, DrawPayload payload);
 }

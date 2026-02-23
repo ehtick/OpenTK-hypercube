@@ -7,8 +7,8 @@ namespace Hypercube.Core.Graphics.Rendering.Context;
 [EngineInternal, UsedImplicitly]
 public partial class RenderContext : IRenderContext
 {
-    private IRenderingApi _renderingApi = default!;
-    private IWindowingApi _windowingApi = default!;
+    private IRenderingApi _renderingApi = null!;
+    private IWindowingApi _windowingApi = null!;
     
     public void Init(IRenderingApi renderingApi, IWindowingApi windowingApi)
     {

@@ -82,6 +82,6 @@ public class Camera : ICamera
 
     private void UpdateView()
     {
-        View = Matrix4x4.CreateTransform(Position, Rotation, Scale);
+       View = Matrix4x4.CreateTransform(-Position, -Rotation, 1.0f / Scale);
     }
 }

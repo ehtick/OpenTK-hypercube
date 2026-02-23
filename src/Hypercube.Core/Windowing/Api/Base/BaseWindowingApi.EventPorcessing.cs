@@ -48,6 +48,10 @@ public abstract partial class BaseWindowingApi
                 OnWindowSize?.Invoke(@event.Window, @event.Size);
                 break;
             
+            case EventWindowFramebufferSize @event:
+                OnWindowFramebufferSize?.Invoke(@event.Window, @event.Size);
+                break;
+            
             case EventWindowPosition @event:
                 OnWindowPosition?.Invoke(@event.Window, @event.Position);
                 break;
