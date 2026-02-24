@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Input.Args;
+﻿using Hypercube.Core.Execution.LifeCycle;
+using Hypercube.Core.Input.Args;
 using Hypercube.Core.Windowing;
 
 namespace Hypercube.Core.Input.Handler;
@@ -9,7 +10,7 @@ namespace Hypercube.Core.Input.Handler;
 /// Provides low-level access to input state queries and input simulation.
 /// </summary>
 [PublicAPI]
-public interface IInputHandler
+public interface IInputHandler : IRuntimeUpdatable
 {
     /// <summary>
     /// Clears all recorded key input states (Held and Released keys)

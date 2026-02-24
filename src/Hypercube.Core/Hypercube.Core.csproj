@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\submodules\ecs\src\Hypercube.Ecs\Hypercube.Ecs.csproj" />
     <ProjectReference Include="..\..\submodules\mathematics\src\Hypercube.Mathematics\Hypercube.Mathematics.csproj" />
     <ProjectReference Include="..\..\submodules\modloader\src\Hypercube.ModLoader\Hypercube.ModLoader.csproj" />
     <ProjectReference Include="..\..\submodules\utilities\src\Hypercube.Utilities\Hypercube.Utilities.csproj" />
@@ -53,9 +54,5 @@
     <PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
     <PackageReference Include="StbTrueTypeSharp" Version="1.26.12" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Graphics\Objects\" />
-  </ItemGroup>
-
+  
 </Project>

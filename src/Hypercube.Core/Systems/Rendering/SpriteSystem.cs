@@ -1,8 +1,4 @@
-﻿using Hypercube.Core.Ecs;
-using Hypercube.Core.Ecs.Attributes;
-using Hypercube.Core.Ecs.Core.Query;
-using Hypercube.Core.Ecs.Events;
-using Hypercube.Core.Graphics.Rendering;
+﻿using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Resources;
@@ -12,7 +8,6 @@ using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Systems.Rendering;
 
-[RegisterEntitySystem]
 public sealed class SpriteSystem : PatchEntitySystem
 {
     [Dependency] private readonly IRenderManager _render = null!;

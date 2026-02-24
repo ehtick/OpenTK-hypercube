@@ -1,17 +1,13 @@
-﻿using Hypercube.Core.Ecs;
-using Hypercube.Core.Ecs.Attributes;
-using Hypercube.Core.Ecs.Core.Query;
-using Hypercube.Core.Ecs.Events;
-using Hypercube.Core.Graphics.Rendering;
+﻿using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
-using Hypercube.Core.Graphics.Resources;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Systems.Transform;
+using Hypercube.Ecs;
 using Hypercube.Utilities.Dependencies;
 
-namespace Hypercube.Core.Systems.Rendering;
+namespace Hypercube.Core.Systems.Rendering.Model;
 
-[RegisterEntitySystem]
+// [RegisterEntitySystem]
 public sealed class ModelSystem : PatchEntitySystem
 {
     [Dependency] private readonly IResourceManager _resource = null!;
@@ -32,7 +28,7 @@ public sealed class ModelSystem : PatchEntitySystem
 
     private void OnAdded(ref Entity entity, ref ModelComponent component, ref AddedEvent args)
     {
-        component.Model = _resource.Load<Model>(component.Path);
+        component.Model = _resource.Load<Graphics.Resources.Model>(component.Path);
     }
     
     public override void Draw(IRenderContext renderer, DrawPayload payload)

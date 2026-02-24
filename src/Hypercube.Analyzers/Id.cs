@@ -6,4 +6,5 @@ public static class Id
     public const string EntitySystemNamingConvention = "HE0001";
     public const string EngineCoreUsageNotAllowed = "HE0002";
     public const string NullEquality = "HE0003";
+    public const string AccessCheck = "HE0004";
 }

@@ -1,13 +1,12 @@
-﻿using Hypercube.Core.Ecs;
-using Hypercube.Core.Graphics.Resources;
+﻿using Hypercube.Core.Graphics.Resources;
 using Hypercube.Core.Resources;
-using Hypercube.Core.Serialization;
+using Hypercube.Ecs.Components;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Systems.Rendering;
 
-public sealed class SpriteComponent : Component
+public struct SpriteComponent() : IComponent
 {
     public Texture? Texture;
     

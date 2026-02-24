@@ -1,5 +1,4 @@
-﻿using Hypercube.Core.Ecs;
-using Hypercube.Core.Graphics.Rendering.Manager;
+﻿using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Input.Handler;
 using Hypercube.Core.Input.Manager;
 using Hypercube.Utilities.Collections;
@@ -20,9 +19,6 @@ public enum EngineUpdatePriority
     
     /// <see cref="IRenderManager"/>
     RendererUpdate,
-    
-    /// <see cref="IEntitySystemManager"/>
-    EntitySystemManager,
     
     /// <see cref="IRenderManager"/>
     RendererRender

@@ -1,9 +1,10 @@
-﻿using Hypercube.Core.Windowing;
+﻿using Hypercube.Core.Execution.LifeCycle;
+using Hypercube.Core.Windowing;
 using Hypercube.Core.Windowing.Settings;
 
 namespace Hypercube.Core.Graphics.Rendering;
 
-public interface IRenderer
+public interface IRenderer : IRuntimeUpdatable
 {
     IWindow MainWindow { get; }
     

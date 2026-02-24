@@ -7,3 +7,6 @@
 [submodule "submodules/modloader"]
 	path = submodules/modloader
 	url = https://github.com/technologists-team/hypercube-modloader.git
+[submodule "submodules/ecs"]
+	path = submodules/ecs
+	url = https://github.com/technologists-team/hypercube-ecs.git

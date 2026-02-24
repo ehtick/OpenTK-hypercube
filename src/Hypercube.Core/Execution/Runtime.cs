@@ -1,5 +1,4 @@
 ﻿using Hypercube.Core.Audio.Manager;
-using Hypercube.Core.Ecs;
 using Hypercube.Core.Execution.Enums;
 using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Core.Graphics.Rendering;
@@ -17,7 +16,6 @@ public sealed partial class Runtime
 
     [Dependency] private readonly IAudioManager _audioManager = null!;
     [Dependency] private readonly IConfigManager _configManager = null!;
-    [Dependency] private readonly IEntitySystemManager _entitySystemManager = null!;
     [Dependency] private readonly IResourceManager _resourceManager = null!;
     [Dependency] private readonly IRenderer _renderer = null!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
@@ -76,8 +74,6 @@ public sealed partial class Runtime
         _renderer.Load();
 
         InitDependentsDependencies();
-        
-        _entitySystemManager.CrateMainWorld();
 
         _logger.Info("Preparation is complete, start the main application cycle");
     }
