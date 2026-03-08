@@ -4,6 +4,7 @@ using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Resources;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Systems.Transform;
+using Hypercube.Ecs.Query;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Systems.Rendering;
@@ -12,21 +13,18 @@ public sealed class SpriteSystem : PatchEntitySystem
 {
     [Dependency] private readonly IRenderManager _render = null!;
     [Dependency] private readonly IResourceManager _resource = null!;
-    
-    private EntityQuery _spriteQuery = null!;
+
+    private QueryMeta _spriteQuery = new QueryMeta()
+        .WithAll<TransformComponent>()
+        .WithAll<SpriteComponent>();
     
     public override void Startup()
     {
         base.Startup();
-
-        _spriteQuery = EntityQueryBuilder
-            .With<TransformComponent>()
-            .With<SpriteComponent>()
-            .Build();
         
         Subscribe<SpriteComponent, AddedEvent>(OnAdded);
     }
-
+    
     private void OnAdded(ref Entity entity, ref SpriteComponent component, ref AddedEvent args)
     {
         component.Texture = _resource.Load<Texture>(component.Path);
