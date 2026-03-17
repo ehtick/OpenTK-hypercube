@@ -8,7 +8,7 @@ namespace Hypercube.Core.Systems;
 
 public abstract class PatchEntitySystem : EntitySystem, IPatch, IPostInject
 {
-    [Dependency, PublicAPI] protected readonly IPatchManager PatchManager = null!;
+    [Dependency] protected readonly IPatchManager PatchManager = null!;
 
     public virtual int Priority => 0;
 

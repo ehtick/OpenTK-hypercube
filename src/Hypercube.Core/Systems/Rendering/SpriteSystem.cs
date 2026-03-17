@@ -4,7 +4,9 @@ using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Graphics.Resources;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Systems.Transform;
-using Hypercube.Ecs.Query;
+using Hypercube.Ecs;
+using Hypercube.Ecs.Lifetime;
+using Hypercube.Ecs.Queries;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Systems.Rendering;
@@ -14,18 +16,19 @@ public sealed class SpriteSystem : PatchEntitySystem
     [Dependency] private readonly IRenderManager _render = null!;
     [Dependency] private readonly IResourceManager _resource = null!;
 
-    private QueryMeta _spriteQuery = new QueryMeta()
-        .WithAll<TransformComponent>()
-        .WithAll<SpriteComponent>();
+    private Query _spriteQuery = null!;
     
-    public override void Startup()
+    public override void Initialize()
     {
-        base.Startup();
+        _spriteQuery = CreateQuery(new QueryMeta()
+            .WithAll<TransformComponent>()
+            .WithAll<SpriteComponent>()
+        );
         
         Subscribe<SpriteComponent, AddedEvent>(OnAdded);
     }
     
-    private void OnAdded(ref Entity entity, ref SpriteComponent component, ref AddedEvent args)
+    private void OnAdded(Entity entity, ref SpriteComponent component, ref AddedEvent args)
     {
         component.Texture = _resource.Load<Texture>(component.Path);
         
@@ -35,20 +38,16 @@ public sealed class SpriteSystem : PatchEntitySystem
 
     public override void Draw(IRenderContext renderer, DrawPayload payload)
     {
-        var enumerator = _spriteQuery.GetEnumerator;
-        while (enumerator.MoveNext(out var entity))
+        _spriteQuery.With<TransformComponent, SpriteComponent>((_, ref transform, ref sprite) =>
         {
-            var transformComponent = GetComponent<TransformComponent>(entity);
-            var spriteComponent = GetComponent<SpriteComponent>(entity);
+            if (sprite.Texture is null)
+                return;
 
-            var position = transformComponent.LocalPosition + spriteComponent.Offset;
-            var rotation = transformComponent.LocalRotation.ToEuler().Z + spriteComponent.Rotation;
-            var scale = transformComponent.LocalScale * spriteComponent.Scale;
+            var position = transform.LocalPosition + sprite.Offset;
+            var rotation = transform.LocalRotation.ToEuler().Z + sprite.Rotation;
+            var scale = transform.LocalScale * sprite.Scale;
             
-            if (spriteComponent.Texture is null)
-                continue;
-            
-            renderer.DrawTexture(spriteComponent.Texture, position.Xy, rotation, scale.Xy, spriteComponent.Color);
-        }
+            renderer.DrawTexture(sprite.Texture, position.Xy, rotation, scale.Xy, sprite.Color);
+        });
     }
 }

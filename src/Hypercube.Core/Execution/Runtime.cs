@@ -1,4 +1,5 @@
 ﻿using Hypercube.Core.Audio.Manager;
+using Hypercube.Core.Ecs;
 using Hypercube.Core.Execution.Enums;
 using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Core.Graphics.Rendering;
@@ -19,6 +20,7 @@ public sealed partial class Runtime
     [Dependency] private readonly IResourceManager _resourceManager = null!;
     [Dependency] private readonly IRenderer _renderer = null!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
+    [Dependency] private readonly IEntitySystemManager _entitySystemManager = null!;
 
     private readonly ConsoleLogger _logger = new();
 
@@ -43,6 +45,14 @@ public sealed partial class Runtime
         _logger.Echo(EngineInfo.WelcomeMessage);
         _logger.Info("Dependency initialization...");
         
+        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
+        {
+            if (args.ExceptionObject as Exception is not {} exception)
+                return;
+            
+            _logger.Critical(exception);
+        };
+        
         InitDependencies();
     }
     
@@ -55,7 +65,7 @@ public sealed partial class Runtime
         _logger.Info("Preparing for the execution of entry points...");
 
         EntryPointsLoad();
-        EntryPointsExecute(EntryPointLevel.BeforeInit);
+        EntryPointsExecute(EntryPointStage.BeforeInit);
     }
     
     private void InitModules()
@@ -75,12 +85,14 @@ public sealed partial class Runtime
 
         InitDependentsDependencies();
 
+        _entitySystemManager.Initialize();
+        
         _logger.Info("Preparation is complete, start the main application cycle");
     }
     
     private void RunApplication()
     {
-        EntryPointsExecute(EntryPointLevel.AfterInit);
+        EntryPointsExecute(EntryPointStage.AfterInit);
         _runtimeLoop.Run();
     }
 

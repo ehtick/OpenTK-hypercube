@@ -5,10 +5,10 @@ namespace Hypercube.Core.Execution.Attributes;
 [AttributeUsage(AttributeTargets.Method), MeansImplicitUse]
 public class EntryPointAttribute : Attribute
 {
-    public readonly EntryPointLevel Level;
+    public readonly EntryPointStage Stage;
 
-    public EntryPointAttribute(EntryPointLevel level)
+    public EntryPointAttribute(EntryPointStage stage)
     {
-        Level = level;
+        Stage = stage;
     }
 }

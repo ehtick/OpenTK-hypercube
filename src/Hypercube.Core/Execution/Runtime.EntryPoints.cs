@@ -9,7 +9,7 @@ namespace Hypercube.Core.Execution;
 
 public partial class Runtime
 {
-    private readonly Dictionary<EntryPointLevel, List<MethodInfo>> _entryPoints = [];
+    private readonly Dictionary<EntryPointStage, List<MethodInfo>> _entryPoints = [];
     
     private void EntryPointsLoad()
     {
@@ -20,15 +20,15 @@ public partial class Runtime
                 throw new InvalidOperationException();
             
             var attribute = method.GetCustomAttribute<EntryPointAttribute>()!;
-            _entryPoints.GetOrInstantiate(attribute.Level).Add(method);
+            _entryPoints.GetOrInstantiate(attribute.Stage).Add(method);
             
             _logger.Debug($"Loaded {method.Name} entry point");
         }
     }
     
-    private void EntryPointsExecute(EntryPointLevel level)
+    private void EntryPointsExecute(EntryPointStage stage)
     {
-        if (!_entryPoints.TryGetValue(level, out var entryPoints))
+        if (!_entryPoints.TryGetValue(stage, out var entryPoints))
             return;
         
         foreach (var method in entryPoints)

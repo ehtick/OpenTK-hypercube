@@ -3,48 +3,42 @@ using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Systems.Transform;
 using Hypercube.Ecs;
+using Hypercube.Ecs.Lifetime;
+using Hypercube.Ecs.Queries;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Systems.Rendering.Model;
 
-// [RegisterEntitySystem]
 public sealed class ModelSystem : PatchEntitySystem
 {
     [Dependency] private readonly IResourceManager _resource = null!;
     
-    private EntityQuery _query = null!;
+    private Query _modelQuery = null!;
     
-    public override void Startup()
+    public override void Initialize()
     {
-        base.Startup();
-
-        _query = EntityQueryBuilder
-            .With<TransformComponent>()
-            .With<ModelComponent>()
-            .Build();
+        _modelQuery = CreateQuery(new QueryMeta()
+            .WithAll<TransformComponent>()
+            .WithAll<ModelComponent>()
+        );
         
         Subscribe<ModelComponent, AddedEvent>(OnAdded);
     }
 
-    private void OnAdded(ref Entity entity, ref ModelComponent component, ref AddedEvent args)
+    private void OnAdded(Entity entity, ref ModelComponent component, ref AddedEvent args)
     {
         component.Model = _resource.Load<Graphics.Resources.Model>(component.Path);
     }
     
     public override void Draw(IRenderContext renderer, DrawPayload payload)
     {
-        var enumerator = _query.GetEnumerator;
-        while (enumerator.MoveNext(out var entity))
+        _modelQuery.With<TransformComponent, ModelComponent>((_, ref transform, ref model) =>
         {
-            var transformComponent = GetComponent<TransformComponent>(entity);
-            var modelComponent = GetComponent<ModelComponent>(entity);
-
-            var position = transformComponent.LocalPosition;
-  
-            if (modelComponent.Model is null)
-                continue;
+            var position = transform.LocalPosition;
+            if (model.Model is null)
+                return;
             
-            renderer.DrawModel(modelComponent.Model, position, modelComponent.Rotation, modelComponent.Scale, modelComponent.Color);
-        }
+            renderer.DrawModel(model.Model, position, model.Rotation, model.Scale, model.Color);
+        });
     }
 }

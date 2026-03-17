@@ -1,4 +1,5 @@
 ﻿using Hypercube.Core.Audio.Manager;
+using Hypercube.Core.Ecs;
 using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering;
@@ -10,6 +11,8 @@ using Hypercube.Core.Resources;
 using Hypercube.Core.Scenes.Manager;
 using Hypercube.Core.Viewports;
 using Hypercube.Core.Windowing.Manager;
+using Hypercube.Ecs;
+using Hypercube.Ecs.Events;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
 
@@ -34,6 +37,7 @@ public partial class Runtime
         // Windowing
         _dependencies.Register<IWindowManager, WindowManager>();
         
+        
         // Graphics
         _dependencies.Register<ICameraManager, CameraManager>();
         _dependencies.Register<IRenderContext, RenderContext>();
@@ -43,7 +47,10 @@ public partial class Runtime
         
         // Audio
         _dependencies.Register<IAudioManager, AudioManager>();
-
+        
+        // ECS
+        _dependencies.Register<IEntitySystemManager, EntitySystemManager>();
+        
         _dependencies.ResolveAll();
         _dependencies.Inject(this);
     }

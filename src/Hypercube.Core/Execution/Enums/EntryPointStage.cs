@@ -1,6 +1,6 @@
 ﻿namespace Hypercube.Core.Execution.Enums;
 
-public enum EntryPointLevel
+public enum EntryPointStage
 {
     BeforeInit,
     AfterInit
