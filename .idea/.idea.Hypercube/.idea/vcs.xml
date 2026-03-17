@@ -2,5 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/submodules/ecs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/submodules/mathematics" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/submodules/modloader" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/submodules/utilities" vcs="Git" />
   </component>
 </project>
