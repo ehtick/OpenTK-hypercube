@@ -5,7 +5,6 @@ namespace Hypercube.Core.Systems.Map;
 
 public sealed class MapSystem : EntitySystem
 {
-    /*
     public Entity<MapComponent> CreateMap(MapId mapId)
     {
         var entity = EntityCreate();
@@ -15,5 +14,4 @@ public sealed class MapSystem : EntitySystem
         
         return new Entity<MapComponent>(entity, component);
     }
-    */
 }

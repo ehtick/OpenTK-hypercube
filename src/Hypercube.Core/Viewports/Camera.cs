@@ -7,14 +7,19 @@ namespace Hypercube.Core.Viewports;
 [PublicAPI]
 public class Camera : ICamera
 {
-    public static Camera Default => new (DefaultSize, DefaultZNear, DefaultZFar, Vector3.One);
-    
+    public static Camera Default => new(DefaultSize, DefaultZNear, DefaultZFar, Vector3.One);
+
     public static readonly Vector2i DefaultSize = new(640, 320);
     public const float DefaultZNear = 0.1f;
     public const float DefaultZFar = 100f;
-    
+
     public Matrix4x4 Projection { get; private set; }
     public Matrix4x4 View { get; private set; }
+
+    private Vector2i _size;
+    private Vector3 _scale;
+    private float _zNear;
+    private float _zFar;
 
     public Vector2i Size
     {
@@ -28,23 +33,23 @@ public class Camera : ICamera
 
     public Vector3 Position
     {
-        get => _position;
+        get;
         set
         {
-            _position = value;
+            field = value;
             UpdateView();
         }
     }
 
     public Quaternion Rotation
     {
-        get => _rotation;
+        get;
         set
         {
-            _rotation = value;
+            field = value;
             UpdateView();
         }
-    }
+    } = Quaternion.Identity;
 
     public Vector3 Scale
     {
@@ -53,24 +58,36 @@ public class Camera : ICamera
         {
             _scale = value;
             UpdateView();
-        } 
+        }
     }
 
-    public float ZFar { get; }
-    public float ZNear { get; }
+    public float ZNear
+    {
+        get => _zNear;
+        set
+        {
+            _zNear = value;
+            UpdateProjection();
+        }
+    }
 
-    private Vector2i _size;
-    private Vector3 _position = Vector3.Zero;
-    private Quaternion _rotation;
-    private Vector3 _scale = new(32, 32, 1);
+    public float ZFar
+    {
+        get => _zFar;
+        set
+        {
+            _zFar = value;
+            UpdateProjection();
+        }
+    }
 
     public Camera(Vector2i size, float zNear, float zFar, Vector3 scale)
     {
-        Size = size;
-        ZNear = zNear;
-        ZFar = zFar;
-        Scale = scale;
-        
+        _size = size;
+        _zNear = zNear;
+        _zFar = zFar;
+        _scale = scale;
+
         UpdateProjection();
         UpdateView();
     }
@@ -82,6 +99,6 @@ public class Camera : ICamera
 
     private void UpdateView()
     {
-       View = Matrix4x4.CreateTransform(-Position, -Rotation, 1.0f / Scale);
+        View = Matrix4x4.CreateTransform(-Position, -Rotation, 1.0f / Scale);
     }
 }

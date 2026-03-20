@@ -1,4 +1,5 @@
 ﻿using Hypercube.Core.Systems.Map;
+using Hypercube.Core.Transform;
 using Hypercube.Ecs;
 using Hypercube.Ecs.Components;
 using Hypercube.Mathematics.Quaternions;
@@ -6,13 +7,34 @@ using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Systems.Transform;
 
-[UsedImplicitly]
+[PublicAPI]
 public struct TransformComponent() : IComponent
 {
-    public Entity? Parent;
+    public Entity Parent = Entity.Invalid;
 
-    public MapId Map;
-    public Vector3 LocalPosition = Vector3.Zero;
-    public Quaternion LocalRotation = Quaternion.Identity;
-    public Vector3 LocalScale = Vector3.One;
+    public MapId Map
+    {
+        get => Local.Map;
+        set => Local.Map = value;
+    }
+    
+    public Vector3 LocalPosition
+    {
+        get => Local.Position;
+        set => Local.Position = value;
+    }
+    
+    public Quaternion LocalRotation
+    {
+        get => Local.Rotation;
+        set => Local.Rotation = value;
+    }
+    
+    public Vector3 LocalScale
+    {
+        get => Local.Scale;
+        set => Local.Scale = value;
+    }
+    
+    public MapTransformation Local = new();
 }

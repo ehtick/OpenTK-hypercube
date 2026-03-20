@@ -15,6 +15,6 @@ public interface ICamera
     Quaternion Rotation { get; set; }
     Vector3 Scale { get; set; }
 
-    float ZFar { get; }
-    float ZNear { get; }
+    float ZFar { get; set; }
+    float ZNear { get; set;  }
 }

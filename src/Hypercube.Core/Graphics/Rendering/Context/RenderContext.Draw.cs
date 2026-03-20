@@ -10,7 +10,7 @@ namespace Hypercube.Core.Graphics.Rendering.Context;
 
 public sealed partial class RenderContext
 {
-   public void DrawModel(Model model, Vector3 position, Quaternion rotation, Vector3 scale, Color color, Texture? texture)
+    public void DrawModel(Model model, Vector3 position, Quaternion rotation, Vector3 scale, Color color, Texture? texture)
     {
         var shader = texture is null ? _renderingApi.PrimitiveShaderProgram : _renderingApi.TexturingShaderProgram;
         if (shader is null)

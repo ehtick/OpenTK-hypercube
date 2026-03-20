@@ -8,11 +8,8 @@ using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Input.Handler;
 using Hypercube.Core.Input.Manager;
 using Hypercube.Core.Resources;
-using Hypercube.Core.Scenes.Manager;
 using Hypercube.Core.Viewports;
 using Hypercube.Core.Windowing.Manager;
-using Hypercube.Ecs;
-using Hypercube.Ecs.Events;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
 
@@ -37,7 +34,6 @@ public partial class Runtime
         // Windowing
         _dependencies.Register<IWindowManager, WindowManager>();
         
-        
         // Graphics
         _dependencies.Register<ICameraManager, CameraManager>();
         _dependencies.Register<IRenderContext, RenderContext>();
@@ -60,9 +56,6 @@ public partial class Runtime
         // Input
         _dependencies.Register<IInputHandler, InputHandler>();
         _dependencies.Register<IInputManager, InputManager>();
-        
-        // Utilities
-        _dependencies.Register<ISceneManager, SceneManager>();
         
         _dependencies.ResolveAll();
     }
