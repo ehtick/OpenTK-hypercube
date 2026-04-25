@@ -3,8 +3,9 @@ using Hypercube.Core.Graphics.Rendering.Api.Handlers;
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
-using Hypercube.Core.Windowing;
+using Hypercube.Core.Viewports;
 using Hypercube.Core.Windowing.Api;
+using Hypercube.Core.Windowing.Windows;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Shapes;
@@ -22,14 +23,20 @@ public abstract partial class BaseRenderingApi : IRenderingApi
 
     public IShaderProgram? PrimitiveShaderProgram { get; protected set; }
     public IShaderProgram? TexturingShaderProgram { get; protected set; }
-    public int BatchVerticesIndex { get; protected set; }
-    public int BatchIndicesIndex { get; protected set; }
-
-    protected readonly IWindowingApi WindowingApi;
-    protected readonly List<Batch> Batches = [];
+    
+    [PublicAPI] public int BatchVerticesIndex { get; protected set; }
+    [PublicAPI] public int BatchIndicesIndex { get; protected set; }
+    
+    [PublicAPI] protected readonly IWindowingApi WindowingApi;
+    
+    [PublicAPI] protected readonly List<Batch> Batches = [];
+    
     protected readonly Vertex[] BatchVertices;
     protected readonly uint[] BatchIndices;
+    
     private BatchData? _currentBatchData;
+    private readonly List<RenderState> _renderStates = [];
+    private RenderStateId _currentRenderStateId;
 
     protected Color ClearColor { get; private set; }
 
@@ -42,9 +49,13 @@ public abstract partial class BaseRenderingApi : IRenderingApi
         BatchVertices = new Vertex[settings.MaxVertices];
         BatchIndices = new uint[settings.MaxIndices];
         WindowingApi = windowingApi;
+        
+        // Инициализируем дефолтным состоянием
+        _renderStates.Add(RenderState.Default);
+        _currentRenderStateId = new RenderStateId(0);
     }
 
-    public void Init(IContextInfo context)
+    public void Init(IContextInfoProvider context)
     {
         if (!InternalInit(context))
             throw new Exception();
@@ -66,18 +77,23 @@ public abstract partial class BaseRenderingApi : IRenderingApi
 
     public void EnsureBatch(PrimitiveTopology topology, uint shader, uint? texture)
     {
+        EnsureBatch(topology, shader, texture, _currentRenderStateId);
+    }
+    
+    public void EnsureBatch(PrimitiveTopology topology, uint shader, uint? texture, RenderStateId renderStateId)
+    {
         if (_currentBatchData is not null)
         {
             // It's just similar batch,
             // we need changing nothing to render different things
-            if (_currentBatchData.Value.Equals(topology, texture, shader))
+            if (_currentBatchData.Value.Equals(topology, texture, shader, renderStateId))
                 return;
 
             // Creating a real batch
             GenerateBatch();
         }
-
-        _currentBatchData = new BatchData(BatchIndicesIndex, texture, shader, topology);
+        
+        _currentBatchData = new BatchData(BatchIndicesIndex, texture, shader, topology, renderStateId);
     }
 
     public void BreakCurrentBatch()
@@ -94,18 +110,18 @@ public abstract partial class BaseRenderingApi : IRenderingApi
         // TODO: Add clamping and warning for index
         BatchVertices[BatchVerticesIndex++] = vertex;
     }
-
+    
     public void PushIndex(uint start,uint offset)
     {
         // TODO: Add clamping and warning for index
         BatchIndices[BatchIndicesIndex++] = start + offset;
     }
-
+    
     public void PushIndex(int start, int index)
     {
         PushIndex((uint) start, (uint) index);
     }
-
+    
     public IShaderProgram CreateShaderProgram(string source)
     {
         var sections = RenderingApiShaderLoader.ParseSections(source);
@@ -137,9 +153,12 @@ public abstract partial class BaseRenderingApi : IRenderingApi
 
         BatchVerticesIndex = 0;
         BatchIndicesIndex = 0;
-        
+
         _currentBatchData = null;
         Batches.Clear();
+        _renderStates.Clear();
+        _renderStates.Add(RenderState.Default);
+        _currentRenderStateId = new RenderStateId(0);
     }
     
     private void GenerateBatch()
@@ -156,9 +175,65 @@ public abstract partial class BaseRenderingApi : IRenderingApi
             data.Texture,
             data.PrimitiveTopology,
             Matrix4x4.Identity,
-            WindowingApi.Context
+            WindowingApi.Context,
+            data.RenderStateId
         );
 
         Batches.Add(batch);
+    }
+    
+    public RenderStateId RegisterRenderState(RenderState state)
+    {
+        var id = new RenderStateId(_renderStates.Count);
+        _renderStates.Add(state);
+        return id;
+    }
+    
+    public void SetRenderState(Matrix4x4 view, Matrix4x4 projection)
+    {
+        var newState = new RenderState(view, projection);
+        
+        var existingId = _renderStates.IndexOf(newState);
+        if (existingId >= 0)
+        {
+            _currentRenderStateId = new RenderStateId(existingId);
+            return;
+        }
+        
+        _renderStates.Add(newState);
+        
+        _currentRenderStateId = new RenderStateId(_renderStates.Count - 1);
+    }
+    
+    public void SetRenderState(ICameraManager cameraManager)
+    {
+        SetRenderState(cameraManager.MainCamera.View, cameraManager.MainCamera.Projection);
+    }
+    
+    public RenderState GetRenderState(RenderStateId id)
+    {
+        return _renderStates[id.Value];
+    }
+    
+    public RenderStateId GetCurrentRenderStateId()
+    {
+        return _currentRenderStateId;
+    }
+    
+    public RenderState GetCurrentRenderState()
+    {
+        return _renderStates[_currentRenderStateId.Value];
+    }
+    
+    public void SetRenderView(Matrix4x4 view)
+    {
+        var currentState = GetCurrentRenderState();
+        SetRenderState(view, currentState.Projection);
+    }
+    
+    public void SetRenderProjection(Matrix4x4 projection)
+    {
+        var currentState = GetCurrentRenderState();
+        SetRenderState(currentState.View, projection);
     }
 }

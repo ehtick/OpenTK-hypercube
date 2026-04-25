@@ -2,7 +2,6 @@
 using Hypercube.Core.Resources;
 using Hypercube.Ecs.Components;
 using Hypercube.Mathematics;
-using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Systems.Rendering;
 

@@ -1,13 +1,17 @@
 ﻿using System.Threading.Channels;
-using Hypercube.Core.Graphics;
+using Hypercube.Core.Graphics.Objects.Texturing;
 using Hypercube.Core.Windowing.Api.Exceptions;
-using Hypercube.Core.Windowing.Settings;
+using Hypercube.Core.Windowing.Windows;
 using Hypercube.Mathematics.Vectors;
 using Hypercube.Utilities.Extensions;
 using Hypercube.Utilities.Threads;
 
 namespace Hypercube.Core.Windowing.Api.Base;
 
+/// <summary>
+/// An optional template that provides a convenient implementation
+/// allowing you to avoid reimplementing the multithreading and API communication systems with the engine.
+/// </summary>
 public abstract partial class BaseWindowingApi : IWindowingApi
 {
     public abstract WindowingApi Type { get; }
@@ -16,7 +20,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi
     
     public event InitHandler? OnInit;
     public event ErrorHandler? OnError;
-    
+
     public event MonitorHandler? OnMonitor;
     public event JoystickHandler? OnJoystick;
     
@@ -28,6 +32,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi
     public event WindowFocusHandler? OnWindowFocus;
     public event WindowKey? OnWindowKey;
     public event WindowScroll? OnWindowScroll;
+    public event WindowMousePosition? OnWindowMousePosition;
     public event WindowMouseButton? OnWindowMouseButton;
     public event WindowChar? OnWindowChar;
     
@@ -43,6 +48,8 @@ public abstract partial class BaseWindowingApi : IWindowingApi
     #endregion
 
     private readonly List<WindowHandle> _windows = [];
+    private readonly List<MonitorHandler> _monitors = [];
+    
     private readonly float _waitEventsTimeout;
     private bool _running;
 
@@ -51,6 +58,9 @@ public abstract partial class BaseWindowingApi : IWindowingApi
 
     public IReadOnlyList<WindowHandle> Windows => _windows;
     public WindowHandle? MainWindow { get; private set; }
+
+    public IReadOnlyList<MonitorHandler> Monitors => _monitors;
+
     public WindowHandle Context
     {
         get => InternalGetCurrentContext();
@@ -84,7 +94,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi
         Thread = Thread.CurrentThread;
         Initialized = true;
         
-        OnInit?.Invoke(Info);
+        OnInit?.Invoke(new InitInfo(Info, InternalGetMonitorInstances()));
     }
 
     public void EnterLoop()
@@ -155,6 +165,11 @@ public abstract partial class BaseWindowingApi : IWindowingApi
         Execute(new CommandWindowSetFramebufferSize(window, size));
     }
 
+    public void WindowSetIcon(WindowHandle window, IImage icon)
+    {
+        Execute(new CommandWindowSetIcon(window, icon));
+    }
+
     public WindowHandle WindowCreateSync(WindowCreateSettings settings)
     {
         var tempContext = Context;
@@ -163,7 +178,10 @@ public abstract partial class BaseWindowingApi : IWindowingApi
         {
             var tcs = new TaskCompletionSource<nint>();
             var command = new CommandWindowCreateSync(settings, tcs, Thread.CurrentThread);
-        
+
+            // Free context for GLFW thread
+            Context = WindowHandle.Zero;
+            
             Execute(command);
             var window = new WindowHandle(WaitCommand(tcs));
 
@@ -172,21 +190,15 @@ public abstract partial class BaseWindowingApi : IWindowingApi
             Context = window;
             SwapInterval(settings.VSync.ToInt());
 
+            // First create window is main
+            MainWindow ??= window;
+                
             return window;
         }
         finally
         {
             Context = tempContext;
         }
-    }
-
-    public WindowHandle WindowCreateMainSync(WindowCreateSettings settings)
-    {
-        if (MainWindow is not null)
-            throw new Exception();
-        
-        MainWindow = WindowCreateSync(settings);
-        return MainWindow.Value;
     }
 
     public void WindowDestroy(WindowHandle window)

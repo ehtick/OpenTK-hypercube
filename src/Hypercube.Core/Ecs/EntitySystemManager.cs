@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
 using Hypercube.Core.Execution.LifeCycle;
+using Hypercube.Ecs;
 using Hypercube.Ecs.System;
 using Hypercube.Ecs.System.Collections;
+using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Helpers;
 
@@ -12,11 +14,14 @@ public sealed partial class EntitySystemManager : IEntitySystemManager, IPostInj
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
 
     private readonly SystemSequence _systemSequence = new();
+    
     private readonly DependenciesContainer _container;
-
-    public EntitySystemManager(IDependenciesContainer container)
+    private readonly IWorld _globalWorld;
+    
+    public EntitySystemManager(IDependenciesContainer container, ILogger logger)
     {
         _container = new DependenciesContainer(container);
+        _globalWorld = new World(logger);
     }
 
     public void OnPostInject()
@@ -26,7 +31,7 @@ public sealed partial class EntitySystemManager : IEntitySystemManager, IPostInj
 
     public void Initialize()
     {
-        foreach (var type in ReflectionHelper.GetInstantiableSubclasses<EntitySystem>())
+        foreach (var type in ReflectionHelper.GetInstantiableSubclasses<EntitySystemOriginal>())
         {
             var constructor = type.GetConstructor([]);   
             if (constructor is null) 
@@ -47,7 +52,7 @@ public sealed partial class EntitySystemManager : IEntitySystemManager, IPostInj
                 .DeclaringType?
                 .GetProperty(property, flags);
             
-            propertyInfo?.SetValue(instance, GlobalWorld);
+            propertyInfo?.SetValue(instance, _globalWorld);
             
             _systemSequence.Add((ISystem) instance);
             _container.RegisterSingleton(instance.GetType(), instance);

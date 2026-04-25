@@ -4,54 +4,55 @@
 public class PatchManager : IPatchManager
 {
     private readonly Dictionary<Type, IPatch> _patches = new();
+    
+    private List<IPatch> _sorted = [];
+    private bool _dirty = true;
 
-    public IEnumerable<IPatch> Patches => _patches.Values;
+    /// <inheritdoc/>
+    public IEnumerable<IPatch> Patches => GetPatches();
 
-    /// <summary>
-    /// Adds a patch to the dictionary if it doesn't exist already.
-    /// </summary>
+    /// <inheritdoc/>
     public bool AddPatch(IPatch patch)
     {
-        return _patches.TryAdd(patch.GetType(), patch);
+        if (!_patches.TryAdd(patch.GetType(), patch))
+            return false;
+
+        _dirty = true;
+        return true;
     }
 
-    /// <summary>
-    /// Removes a specific patch from the dictionary.
-    /// </summary> 
-    public bool RemovePatch(IPatch patch)
-    {
-        return _patches.Remove(patch.GetType());
-    }
-
-    /// <summary>
-    /// Removes a patch by its Type from the dictionary.
-    /// </summary>
+    /// <inheritdoc/>
     public bool RemovePatch(Type patch)
     {
-        return _patches.Remove(patch);
+        if (!_patches.Remove(patch))
+            return false;
+
+        _dirty = true;
+        return true;
     }
 
-    /// <summary>
-    /// Removes a patch by its generic Type parameter.
-    /// </summary>
-    public bool RemovePatch<T>() where T : IPatch
-    {
-        return _patches.Remove(typeof(T));
-    }
+    /// <inheritdoc/>
+    public bool RemovePatch(IPatch patch) => RemovePatch(patch.GetType());
 
-    /// <summary>
-    /// Checks if a patch of a specific Type exists in the dictionary.
-    /// </summary>
-    public bool HasPatch(Type patch)
-    {
-        return _patches.ContainsKey(patch);
-    }
+    /// <inheritdoc/>
+    public bool RemovePatch<T>() where T : IPatch => RemovePatch(typeof(T));
 
-    /// <summary>
-    /// Checks if a patch of a specific generic Type exists in the dictionary.
-    /// </summary>
-    public bool HasPatch<T>() where T : IPatch
+    /// <inheritdoc/>
+    public bool HasPatch(Type patch) => _patches.ContainsKey(patch);
+
+    /// <inheritdoc/>
+    public bool HasPatch<T>() where T : IPatch => HasPatch(typeof(T));
+    
+    private List<IPatch> GetPatches()
     {
-        return _patches.ContainsKey(typeof(T));
+        if (!_dirty)
+            return _sorted;
+        
+        _sorted = _patches.Values
+            .OrderByDescending(p => p.Priority)
+            .ToList();
+
+        _dirty = false;
+        return _sorted;
     }
 }

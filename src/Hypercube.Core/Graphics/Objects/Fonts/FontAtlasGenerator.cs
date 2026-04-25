@@ -1,5 +1,4 @@
 ﻿using System.Collections.Frozen;
-using Hypercube.Core.Graphics.Fonts;
 using Hypercube.Core.Graphics.Utilities.Helpers;
 using Hypercube.Mathematics.Shapes;
 using Hypercube.Mathematics.Vectors;

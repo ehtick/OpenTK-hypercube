@@ -1,6 +1,6 @@
 ﻿using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Utilities.Helpers;
-using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Windows;
 
 namespace Hypercube.Core.Utilities.Extensions;
 

@@ -9,20 +9,23 @@ public readonly struct BatchData : IEquatable<BatchData>
     public readonly uint? Texture;
     public readonly uint Shader;
     public readonly PrimitiveTopology PrimitiveTopology;
+    public readonly RenderStateId RenderStateId;
 
-    public BatchData(int start, uint? texture, uint shader, PrimitiveTopology primitiveTopology)
+    public BatchData(int start, uint? texture, uint shader, PrimitiveTopology primitiveTopology, RenderStateId renderStateId)
     {
         Start = start;
         Texture = texture;
         Shader = shader;
         PrimitiveTopology = primitiveTopology;
+        RenderStateId = renderStateId;
     }
     
-    public bool Equals(PrimitiveTopology topology, uint? texture, uint shader)
+    public bool Equals(PrimitiveTopology topology, uint? texture, uint shader, RenderStateId renderStateId)
     {
         return Texture == texture &&
                Shader == shader &&
-               PrimitiveTopology == topology;
+               PrimitiveTopology == topology &&
+               RenderStateId == renderStateId;
     }
     
     public bool Equals(BatchData other)
@@ -30,7 +33,8 @@ public readonly struct BatchData : IEquatable<BatchData>
         return Start == other.Start &&
                Texture == other.Texture &&
                Shader == other.Shader &&
-               PrimitiveTopology == other.PrimitiveTopology;
+               PrimitiveTopology == other.PrimitiveTopology &&
+               RenderStateId == other.RenderStateId;
     }
 
     public override bool Equals(object? obj)
@@ -40,7 +44,7 @@ public readonly struct BatchData : IEquatable<BatchData>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Start, Texture, Shader, (int)PrimitiveTopology);
+        return HashCode.Combine(Start, Texture, Shader, (int)PrimitiveTopology, RenderStateId);
     }
     
     public static bool operator ==(BatchData a, BatchData b)

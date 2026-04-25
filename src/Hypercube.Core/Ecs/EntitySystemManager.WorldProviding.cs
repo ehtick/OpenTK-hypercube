@@ -7,31 +7,29 @@ namespace Hypercube.Core.Ecs;
 
 public partial class EntitySystemManager
 {
-    public readonly IWorld GlobalWorld = new World();
+    public IEventBus Events => _globalWorld.Events;
     
-    public IEventBus Events => GlobalWorld.Events;
-    
-    public Entity Create() => GlobalWorld.Create();
+    public Entity Create() => _globalWorld.Create();
 
-    public void Delete(Entity entity) => GlobalWorld.Delete(entity);
+    public void Delete(Entity entity) => _globalWorld.Delete(entity);
 
-    public bool Validate(Entity entity) => GlobalWorld.Validate(entity);
+    public bool Validate(Entity entity) => _globalWorld.Validate(entity);
 
     public ref T Add<T>(Entity entity) where T : struct, IComponent
-        => ref GlobalWorld.Add<T>(entity);
+        => ref _globalWorld.Add<T>(entity);
 
     public ref T Add<T>(Entity entity, in T component) where T : struct, IComponent
-        => ref GlobalWorld.Add(entity, in component);
+        => ref _globalWorld.Add(entity, in component);
 
     public ref T Get<T>(Entity entity) where T : struct, IComponent
-        => ref GlobalWorld.Get<T>(entity) ;
+        => ref _globalWorld.Get<T>(entity) ;
 
     public bool Has<T>(Entity entity) where T : struct, IComponent
-        => GlobalWorld.Has<T>(entity);
+        => _globalWorld.Has<T>(entity);
 
     public void Remove<T>(Entity entity) where T : struct, IComponent
-        => GlobalWorld.Remove<T>(entity);
+        => _globalWorld.Remove<T>(entity);
 
     public Query CreateQuery(in QueryMeta meta)
-        => GlobalWorld.CreateQuery(meta);
+        => _globalWorld.CreateQuery(meta);
 }

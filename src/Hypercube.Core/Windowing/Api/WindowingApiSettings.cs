@@ -1,6 +1,4 @@
-﻿using Hypercube.Core.Graphics;
-
-namespace Hypercube.Core.Windowing.Api;
+﻿namespace Hypercube.Core.Windowing.Api;
 
 public readonly struct WindowingApiSettings
 {

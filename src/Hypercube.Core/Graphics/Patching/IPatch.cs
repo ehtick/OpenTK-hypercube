@@ -1,6 +1,5 @@
 ﻿using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
-using Hypercube.Core.Windowing;
 
 namespace Hypercube.Core.Graphics.Patching;
 
@@ -16,10 +15,11 @@ public interface IPatch
     /// (on top of patches with lower priority).
     /// </summary>
     int Priority { get; }
-    
+
     /// <summary>
     /// Renders the patch using the provided rendering context.
     /// </summary>
     /// <param name="renderer">The rendering context used to draw the patch.</param>
+    /// <param name="payload"></param>
     void Draw(IRenderContext renderer, DrawPayload payload);
 }

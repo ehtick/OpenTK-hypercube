@@ -1,7 +1,6 @@
 ﻿using System.Collections.Frozen;
-using Hypercube.Mathematics.Vectors;
 
-namespace Hypercube.Core.Graphics.Fonts;
+namespace Hypercube.Core.Graphics.Objects.Fonts;
 
 [PublicAPI]
 public readonly struct FontInfo

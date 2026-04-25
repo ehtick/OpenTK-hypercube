@@ -1,20 +1,21 @@
 ﻿using Hypercube.Core.Input.Args;
-using Hypercube.Core.Windowing;
+using Hypercube.Mathematics.Vectors;
+using WindowHandle = Hypercube.Core.Windowing.Windows.WindowHandle;
 
 namespace Hypercube.Core.Input.Handler;
 
 public sealed partial class InputHandler
 {
-    private readonly Dictionary<nint, MouseStateBuffer> _mouse = new();
+    private readonly Dictionary<WindowHandle, MouseStateBuffer> _mouse = new();
+    private readonly Dictionary<WindowHandle, Vector2i> _mousePosition = new();
 
-    #region Public API
+    public Vector2i MousePosition => GetMousePosition(Api.Context);
     
+    #region Public API
+
     public void ClearMouseButtonState()
     {
-        foreach (var (_, buffer) in _mouse)
-        {
-            buffer.ClearFrameState();
-        }
+        foreach (var (_, buffer) in _mouse) buffer.ClearFrameState();
     }
 
     public bool IsMouseButtonHeld(MouseButton button) =>
@@ -28,10 +29,10 @@ public sealed partial class InputHandler
 
     public bool IsMouseButtonState(MouseButton button, KeyState state) =>
         IsMouseButtonState(Api.Context, button, state);
-    
+
     public void SimulateMouseButton(MouseButtonChangedArgs state) =>
         OnMouseButtonUpdate(Api.Context, state);
-    
+
     public bool IsMouseButtonHeld(WindowHandle window, MouseButton button) =>
         IsMouseButtonState(window, button, KeyState.Held);
 
@@ -40,15 +41,18 @@ public sealed partial class InputHandler
 
     public bool IsMouseButtonReleased(WindowHandle window, MouseButton button) =>
         IsMouseButtonState(window, button, KeyState.Released);
-    
+
     public bool IsMouseButtonState(WindowHandle window, MouseButton button, KeyState state) =>
         _mouse.TryGetValue(window, out var buffer) && buffer[state].Contains(button);
 
+    public Vector2i GetMousePosition(WindowHandle window)
+        => !_mousePosition.TryGetValue(window, out var position) ? Vector2i.Zero : position;
+
     public void SimulateMouseButton(WindowHandle window, MouseButtonChangedArgs state) =>
         OnMouseButtonUpdate(window, state);
-    
+
     #endregion
-    
+
     private MouseStateBuffer GetMouseStateBuffer(WindowHandle window)
     {
         if (_mouse.TryGetValue(window, out var buffer))

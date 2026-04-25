@@ -5,18 +5,20 @@ using Hypercube.Core.Graphics.Rendering.Api.Realisations.OpenGl.Objects;
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
-using Hypercube.Core.Graphics.Texturing;
 using Hypercube.Core.Graphics.Utilities.Extensions;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Viewports;
 using Hypercube.Core.Windowing;
 using Hypercube.Core.Windowing.Api;
+using Hypercube.Core.Windowing.Windows;
+using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Shapes;
 using Hypercube.Utilities.Dependencies;
 using Silk.NET.OpenGL;
 
 using Shader = Hypercube.Core.Graphics.Resources.Shader;
 using ShaderType = Hypercube.Core.Graphics.Rendering.Shaders.ShaderType;
+using TextureHandle = Hypercube.Core.Graphics.Objects.Texturing.TextureHandle;
 
 namespace Hypercube.Core.Graphics.Rendering.Api.Realisations.OpenGl;
 
@@ -119,9 +121,9 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi, IOpenGlRender
         Gl.Scissor(rect.Left, rect.Top, (uint) rect.Width, (uint) rect.Height);
     }
 
-    protected override bool InternalInit(IContextInfo contextInfo)
+    protected override bool InternalInit(IContextInfoProvider contextInfoProvider)
     {
-        Gl = GL.GetApi(contextInfo.GetProcAddress);
+        Gl = GL.GetApi(contextInfoProvider.GetProcAddress);
 
         if (Gl.HasErrors())
             return false;
@@ -196,6 +198,8 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi, IOpenGlRender
         Gl.Viewport(window);
         Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         
+        SetRenderState(_cameraManager);
+        
         OnDraw?.Invoke(new DrawPayload(window, _cameraManager.MainCamera));
 
         BreakCurrentBatch();
@@ -215,10 +219,8 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi, IOpenGlRender
         _ebo.SetData(BatchIndices);
         
         foreach (var batch in Batches)
-        {
             Render(batch);
-        }
-
+        
         _vao.Unbind();
         _vbo.Unbind();
         _ebo.Unbind();
@@ -230,8 +232,9 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi, IOpenGlRender
 
     private void Render(Batch batch)
     {
+        var renderState = GetRenderState(batch.RenderStateId);
         var shader = PrimitiveShaderProgram;
-        
+
         if (batch.TextureHandle is not null)
         {
             Gl.ActiveTexture(TextureUnit.Texture0);
@@ -243,9 +246,9 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi, IOpenGlRender
             throw new Exception();
         
         shader.Use();
-        shader.SetUniform("model", batch.Model);
-        shader.SetUniform("view", _cameraManager.MainCamera.View);
-        shader.SetUniform("projection", _cameraManager.MainCamera.Projection);
+        shader.SetUniform("model", Matrix4x4.Identity);
+        shader.SetUniform("view", renderState.View);
+        shader.SetUniform("projection", renderState.Projection);
 
         Gl.DrawElements(batch.PrimitiveTopology, batch.Size, DrawElementsType.UnsignedInt, batch.Start * sizeof(uint));
 

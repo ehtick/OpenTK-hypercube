@@ -1,8 +1,7 @@
 ﻿using System.Globalization;
 using Hypercube.Core.Graphics.Resources;
-using Hypercube.Mathematics.Vectors;
 
-namespace Hypercube.Core.Graphics.Models;
+namespace Hypercube.Core.Graphics.Objects.Models;
 
 public static class ModelObjLoader
 {

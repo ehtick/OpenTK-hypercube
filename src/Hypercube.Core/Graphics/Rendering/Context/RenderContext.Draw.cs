@@ -4,7 +4,6 @@ using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Quaternions;
 using Hypercube.Mathematics.Shapes;
-using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Graphics.Rendering.Context;
 
@@ -115,27 +114,45 @@ public sealed partial class RenderContext
         _renderingApi.PushIndex(startIndex, 2);
     }
 
-    public void DrawCircle(Vector2 center, float radius, Color color, int segments = 32)
+    public void DrawCircle(Vector2 center, float radius, Color color, int segments = 32, bool outline = false)
     {
         if (_renderingApi.PrimitiveShaderProgram is null)
             throw new InvalidOperationException("Primitive shader program is not initialized");
-
-        _renderingApi.EnsureBatch(PrimitiveTopology.TriangleList, _renderingApi.PrimitiveShaderProgram.Handle, null);
-
+        
+        _renderingApi.EnsureBatch(outline ? PrimitiveTopology.LineList : PrimitiveTopology.TriangleList, _renderingApi.PrimitiveShaderProgram.Handle, null);
+        
         var startIndex = _renderingApi.BatchVerticesIndex;
+        
+        if (outline)
+        {
+            for (var i = 0; i <= segments; i++)
+            {
+                var angle = (float) i / segments * float.Pi * 2;
+                var point = center + new Vector2(float.Cos(angle), float.Sin(angle)) * radius;
+                _renderingApi.PushVertex(new Vertex(point, Vector2.Zero, color));
+            }
+
+            for (var i = 0; i < segments; i++)
+            {
+                _renderingApi.PushIndex(startIndex, i);
+                _renderingApi.PushIndex(startIndex, i + 1);
+            }
+            return;
+        }
+        
         _renderingApi.PushVertex(new Vertex(center, Vector2.Zero, color));
         
         for (var i = 0; i <= segments; i++)
         {
-            var angle = (float)i / segments * MathF.PI * 2;
-            var point = center + new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * radius;
+            var angle = (float) i / segments * float.Pi * 2;
+            var point = center + new Vector2(float.Cos(angle), float.Sin(angle)) * radius;
             _renderingApi.PushVertex(new Vertex(point, Vector2.Zero, color));
         }
         
         for (var i = 1; i <= segments; i++)
         {
             _renderingApi.PushIndex(startIndex, 0);
-            _renderingApi.PushIndex(startIndex, i);
+            _renderingApi.PushIndex(startIndex, i); 
             _renderingApi.PushIndex(startIndex, i % segments + 1);
         }
     }

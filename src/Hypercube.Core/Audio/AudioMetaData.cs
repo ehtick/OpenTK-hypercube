@@ -20,6 +20,15 @@ public readonly struct AudioMetaData
     /// Number of samples per second in Hertz (Hz).
     /// </summary>
     public readonly int SampleRate;
+
+    public int Channels => AudioFormat switch
+    {
+        AudioFormat.Mono8 => 1,
+        AudioFormat.Mono16 => 1,
+        AudioFormat.Stereo8 => 2,
+        AudioFormat.Stereo16 => 2,
+        _ => 0
+    };
     
     public AudioMetaData(AudioFormat audioFormat, TimeSpan length, int sampleRate)
     {
@@ -27,7 +36,9 @@ public readonly struct AudioMetaData
         Length = length;
         SampleRate = sampleRate;
     }
-    
+
+    public AudioMetaData WithLength(TimeSpan length) => new(AudioFormat, length, SampleRate);
+
     public override string ToString()
     {
         return $"Format: {AudioFormat}, Length: {Length}, SampleRate: {SampleRate} Hz";

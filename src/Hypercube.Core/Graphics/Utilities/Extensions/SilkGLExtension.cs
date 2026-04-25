@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Hypercube.Core.Graphics.Rendering.Batching;
-using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Windows;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Vectors;
 using Silk.NET.OpenGL;
@@ -14,105 +14,108 @@ namespace Hypercube.Core.Graphics.Utilities.Extensions;
 [EngineInternal]
 public static class SilkGLExtension
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void TexStorage2D(this GL gl, TextureTarget target, uint levels, SizedInternalFormat internalFormat, int width, int height)
+    extension(GL gl)
     {
-        gl.TexStorage2D(target, levels, internalFormat, (uint) width, (uint) height);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void UnbindTexture(this GL gl, TextureTarget target)
-    {
-        gl.BindTexture(TextureTarget.Texture2D, 0);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void SetBlend(this GL gl, bool value)
-    {
-        gl.SetEnableCap(EnableCap.Blend, value);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void SetScissor(this GL gl, bool value)
-    {
-        gl.SetEnableCap(EnableCap.ScissorTest, value);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Viewport(this GL gl, IWindow window)
-    {
-        gl.Viewport(window.Size);
-    }
-    
-    [PublicAPI]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Viewport(this GL gl, Vector2i size)
-    {
-        gl.Viewport(0, 0, (uint) size.X, (uint) size.Y);
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint CreateShader(this GL gl, ShaderType type)
-    {
-        return gl.CreateShader(ToShaderType(type));
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe string GetStringExt(this GL gl, StringName name)
-    {
-        var pointer = gl.GetString(name);
-        return Marshal.PtrToStringUTF8((nint) pointer) ?? string.Empty;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void ObjectLabel(this GL gl, ObjectIdentifier identifier, uint handle, string name)
-    {
-        gl.ObjectLabel(identifier, handle, (uint) name.Length, name);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool HasErrors(this GL gl)
-    {
-        return gl.GetError() != (int) ErrorCode.NoError;
-    }
-
-    public static string HasErrors(this GL gl, string title)
-    {
-        var error = gl.GetError();
-        var result = string.Empty;
-        
-        while (error != (int) ErrorCode.NoError)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void TexStorage2D(TextureTarget target, uint levels, SizedInternalFormat internalFormat, int width, int height)
         {
-            result += $"{title}: {error}{Environment.NewLine}";
-            error = gl.GetError();
+            gl.TexStorage2D(target, levels, internalFormat, (uint) width, (uint) height);
         }
 
-        return result;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void ClearColor(this GL gl, Color color)
-    {
-        gl.ClearColor(color.R, color.G, color.B, color.A);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe void DrawElements(this GL gl, PrimitiveTopology topology, int count, DrawElementsType type, int indices)
-    {
-        var pointer = (void*) indices;
-        gl.DrawElements(ToPrimitiveType(topology), (uint) count, type, pointer);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void SetEnableCap(this GL gl, EnableCap cap, bool value)
-    {
-        if (value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void UnbindTexture(TextureTarget target)
         {
-            gl.Enable(cap);
-            return;
+            gl.BindTexture(TextureTarget.Texture2D, 0);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetBlend(bool value)
+        {
+            gl.SetEnableCap(EnableCap.Blend, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetScissor(bool value)
+        {
+            gl.SetEnableCap(EnableCap.ScissorTest, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Viewport(IWindow window)
+        {
+            gl.Viewport(window.Size);
+        }
+
+        [PublicAPI]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Viewport(Vector2i size)
+        {
+            gl.Viewport(0, 0, (uint) size.X, (uint) size.Y);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public uint CreateShader(ShaderType type)
+        {
+            return gl.CreateShader(ToShaderType(type));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe string GetStringExt(StringName name)
+        {
+            var pointer = gl.GetString(name);
+            return Marshal.PtrToStringUTF8((nint) pointer) ?? string.Empty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ObjectLabel(ObjectIdentifier identifier, uint handle, string name)
+        {
+            gl.ObjectLabel(identifier, handle, (uint) name.Length, name);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool HasErrors()
+        {
+            return gl.GetError() != (int) ErrorCode.NoError;
+        }
+
+        public string HasErrors(string title)
+        {
+            var error = gl.GetError();
+            var result = string.Empty;
         
-        gl.Disable(cap);
+            while (error != (int) ErrorCode.NoError)
+            {
+                result += $"{title}: {error}{Environment.NewLine}";
+                error = gl.GetError();
+            }
+
+            return result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ClearColor(Color color)
+        {
+            gl.ClearColor(color.R, color.G, color.B, color.A);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe void DrawElements(PrimitiveTopology topology, int count, DrawElementsType type, int indices)
+        {
+            var pointer = (void*) indices;
+            gl.DrawElements(ToPrimitiveType(topology), (uint) count, type, pointer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void SetEnableCap(EnableCap cap, bool value)
+        {
+            if (value)
+            {
+                gl.Enable(cap);
+                return;
+            }
+        
+            gl.Disable(cap);
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

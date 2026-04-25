@@ -1,8 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using Hypercube.Mathematics.Shapes;
-using Hypercube.Mathematics.Vectors;
+﻿using Hypercube.Mathematics.Shapes;
 
-namespace Hypercube.Core.Graphics.Texturing;
+namespace Hypercube.Core.Graphics.Objects.Texturing;
 
 /// <inheritdoc/>
 [PublicAPI]
@@ -23,24 +21,22 @@ public class Image : IImage
     public int Height => Size.Y;
 
     /// <inheritdoc/>
-    public Rect2 UV => Rect2.UV;
+    public Rect2 Uv { get; }
 
     /// <inheritdoc/>
-    public ReadOnlyCollection<byte> Data => Array.AsReadOnly(_data);
+    public ReadOnlyMemory<byte> Data => new Memory<byte>(_data);
 
-    public Image(byte[] data, int width, int height, int channels)
+    public Image(byte[] data, Vector2i size, int channels, Rect2 uv)
     {
         _data = data;
         
-        Size = new Vector2i(width, height);
+        Size = size;
         Channels = channels;
+        Uv = uv;
     }
 
     /// <inheritdoc/>
-    public ReadOnlySpan<byte> GetPixel(Vector2i position)
-    {
-        return GetPixel(position.X, position.Y);
-    }
+    public ReadOnlySpan<byte> GetPixel(Vector2i position) => GetPixel(position.X, position.Y);
 
     /// <inheritdoc/>
     public ReadOnlySpan<byte> GetPixel(int x, int y)

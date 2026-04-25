@@ -1,6 +1,7 @@
-﻿using Hypercube.Core.Graphics;
+﻿using Hypercube.Core.Graphics.Objects.Texturing;
 using Hypercube.Core.Windowing.Api.Base;
-using Hypercube.Core.Windowing.Settings;
+using Hypercube.Core.Windowing.Monitors;
+using Hypercube.Core.Windowing.Windows;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Windowing.Api.Realisations.Headless;
@@ -34,6 +35,11 @@ public sealed class HeadlessWindowingApi : BaseWindowingApi
 
     protected override void InternalWaitEvents()
     {
+    }
+
+    protected override IReadOnlyList<MonitorInstance> InternalGetMonitorInstances()
+    {
+        return [];
     }
 
     protected override void InternalWaitEventsTimeout(double timeout)
@@ -71,6 +77,10 @@ public sealed class HeadlessWindowingApi : BaseWindowingApi
     }
 
     protected override void InternalWindowSetFramebufferSize(WindowHandle window, Vector2i size)
+    {
+    }
+
+    protected override void InternalWindowSetIcon(WindowHandle window, IImage icon)
     {
     }
 

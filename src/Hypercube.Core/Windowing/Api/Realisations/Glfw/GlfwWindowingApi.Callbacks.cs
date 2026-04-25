@@ -8,6 +8,7 @@ using SilkKeyModifiers = Silk.NET.GLFW.KeyModifiers;
 using SilkMouseButton = Silk.NET.GLFW.MouseButton;
 using Monitor = Silk.NET.GLFW.Monitor;
 using SilkWindowHandle = Silk.NET.GLFW.WindowHandle;
+using WindowHandle = Hypercube.Core.Windowing.Windows.WindowHandle;
 
 namespace Hypercube.Core.Windowing.Api.Realisations.Glfw;
 

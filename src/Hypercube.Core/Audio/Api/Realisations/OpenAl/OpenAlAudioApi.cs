@@ -5,8 +5,8 @@ namespace Hypercube.Core.Audio.Api.Realisations.OpenAl;
 
 public sealed unsafe partial class OpenAlAudioApi : AudioApi
 {
-    private AL _al = default!;
-    private ALContext _alc = default!;
+    private AL _al = null!;
+    private ALContext _alc = null!;
     
     private Device* _device;
     private Context* _context;
@@ -15,11 +15,17 @@ public sealed unsafe partial class OpenAlAudioApi : AudioApi
     {
         _al = AL.GetApi();
         _alc = ALContext.GetApi();
-        
         _device = _alc.OpenDevice(null);
+        
         if (HandleError("Failed loading open device"))
             return false;
 
+        if (!TryLoadEnumerating())
+            LogInfo("Unable to load enumerating ext");
+        
+        if (!TryLoadCapture())
+            LogInfo("Unable to load capturing ext");
+        
         if (_device is not null)
             return true;
         

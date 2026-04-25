@@ -1,53 +1,54 @@
-﻿using System.Collections.ObjectModel;
+﻿using Hypercube.Core.Graphics.Objects.Texturing;
+using Hypercube.Core.Graphics.Objects.Texturing.Gpu;
 using Hypercube.Core.Graphics.Rendering.Api;
-using Hypercube.Core.Graphics.Texturing;
-using Hypercube.Core.Graphics.Texturing.Gpu;
 using Hypercube.Core.Resources.Loaders;
 using Hypercube.Mathematics.Shapes;
-using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Graphics.Resources;
 
-public sealed class Texture : Resource, IImage
+public sealed class Texture : Resource, ITexture
 {
-    public Vector2i Size { get; }
-    public Rect2 UV { get; }
-    public int Channels { get; }
+    /// <inheritdoc/>
+    public IImage Image { get; }
+
+    /// <inheritdoc/>
     public IGpuTexture? Gpu { get; private set; }
 
-    private readonly byte[] _data;
+    /// <inheritdoc/>
+    public Vector2i Size => Image.Size;
 
-    public ReadOnlyCollection<byte> Data => _data.AsReadOnly();
-    
-    public Texture(Vector2i size, byte[] data, int channels, Rect2 uv)
+    /// <inheritdoc/>
+    public Rect2 Uv => Image.Uv;
+
+    /// <inheritdoc/>
+    public int Channels => Image.Channels;
+
+    /// <inheritdoc/>
+    public ReadOnlyMemory<byte> Data => Image.Data;
+
+    public Texture(byte[] data, Vector2i size, int channels, Rect2 uv)
     {
-        _data = data;
-        
-        Size = size;
-        Channels = channels;
-        UV = uv;
+        Image = new Image(data, size, channels, uv);
+    }
+    
+    public Texture(Image image)
+    {
+        Image = image;
     }
 
+    /// <inheritdoc/>
     public void GpuBind(IRenderingApi api)
     {
         Gpu?.Dispose();
-        Gpu = new GpuTexture(api, Size.X, Size.Y, Channels, _data);
-    }
-    
-    public ReadOnlySpan<byte> GetPixel(Vector2i position)
-    {
-        return GetPixel(position.X, position.Y);
+        Gpu = new GpuTexture(api, Size.X, Size.Y, Channels, Image.Data.Span.ToArray());
     }
 
-    public ReadOnlySpan<byte> GetPixel(int x, int y)
-    {
-        if (x < 0 || y < 0 || x >= Size.X || y >= Size.Y)
-            throw new ArgumentOutOfRangeException();
-
-        var index = (y * Size.X + x) * Channels;
-        return new ReadOnlySpan<byte>(_data, index, Channels);
-    }
+    /// <inheritdoc/>
+    public ReadOnlySpan<byte> GetPixel(Vector2i position) => Image.GetPixel(position);
     
+    /// <inheritdoc/>
+    public ReadOnlySpan<byte> GetPixel(int x, int y) => Image.GetPixel(x, y);
+
     public override void Dispose()
     {
         Gpu?.Dispose();

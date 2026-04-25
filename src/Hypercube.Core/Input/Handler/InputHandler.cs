@@ -1,10 +1,12 @@
 ﻿using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Core.Input.Args;
 using Hypercube.Core.Input.Manager;
-using Hypercube.Core.Windowing;
 using Hypercube.Core.Windowing.Api;
 using Hypercube.Core.Windowing.Manager;
+using Hypercube.Mathematics.Vectors;
+using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
+using WindowHandle = Hypercube.Core.Windowing.Windows.WindowHandle;
 
 namespace Hypercube.Core.Input.Handler;
 
@@ -19,18 +21,21 @@ namespace Hypercube.Core.Input.Handler;
 [UsedImplicitly]
 public sealed partial class InputHandler : IInputHandler, IPostInject
 {
-    [Dependency] private readonly IWindowManager _window = null!;
-    [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
+    [Dependency] private readonly ILogger _logger = null!;
     
+    [Dependency] private readonly IWindowingManager _windowing = null!;
+    [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
+
     private readonly Dictionary<nint, KeyStateBuffer> _keys = new();
 
-    private IWindowingApi Api => _window.Api;
+    private IWindowingApi Api => _windowing.Api;
     
     public void OnPostInject()
     {
         _runtimeLoop.Actions.Add(OnUpdate, EngineUpdatePriority.InputHandler); 
         
         Api.OnWindowKey += OnKeyUpdate;
+        Api.OnWindowMousePosition += OnMousePositionUpdate;
         Api.OnWindowMouseButton += OnMouseButtonUpdate;
     }
 
@@ -47,9 +52,15 @@ public sealed partial class InputHandler : IInputHandler, IPostInject
 
     private void OnKeyUpdate(WindowHandle window, KeyChangedArgs state)
     {
+        // _logger.Trace($"[Key] {state.Key} ({window})");
         GetKeySateBuffer(window).Apply(state);
     }
-    
+
+    private void OnMousePositionUpdate(WindowHandle window, Vector2d position)
+    {
+        _mousePosition[window] = (Vector2i) position;
+    }
+
     private void OnMouseButtonUpdate(WindowHandle window, MouseButtonChangedArgs state)
     {
         GetMouseStateBuffer(window).Apply(state);

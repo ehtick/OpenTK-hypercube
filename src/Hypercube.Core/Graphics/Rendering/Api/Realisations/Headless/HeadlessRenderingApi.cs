@@ -2,14 +2,16 @@
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
-using Hypercube.Core.Graphics.Texturing;
+using Hypercube.Core.Viewports;
 using Hypercube.Core.Windowing;
 using Hypercube.Core.Windowing.Api;
+using Hypercube.Core.Windowing.Windows;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Shapes;
 using Hypercube.Mathematics.Vectors;
 using InitHandler = Hypercube.Core.Graphics.Rendering.Api.Handlers.InitHandler;
+using TextureHandle = Hypercube.Core.Graphics.Objects.Texturing.TextureHandle;
 
 namespace Hypercube.Core.Graphics.Rendering.Api.Realisations.Headless;
 
@@ -37,7 +39,7 @@ public sealed class HeadlessRenderingApi : IRenderingApi
         _ = windowingApi;
     }
 
-    public void Init(IContextInfo context)
+    public void Init(IContextInfoProvider context)
     {
     }
 
@@ -92,6 +94,37 @@ public sealed class HeadlessRenderingApi : IRenderingApi
     }
 
     public void SetScissorRect(Rect2i rect)
+    {
+    }
+
+    public void SetRenderState(Matrix4x4 view, Matrix4x4 projection)
+    {
+    }
+
+    public void SetRenderState(ICameraManager cameraManager)
+    {
+    }
+
+    public Batching.RenderState GetRenderState(Batching.RenderStateId id)
+    {
+        return Batching.RenderState.Default;
+    }
+
+    public Batching.RenderStateId GetCurrentRenderStateId()
+    {
+        return new Batching.RenderStateId(0);
+    }
+
+    public Batching.RenderState GetCurrentRenderState()
+    {
+        return Batching.RenderState.Default;
+    }
+
+    public void SetRenderView(Matrix4x4 view)
+    {
+    }
+
+    public void SetRenderProjection(Matrix4x4 projection)
     {
     }
 

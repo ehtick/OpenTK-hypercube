@@ -1,4 +1,4 @@
-﻿namespace Hypercube.Core.Graphics.Texturing.Gpu;
+﻿namespace Hypercube.Core.Graphics.Objects.Texturing.Gpu;
 
 /// <summary>
 /// Represents a GPU texture resource with basic properties and lifecycle management.

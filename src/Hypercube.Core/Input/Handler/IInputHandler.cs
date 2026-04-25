@@ -1,6 +1,7 @@
 ﻿using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Core.Input.Args;
-using Hypercube.Core.Windowing;
+using Hypercube.Mathematics.Vectors;
+using WindowHandle = Hypercube.Core.Windowing.Windows.WindowHandle;
 
 namespace Hypercube.Core.Input.Handler;
 
@@ -12,6 +13,8 @@ namespace Hypercube.Core.Input.Handler;
 [PublicAPI]
 public interface IInputHandler : IRuntimeUpdatable
 {
+    Vector2i MousePosition { get; }
+    
     /// <summary>
     /// Clears all recorded key input states (Held and Released keys)
     /// for all tracked windows.
@@ -244,4 +247,6 @@ public interface IInputHandler : IRuntimeUpdatable
     /// The mouse button state change to simulate.
     /// </param>
     void SimulateMouseButton(WindowHandle window, MouseButtonChangedArgs state);
+
+    Vector2i GetMousePosition(WindowHandle window);
 }

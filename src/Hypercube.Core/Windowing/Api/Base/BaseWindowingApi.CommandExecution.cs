@@ -43,6 +43,10 @@ public abstract partial class BaseWindowingApi
                 InternalWindowSetFramebufferSize(windowSetFramebufferSize.Window, windowSetFramebufferSize.Size);
                 break;
             
+            case CommandWindowSetIcon cmd:
+                InternalWindowSetIcon(cmd.Window, cmd.Icon);
+                break;
+            
             case CommandWindowCreateSync windowCreateSync:
                 Raise(new EventSync<nint>(windowCreateSync.Task, InternalWindowCreate(windowCreateSync.Settings)), windowCreateSync.Thread != Thread);
                 break;

@@ -6,7 +6,7 @@ namespace Hypercube.Core.Resources.FileSystems;
 public sealed class PhysicalFileSystem : IFileSystem
 {
     private readonly List<Root> _mountings = [];
-    private readonly object _mountLock = new();
+    private readonly Lock _mountLock = new();
 
     public void Mount(Dictionary<ResourcePath, ResourcePath> mountFolders)
     {

@@ -1,5 +1,4 @@
 ﻿using Hypercube.Core.Resources.Loaders;
-using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Graphics.Resources;
 

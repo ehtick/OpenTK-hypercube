@@ -1,6 +1,6 @@
 ﻿using Hypercube.Core.Graphics.Rendering.Shaders;
-using Hypercube.Core.Graphics.Texturing;
-using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Api;
+using TextureHandle = Hypercube.Core.Graphics.Objects.Texturing.TextureHandle;
 
 namespace Hypercube.Core.Graphics.Rendering.Api;
 
@@ -11,7 +11,7 @@ public abstract partial class BaseRenderingApi
     
     protected abstract string InternalInfo { get; }
     
-    protected abstract bool InternalInit(IContextInfo contextInfo);
+    protected abstract bool InternalInit(IContextInfoProvider contextInfoProvider);
     protected abstract void InternalLoad();
     protected abstract void InternalTerminate();
 

@@ -3,6 +3,8 @@ using Hypercube.Core.Graphics.Rendering.Api.Handlers;
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Graphics.Rendering.Shaders;
 using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Api;
+using Hypercube.Core.Windowing.Windows;
 
 namespace Hypercube.Core.Graphics.Rendering.Manager;
 
@@ -12,11 +14,13 @@ public interface IRenderManager
     
     [EngineInternal]
     IRenderingApi Api { get; }
+    
     int BatchCount { get; }
     int VerticesCount { get; }
-    double Fps { get; }
     
-    void Init(IContextInfo context, RenderingApiSettings settings);
+    FrameCounter FrameCounter { get; }
+    
+    void Init(IContextInfoProvider context, RenderingApiSettings settings);
     void Load();
     void Shutdown();
     void Render(IWindow window);

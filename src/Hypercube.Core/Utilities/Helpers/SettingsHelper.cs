@@ -1,7 +1,9 @@
-﻿using Hypercube.Core.Graphics.Rendering;
+﻿using Hypercube.Core.Graphics.Objects.Texturing;
+using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
 using Hypercube.Core.Windowing.Api;
-using Hypercube.Core.Windowing.Settings;
+using Hypercube.Core.Windowing.Api.Settings;
+using Hypercube.Core.Windowing.Windows;
 
 namespace Hypercube.Core.Utilities.Helpers;
 
@@ -23,7 +25,9 @@ public static class SettingsHelper
             Decorated = Config.MainWindowDecorated,
             Floating = Config.MainWindowFloating,
             Visible = Config.MainWindowVisible,
-            TransparentFramebuffer = Config.MainWindowTransparentFramebuffer
+            TransparentFramebuffer = Config.MainWindowTransparentFramebuffer,
+            // TESTING
+            Icon = ImageLoader.LoadFile("resources/textures/icons/38.png"),
         };
     }
 

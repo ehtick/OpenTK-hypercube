@@ -8,6 +8,7 @@ using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Input.Handler;
 using Hypercube.Core.Input.Manager;
 using Hypercube.Core.Resources;
+using Hypercube.Core.UI;
 using Hypercube.Core.Viewports;
 using Hypercube.Core.Windowing.Manager;
 using Hypercube.Utilities.Configuration;
@@ -32,7 +33,7 @@ public partial class Runtime
         _dependencies.RegisterSingleton<IResourceManager>(new ResourceManager(container: _dependencies));
         
         // Windowing
-        _dependencies.Register<IWindowManager, WindowManager>();
+        _dependencies.Register<IWindowingManager, WindowingManager>();
         
         // Graphics
         _dependencies.Register<ICameraManager, CameraManager>();
@@ -40,7 +41,7 @@ public partial class Runtime
         _dependencies.Register<IRenderManager, RenderManager>();
         _dependencies.Register<IPatchManager, PatchManager>();
         _dependencies.Register<IRenderer, Renderer>();
-        
+
         // Audio
         _dependencies.Register<IAudioManager, AudioManager>();
         
@@ -56,6 +57,9 @@ public partial class Runtime
         // Input
         _dependencies.Register<IInputHandler, InputHandler>();
         _dependencies.Register<IInputManager, InputManager>();
+        
+        // UI
+        _dependencies.Register<IUIManager, UIManager>();
         
         _dependencies.ResolveAll();
     }

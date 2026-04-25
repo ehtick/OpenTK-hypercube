@@ -1,12 +1,11 @@
 ﻿using Hypercube.Core.Execution.LifeCycle;
-using Hypercube.Core.Windowing;
-using Hypercube.Core.Windowing.Settings;
+using Hypercube.Core.Windowing.Windows;
 
 namespace Hypercube.Core.Graphics.Rendering;
 
 public interface IRenderer : IRuntimeUpdatable
 {
-    IWindow MainWindow { get; }
+    IWindow MainMainWindow { get; }
     
     void Init(RendererSettings settings);
     void Load();

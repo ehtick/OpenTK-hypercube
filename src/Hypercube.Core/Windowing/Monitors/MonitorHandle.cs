@@ -1,12 +1,7 @@
 ﻿namespace Hypercube.Core.Windowing.Monitors;
 
-public sealed unsafe class MonitorHandle
+[IdStruct(typeof(nint))]
+public partial struct MonitorHandle
 {
-    [EngineInternal]
-    public nint* Handle { get; init; }
-    
-    public static explicit operator nint*(MonitorHandle windowHandle)
-    {
-        return windowHandle.Handle;
-    }
+    public static readonly MonitorHandle Zero = new(nint.Zero);
 }

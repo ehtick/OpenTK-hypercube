@@ -1,9 +1,14 @@
 ﻿using Hypercube.Core.Graphics.Rendering.Api.Handlers;
 using Hypercube.Core.Graphics.Rendering.Batching;
 using Hypercube.Core.Graphics.Rendering.Shaders;
-using Hypercube.Core.Graphics.Texturing;
+using Hypercube.Core.Viewports;
 using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Api;
+using Hypercube.Core.Windowing.Windows;
+using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Shapes;
+using InitHandler = Hypercube.Core.Graphics.Rendering.Api.Handlers.InitHandler;
+using TextureHandle = Hypercube.Core.Graphics.Objects.Texturing.TextureHandle;
 
 namespace Hypercube.Core.Graphics.Rendering.Api;
 
@@ -28,7 +33,7 @@ public interface IRenderingApi
     int BatchCount { get; }
     int VerticesCount { get; }
     
-    void Init(IContextInfo context);
+    void Init(IContextInfoProvider context);
     void Load();
     
     void Terminate();
@@ -66,4 +71,20 @@ public interface IRenderingApi
     
     void SetScissor(bool value);
     void SetScissorRect(Rect2i rect);
+    
+    void SetRenderState(Matrix4x4 view, Matrix4x4 projection);
+    void SetRenderState(ICameraManager cameraManager);
+    void SetRenderView(Matrix4x4 view);
+    void SetRenderProjection(Matrix4x4 projection);
+    RenderState GetCurrentRenderState();
+    
+    /// <summary>
+    /// Internal method to get render state by ID. Used by RenderContext.
+    /// </summary>
+    Batching.RenderState GetRenderState(Batching.RenderStateId id);
+    
+    /// <summary>
+    /// Internal method to get current render state ID. Used by RenderContext.
+    /// </summary>
+    Batching.RenderStateId GetCurrentRenderStateId();
 }

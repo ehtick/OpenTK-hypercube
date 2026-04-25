@@ -5,5 +5,5 @@ namespace Hypercube.Core.Audio.Exceptions;
 public sealed class AudioManagerNotInitializedException : Exception
 {
     public AudioManagerNotInitializedException()
-        : base($"Audio system is not initialized. Call {nameof(IAudioManager.Init)} before accessing this member.") { }
+        : base($"Audio system is not initialized. Call {nameof(IAudioManager.Initialize)} before accessing this member.") { }
 }

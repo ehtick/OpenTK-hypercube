@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
-using Hypercube.Core.Windowing;
 using Hypercube.Mathematics.Matrices;
+using WindowHandle = Hypercube.Core.Windowing.Windows.WindowHandle;
 
 namespace Hypercube.Core.Graphics.Rendering.Batching;
 
@@ -13,8 +13,9 @@ public readonly struct Batch : IEquatable<Batch>
     public readonly PrimitiveTopology PrimitiveTopology;
     public readonly Matrix4x4 Model;
     public readonly WindowHandle Window;
+    public readonly RenderStateId RenderStateId;
 
-    public Batch(int start, int size, uint? textureHandle, PrimitiveTopology primitiveTopology, Matrix4x4 model, WindowHandle window)
+    public Batch(int start, int size, uint? textureHandle, PrimitiveTopology primitiveTopology, Matrix4x4 model, WindowHandle window, RenderStateId renderStateId)
     {
         Start = start;
         Size = size;
@@ -22,6 +23,7 @@ public readonly struct Batch : IEquatable<Batch>
         PrimitiveTopology = primitiveTopology;
         Model = model;
         Window = window;
+        RenderStateId = renderStateId;
     }
 
     public override bool Equals(object? obj)
@@ -36,11 +38,16 @@ public readonly struct Batch : IEquatable<Batch>
                TextureHandle == other.TextureHandle &&
                PrimitiveTopology == other.PrimitiveTopology &&
                Model == other.Model &&
-               Window == other.Window;
+               Window == other.Window &&
+               RenderStateId == other.RenderStateId;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Start, Size, TextureHandle, (int) PrimitiveTopology, Model, Window);
+        return HashCode.Combine(Start, Size, TextureHandle, (int) PrimitiveTopology, Model, Window, RenderStateId);
     }
+
+    public static bool operator ==(Batch left, Batch right) => left.Equals(right);
+
+    public static bool operator !=(Batch left, Batch right) => !(left == right);
 }

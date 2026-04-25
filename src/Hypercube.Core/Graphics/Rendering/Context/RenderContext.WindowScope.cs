@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Windowing;
+﻿using Hypercube.Core.Windowing.Windows;
+using WindowHandle = Hypercube.Core.Windowing.Windows.WindowHandle;
 
 namespace Hypercube.Core.Graphics.Rendering.Context;
 

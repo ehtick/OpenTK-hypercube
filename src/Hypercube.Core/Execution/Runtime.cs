@@ -6,7 +6,6 @@ using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Utilities.Extensions;
 using Hypercube.Utilities.Configuration;
-using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.Execution;
@@ -22,10 +21,12 @@ public sealed partial class Runtime
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
     [Dependency] private readonly IEntitySystemManager _entitySystemManager = null!;
 
-    private readonly ConsoleLogger _logger = new();
+    private readonly Debugging.Logger _logger = new();
 
     public void Start(string[] args) 
     {
+        RuntimeExceptionHandling.RunClassConstructor();
+        
         _parser.Parse(args);
         
         InitCore();
@@ -44,14 +45,6 @@ public sealed partial class Runtime
         _logger.LogLevel = Config.LoggingLevel;
         _logger.Echo(EngineInfo.WelcomeMessage);
         _logger.Info("Dependency initialization...");
-        
-        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
-        {
-            if (args.ExceptionObject as Exception is not {} exception)
-                return;
-            
-            _logger.Critical(exception);
-        };
         
         InitDependencies();
     }
@@ -79,7 +72,7 @@ public sealed partial class Runtime
         var mainWindow = _renderer.CreateMainWindow();
         mainWindow.OnClose += () => _runtimeLoop.Shutdown();
 
-        _audioManager.Init();
+        _audioManager.Initialize();
         _resourceManager.AddAllLoaders();
         _renderer.Load();
 
@@ -99,5 +92,10 @@ public sealed partial class Runtime
     private void ShutdownApplication()
     {
         _renderer.Shutdown();
+    }
+
+    public void HandleException(Exception exception)
+    {
+        _logger.Critical(exception, exception.Message);
     }
 }

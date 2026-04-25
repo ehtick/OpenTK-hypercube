@@ -1,5 +1,4 @@
-﻿using Hypercube.Ecs.System;
+﻿namespace Hypercube.Core.Systems.Transform;
 
-namespace Hypercube.Core.Systems.Transform;
-
+[UsedImplicitly]
 public sealed class TransformSystem : EntitySystem;

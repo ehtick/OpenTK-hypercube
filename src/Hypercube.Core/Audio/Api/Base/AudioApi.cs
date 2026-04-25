@@ -2,6 +2,7 @@
 
 public abstract partial class AudioApi : IAudioApi
 {
+    public event InfoHandler? OnInfo;
     public event ErrorHandler? OnError;
 
     public abstract string Info { get; }
@@ -17,6 +18,11 @@ public abstract partial class AudioApi : IAudioApi
         CreateContext();
         Thread = Thread.CurrentThread;
         return true;
+    }
+    
+    protected void LogInfo(string message)
+    {
+        OnInfo?.Invoke(message);
     }
     
     protected void LogError(string message)

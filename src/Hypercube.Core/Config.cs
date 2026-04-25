@@ -1,5 +1,5 @@
-﻿using Hypercube.Core.Graphics;
-using Hypercube.Core.Graphics.Rendering.Api;
+﻿using Hypercube.Core.Graphics.Rendering.Api;
+using Hypercube.Core.Windowing;
 using Hypercube.Mathematics;
 using Hypercube.Utilities.Configuration;
 using Hypercube.Utilities.Debugging.Logger;
@@ -16,13 +16,13 @@ public static class Config
     public static readonly ConfigField<Dictionary<string, string>> MountFolders =
         new("MountFolders", new Dictionary<string, string> 
         {
-            { ".", "/" },
-            { "resources", "/" },
-            { "resources/audio", "/audio/" },
+            { ".",                  "/"          },
+            { "resources",          "/"          },
+            { "resources/audio",    "/audio/"    },
             { "resources/textures", "/textures/" },
-            { "resources/shaders", "/shaders/" },
-            { "resources/fonts", "/fonts/" },
-            { "resources/models", "/models/" },
+            { "resources/shaders",  "/shaders/"  },
+            { "resources/fonts",    "/fonts/"    },
+            { "resources/models",   "/models/"   },
         });
     
     /** 
@@ -67,7 +67,7 @@ public static class Config
         new("WindowingThreadPriority", ThreadPriority.AboveNormal);
 
     public static readonly ConfigField<int> WindowingThreadStackSize =
-        new("WindowingThreadStackSize", 8 * 1024 * 1024); // 8MByte
+        new("WindowingThreadStackSize", 8 * 1024 * 1024); // 8 MByte
 
     public static readonly ConfigField<int> WindowingThreadReadySleepDelay =
         new("WindowingThreadReadySleepDelay", 10);

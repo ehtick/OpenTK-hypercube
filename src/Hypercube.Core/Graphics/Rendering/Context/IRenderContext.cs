@@ -1,11 +1,12 @@
 ﻿using Hypercube.Core.Graphics.Rendering.Api;
 using Hypercube.Core.Graphics.Resources;
-using Hypercube.Core.Windowing;
+using Hypercube.Core.Viewports;
 using Hypercube.Core.Windowing.Api;
+using Hypercube.Core.Windowing.Windows;
 using Hypercube.Mathematics;
+using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Quaternions;
 using Hypercube.Mathematics.Shapes;
-using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Graphics.Rendering.Context;
 
@@ -67,7 +68,8 @@ public interface IRenderContext
     /// <param name="radius">The radius of the circle.</param>
     /// <param name="color">The color of the circle.</param>
     /// <param name="segments">The number of line segments used to approximate the circle. Higher values yield smoother circles.</param>
-    void DrawCircle(Vector2 center, float radius, Color color, int segments = 32);
+    /// <param name="outline">Whether to draw only the outline (true) or fill the circle (false).</param>
+    void DrawCircle(Vector2 center, float radius, Color color, int segments = 32, bool outline = false);
     
     void DrawTexture(Texture texture, Vector2 position);
     void DrawTexture(Texture texture, Vector2 position, Angle rotation);
@@ -86,4 +88,9 @@ public interface IRenderContext
     void Scissor(bool value);
     void Scissor(Rect2i rect);
     IDisposable UseContextScope(IWindow window);
+    IDisposable UseRenderState(Matrix4x4 view, Matrix4x4 projection);
+    IDisposable UseRenderState(ICameraManager cameraManager);
+    IDisposable UseRenderView(Matrix4x4 view);
+    IDisposable UseRenderProjection(Matrix4x4 projection);
+    IDisposable UseWindowSpace(IWindow window);
 }

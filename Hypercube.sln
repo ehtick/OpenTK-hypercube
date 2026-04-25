@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Runner", "src\Hyp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Editor", "src\Hypercube.Editor\Hypercube.Editor.csproj", "{28CCC0B6-D9D0-49ED-8213-B12F2948A3FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Physics", "src\Hypercube.Physics\Hypercube.Physics.csproj", "{214FBA3A-B828-4BE6-BBD1-2C232E6FEDEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypercube.Networking", "src\Hypercube.Networking\Hypercube.Networking.csproj", "{97AE2F81-BB48-4FF0-B2CA-DBAF14CAC74E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +33,13 @@ Global
 		{28CCC0B6-D9D0-49ED-8213-B12F2948A3FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28CCC0B6-D9D0-49ED-8213-B12F2948A3FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28CCC0B6-D9D0-49ED-8213-B12F2948A3FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{214FBA3A-B828-4BE6-BBD1-2C232E6FEDEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{214FBA3A-B828-4BE6-BBD1-2C232E6FEDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{214FBA3A-B828-4BE6-BBD1-2C232E6FEDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{214FBA3A-B828-4BE6-BBD1-2C232E6FEDEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97AE2F81-BB48-4FF0-B2CA-DBAF14CAC74E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97AE2F81-BB48-4FF0-B2CA-DBAF14CAC74E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97AE2F81-BB48-4FF0-B2CA-DBAF14CAC74E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97AE2F81-BB48-4FF0-B2CA-DBAF14CAC74E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,5 +1,4 @@
-﻿using Hypercube.Core.Graphics.Fonts;
-using Hypercube.Core.Graphics.Objects.Fonts;
+﻿using Hypercube.Core.Graphics.Objects.Fonts;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Resources.FileSystems;
 using Hypercube.Core.Resources.Loaders;
@@ -56,6 +55,6 @@ public class FontResourceLoader : ResourceLoader<Font>
     private static Texture CreateTexture(Stream stream)
     {
         var result = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-        return new Texture(new Vector2i(result.Width, result.Height), result.Data, (int) ColorComponents.RedGreenBlueAlpha, Rect2.UV);
+        return new Texture(result.Data, new Vector2i(result.Width, result.Height), (int) ColorComponents.RedGreenBlueAlpha, Rect2.UV);
     }
 }

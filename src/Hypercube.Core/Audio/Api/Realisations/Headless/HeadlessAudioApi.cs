@@ -2,7 +2,7 @@
 
 namespace Hypercube.Core.Audio.Api.Realisations.Headless;
 
-public class HeadlessAudioApi : AudioApi
+public sealed class HeadlessAudioApi : AudioApi
 {
     public override string Info => "Headless, no information available";
 
@@ -22,6 +22,42 @@ public class HeadlessAudioApi : AudioApi
 
     public override void DeleteBuffer(AudioHandle handle)
     {
+    }
+
+    public override IReadOnlyList<string> CaptureDevices => [];
+    
+    public override bool IsRecording => false;
+    
+    public override bool OpenCaptureDevice(string? deviceName, int sampleRate, int channels, int bufferSize)
+    {
+        return true;
+    }
+
+    public override void CloseCaptureDevice()
+    {
+    }
+
+    public override void StartRecording()
+    {
+    }
+
+    public override void StopRecording()
+    {
+    }
+
+    public override int GetRecordedSampleCount()
+    {
+        return 0;
+    }
+
+    public override int ReadRecordedData(float[] buffer, int offset, int count)
+    {
+        return 0;
+    }
+
+    public override AudioData GetRecordedAudioData()
+    {
+        return default;
     }
 
     public override AudioHandle CreateSource(AudioStream stream)

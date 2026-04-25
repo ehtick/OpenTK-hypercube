@@ -1,7 +1,6 @@
 ﻿using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.UI.Alignment;
 using Hypercube.Mathematics.Shapes;
-using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.UI.Elements;
 

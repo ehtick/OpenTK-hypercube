@@ -2,6 +2,7 @@
 using Hypercube.Core.Graphics.Rendering.Api.Realisations.Headless;
 using Hypercube.Core.Graphics.Rendering.Api.Realisations.OpenGl;
 using Hypercube.Core.Graphics.Rendering.Api.Settings;
+using Hypercube.Core.Windowing;
 using Hypercube.Core.Windowing.Api;
 using Hypercube.Core.Windowing.Api.Realisations.Glfw;
 using Hypercube.Core.Windowing.Api.Realisations.Headless;

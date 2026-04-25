@@ -1,5 +1,5 @@
 ﻿using Hypercube.Core.Viewports;
-using Hypercube.Core.Windowing;
+using Hypercube.Core.Windowing.Windows;
 
 namespace Hypercube.Core.Graphics.Rendering;
 

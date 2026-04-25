@@ -1,8 +1,8 @@
-﻿using Hypercube.Core.Windowing.Settings;
+﻿using Hypercube.Core.Windowing.Api.Settings;
 using Silk.NET.GLFW;
 using ConnectedState = Hypercube.Core.Windowing.Api.Enums.ConnectedState;
 using SilkConnectedState = Silk.NET.GLFW.ConnectedState;
-using ContextApi = Hypercube.Core.Windowing.Settings.ContextApi;
+using ContextApi = Hypercube.Core.Windowing.Api.Settings.ContextApi;
 
 namespace Hypercube.Core.Windowing.Api.Realisations.Glfw;
 

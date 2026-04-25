@@ -1,6 +1,6 @@
 ﻿using Hypercube.Core.Graphics.Rendering.Api;
 
-namespace Hypercube.Core.Graphics.Texturing.Gpu;
+namespace Hypercube.Core.Graphics.Objects.Texturing.Gpu;
 
 /// <inheritdoc/>
 public sealed class GpuTexture : IGpuTexture

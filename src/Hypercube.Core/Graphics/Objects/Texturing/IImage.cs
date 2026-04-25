@@ -1,8 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using Hypercube.Mathematics.Shapes;
-using Hypercube.Mathematics.Vectors;
+﻿using Hypercube.Mathematics.Shapes;
 
-namespace Hypercube.Core.Graphics.Texturing;
+namespace Hypercube.Core.Graphics.Objects.Texturing;
 
 /// <summary>
 /// Represents a 2D image with pixel data and associated metadata.
@@ -18,13 +16,13 @@ public interface IImage
     /// Gets a read-only collection of raw image data bytes.
     /// The data is typically stored in row-major order.
     /// </summary>
-    ReadOnlyCollection<byte> Data { get; }
+    ReadOnlyMemory<byte> Data { get; }
 
     /// <summary>
     /// Gets the UV coordinate rectangle mapping the image.
     /// Typically used for texture sampling.
     /// </summary>
-    Rect2 UV { get; }
+    Rect2 Uv { get; }
 
     /// <summary>
     /// Gets the number of color channels per pixel (e.g., 3 for RGB, 4 for RGBA).

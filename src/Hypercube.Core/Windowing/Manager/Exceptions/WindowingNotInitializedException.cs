@@ -6,5 +6,5 @@
 public sealed class WindowingNotInitializedException : Exception
 {
     public WindowingNotInitializedException()
-        : base($"Windowing system is not initialized. Call {nameof(IWindowManager.Init)} before accessing this member.") { }
+        : base($"Windowing system is not initialized. Call {nameof(IWindowingManager.Init)} before accessing this member.") { }
 }

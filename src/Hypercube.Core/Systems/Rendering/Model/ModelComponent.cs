@@ -2,7 +2,6 @@
 using Hypercube.Ecs.Components;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Quaternions;
-using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Systems.Rendering.Model;
 

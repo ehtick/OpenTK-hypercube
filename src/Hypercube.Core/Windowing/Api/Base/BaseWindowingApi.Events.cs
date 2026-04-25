@@ -1,5 +1,6 @@
 ﻿using Hypercube.Core.Input;
 using Hypercube.Core.Windowing.Api.Enums;
+using Hypercube.Core.Windowing.Windows;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Windowing.Api.Base;

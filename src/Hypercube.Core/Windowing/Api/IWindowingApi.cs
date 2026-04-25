@@ -1,5 +1,5 @@
-﻿using Hypercube.Core.Graphics;
-using Hypercube.Core.Windowing.Settings;
+﻿using Hypercube.Core.Graphics.Objects.Texturing;
+using Hypercube.Core.Windowing.Windows;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Windowing.Api;
@@ -8,35 +8,18 @@ namespace Hypercube.Core.Windowing.Api;
 /// A layer between the API for handling windows, events, input and context and the engine.
 /// </summary>
 [PublicAPI]
-public interface IWindowingApi : IDisposable
+public partial interface IWindowingApi : IDisposable, IContextInfoProvider
 {
     WindowingApi Type { get; }
 
-    #region Events
-
-    event InitHandler? OnInit;
-    event ErrorHandler? OnError; 
-    event MonitorHandler? OnMonitor;
-    event JoystickHandler? OnJoystick;
-    event WindowCloseHandler? OnWindowClose;
-    event WindowTitleHandler? OnWindowTitle; 
-    event WindowPositionHandler? OnWindowPosition; 
-    event WindowSizeHandler? OnWindowSize; 
-    event WindowFramebufferSizeHandler? OnWindowFramebufferSize; 
-    event WindowFocusHandler? OnWindowFocus; 
-    event WindowKey? OnWindowKey;
-    event WindowScroll? OnWindowScroll;
-    event WindowMouseButton? OnWindowMouseButton;
-    event WindowChar? OnWindowChar;
-
-    #endregion
-    
     bool Initialized { get; }
     bool Terminated { get; }
     
     IReadOnlyList<WindowHandle> Windows { get; }
     WindowHandle? MainWindow { get; }
     WindowHandle Context { get; set; }
+
+    IReadOnlyList<MonitorHandler> Monitors { get; }
 
     #region Life cycle
 
@@ -53,9 +36,9 @@ public interface IWindowingApi : IDisposable
     void WindowSetPosition(WindowHandle window, Vector2i position);
     void WindowSetSize(WindowHandle window, Vector2i size);
     void WindowSetFramebufferSize(WindowHandle window, Vector2i size);
+    void WindowSetIcon(WindowHandle window, IImage icon);
     
     WindowHandle WindowCreateSync(WindowCreateSettings settings);
-    WindowHandle WindowCreateMainSync(WindowCreateSettings settings);
     
     void WindowSwapBuffers(WindowHandle window);
     
@@ -64,5 +47,4 @@ public interface IWindowingApi : IDisposable
     #endregion
     
     void SwapInterval(int interval);
-    nint GetProcAddress(string name);
 }

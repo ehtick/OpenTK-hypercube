@@ -1,4 +1,4 @@
-﻿using Hypercube.Core.Graphics.Models;
+﻿using Hypercube.Core.Graphics.Objects.Models;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Resources.FileSystems;
 using Hypercube.Core.Resources.Loaders;

@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Windowing.Settings;
+﻿using Hypercube.Core.Graphics.Objects.Texturing;
+using Hypercube.Core.Windowing.Windows;
 using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Windowing.Api.Base;
@@ -53,6 +54,11 @@ public abstract partial class BaseWindowingApi
     private readonly record struct CommandWindowSetFramebufferSize(
         WindowHandle Window,
         Vector2i Size
+    ) : ICommand;
+    
+    private readonly record struct CommandWindowSetIcon(
+        WindowHandle Window,
+        IImage Icon
     ) : ICommand;
     
     private readonly record struct CommandWindowCreate(

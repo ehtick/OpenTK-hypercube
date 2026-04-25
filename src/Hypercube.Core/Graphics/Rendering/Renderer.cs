@@ -2,9 +2,8 @@
 using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Rendering.Manager;
-using Hypercube.Core.Windowing;
 using Hypercube.Core.Windowing.Manager;
-using Hypercube.Core.Windowing.Settings;
+using Hypercube.Core.Windowing.Windows;
 using Hypercube.Utilities.Dependencies;
 using Hypercube.Utilities.Extensions;
 
@@ -15,7 +14,7 @@ namespace Hypercube.Core.Graphics.Rendering;
 public class Renderer : IRenderer, IPostInject
 {
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
-    [Dependency] private readonly IWindowManager _windowManager = null!;
+    [Dependency] private readonly IWindowingManager _windowingManager = null!;
     [Dependency] private readonly IRenderManager _renderManager = null!;
     [Dependency] private readonly IRenderContext _renderContext = null!;
     [Dependency] private readonly IPatchManager _patchManager = null!;
@@ -24,9 +23,9 @@ public class Renderer : IRenderer, IPostInject
     
     private Thread? _thread;
     private RendererSettings _settings;
-    private IWindow? _window;
+    private IWindow? _mainWindow;
 
-    public IWindow MainWindow => _window!;
+    public IWindow MainMainWindow => _mainWindow!;
 
     public void OnPostInject()
     {
@@ -46,13 +45,13 @@ public class Renderer : IRenderer, IPostInject
 
     public void Shutdown()
     {
-        _windowManager.Shutdown();
+        _windowingManager.Shutdown();
         _renderManager.Shutdown();
     }
 
     public void Update()
     {
-        _windowManager.PollEvents();
+        _windowingManager.PollEvents();
     }
 
     public void Draw(DrawPayload payload)
@@ -65,22 +64,23 @@ public class Renderer : IRenderer, IPostInject
 
     public void Render()
     {
-        if (_window is null)
+        if (_mainWindow is null)
             throw new Exception();
         
-        _renderManager.Render(_window);
+        _renderManager.Render(_mainWindow);
     }
 
     public IWindow CreateMainWindow(WindowCreateSettings settings)
     {
-        if (_window is not null)
+        if (_mainWindow is not null)
             throw new Exception();
         
-        _window = _windowManager.Create(settings);
-        _window.MakeCurrent();
-        _renderManager.Init(_window, _settings.RenderingApi);
+        _mainWindow = _windowingManager.Create(settings);
+        _mainWindow.MakeCurrent();
+        
+        _renderManager.Init(_mainWindow, _settings.RenderingApi);
 
-        return _window;
+        return _mainWindow;
     }
 
     private Task InitAsync(RendererSettings settings)
@@ -90,8 +90,8 @@ public class Renderer : IRenderer, IPostInject
 
         if (_settings.Thread is not { } thread)
         {
-            _windowManager.Init(_settings.WindowingApi);
-            _windowManager.WaitInit(_settings.ReadySleepDelay);
+            _windowingManager.Init(_settings.WindowingApi);
+            _windowingManager.WaitInit(_settings.ReadySleepDelay);
             
             return Task.CompletedTask;
         }
@@ -113,11 +113,11 @@ public class Renderer : IRenderer, IPostInject
         if (_settings.Thread is null)
             throw new InvalidOperationException();
         
-        _windowManager.Init(_settings.WindowingApi);
-        _windowManager.WaitInit(_settings.ReadySleepDelay);
+        _windowingManager.Init(_settings.WindowingApi);
+        _windowingManager.WaitInit(_settings.ReadySleepDelay);
         
         _readyEvent.Set();
         
-        _windowManager.EnterLoop();
+        _windowingManager.EnterLoop();
     }
 }

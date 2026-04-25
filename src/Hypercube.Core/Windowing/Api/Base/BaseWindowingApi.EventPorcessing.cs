@@ -1,5 +1,4 @@
-﻿using Hypercube.Core.Input;
-using Hypercube.Core.Input.Args;
+﻿using Hypercube.Core.Input.Args;
 using Hypercube.Core.Windowing.Api.Exceptions;
 
 namespace Hypercube.Core.Windowing.Api.Base;
@@ -30,7 +29,11 @@ public abstract partial class BaseWindowingApi
                 OnJoystick?.Invoke(@event.Joystick, @event.State);
                 break;
             
-            case EventWindowCursorPosition @event:
+            case EventWindowCursorPosition ev:
+                OnWindowMousePosition?.Invoke(
+                    ev.Window,
+                    ev.Position
+                );
                 break;
             
             case EventCursorEnter @event:

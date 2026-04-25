@@ -7,7 +7,7 @@ namespace Hypercube.Core.Viewports;
 [UsedImplicitly]
 public class CameraManager : ICameraManager, IPostInject
 {
-    [Dependency] private readonly IWindowManager _windowManager = default!;
+    [Dependency] private readonly IWindowingManager _windowingManager = default!;
 
     // Just for test
     public ICamera MainCamera { get; } = Camera.Default;
@@ -17,10 +17,10 @@ public class CameraManager : ICameraManager, IPostInject
         // TODO: Implement window scale affect to all camera projections...
         // Need to add cache created windows in IWindowManager & IWindowingApi 
 
-        _windowManager.OnMainWindowResized += OnMainWindowResized;
+        _windowingManager.OnMainWindowResized += MainWindowingResized;
     }
 
-    private void OnMainWindowResized(Vector2i size)
+    private void MainWindowingResized(Vector2i size)
     {
         MainCamera.Size = size;
     }

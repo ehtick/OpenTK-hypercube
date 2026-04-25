@@ -3,7 +3,6 @@ using Hypercube.Core.Transform;
 using Hypercube.Ecs;
 using Hypercube.Ecs.Components;
 using Hypercube.Mathematics.Quaternions;
-using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Systems.Transform;
 

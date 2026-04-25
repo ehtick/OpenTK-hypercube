@@ -2,6 +2,7 @@
 using Hypercube.Core.Graphics.Rendering.Manager;
 using Hypercube.Core.Input.Handler;
 using Hypercube.Core.Input.Manager;
+using Hypercube.Core.UI;
 using Hypercube.Utilities.Collections;
 
 namespace Hypercube.Core.Execution.LifeCycle;
@@ -20,6 +21,9 @@ public enum EngineUpdatePriority
     
     /// <see cref="IEntitySystemManager"/>
     EntitySystemUpdate,
+    
+    /// <see cref="IUIManager"/>
+    UIUpdate,
     
     /// <see cref="IRenderManager"/>
     RendererUpdate,
