@@ -13,13 +13,14 @@ public sealed unsafe partial class OpenAlAudioApi : AudioApi
     
     protected override bool LoadDevice()
     {
-        _al = AL.GetApi();
         _alc = ALContext.GetApi();
+        _al = AL.GetApi();
+
+        // Reset error state
+        HandleError(silent: true);
+        
         _device = _alc.OpenDevice(null);
         
-        if (HandleError("Failed loading open device"))
-            return false;
-
         if (!TryLoadEnumerating())
             LogInfo("Unable to load enumerating ext");
         
@@ -50,12 +51,15 @@ public sealed unsafe partial class OpenAlAudioApi : AudioApi
         if (!_alc.MakeContextCurrent(_context))
             LogError("Failed to make OpenAL context current.");
     }
-
-    private bool HandleError(string message = "")
+    
+    private bool HandleError(string message = "", bool silent = false)
     {
         var error = _al.GetError();
         if (error == AudioError.NoError)
             return false;
+
+        if (silent)
+            return true;
         
         LogError($"OpenAl internal error {error}: {message}");
         return true;
