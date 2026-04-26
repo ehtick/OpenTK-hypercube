@@ -4,11 +4,11 @@ using Hypercube.Core.Graphics.Rendering.Context;
 
 namespace Hypercube.Core.UI;
 
-public class UIPatch : Patch
+public sealed class UIPatch : Patch
 {
     private readonly UIManager _uiManager;
     
-    public override int Priority => 1000; // Рендерим UI последним
+    public override int Priority => 1000;
     
     public UIPatch(UIManager uiManager)
     {
@@ -17,11 +17,9 @@ public class UIPatch : Patch
     
     public override void Draw(IRenderContext renderer, DrawPayload payload)
     {
-        var root = _uiManager.Root;
-        
-        if (!root.Visible)
-            return;
-        
-        root.Render(renderer);
+        using (renderer.UseRenderState(payload.Window))
+        {
+            _uiManager.Root.Render(renderer, payload);
+        }
     }
 }

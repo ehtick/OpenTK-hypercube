@@ -34,7 +34,7 @@ public partial class RenderContext
                 case '\n':
                     // Move to next line
                     pen = new Vector2(position.X, pen.Y - font.LineHeight * scale) ;
-                    //baselineY = pen.Y - font.Baseline * scale;
+                    // baselineY = pen.Y - font.Baseline * scale;
                     // prev = '\0';
                     continue;
             }

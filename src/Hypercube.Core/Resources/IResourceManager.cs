@@ -23,7 +23,7 @@ public interface IResourceManager
 
     T Load<T>(ResourcePath path) where T : Resource;
     
-    T Load<T>(ResourcePath path, ResourceLoadArg[] args) where T : Resource;
+    T Load<T>(ResourcePath path, params ResourceLoadArg[] args) where T : Resource;
     
     Resource Load(ResourcePath path, Type type);
     

@@ -1,77 +1,137 @@
+using Hypercube.Core.Execution.LifeCycle;
+using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
-using Hypercube.Core.Graphics.Resources;
+using Hypercube.Core.Input;
+using Hypercube.Core.Input.Handler;
 using Hypercube.Mathematics;
 using Hypercube.Mathematics.Shapes;
+using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.UI.Elements;
 
+[PublicAPI]
 public class Button : Element
 {
-    private string _text = string.Empty;
-    private ButtonState _state = ButtonState.Normal;
-    
-    public Font? Font;
-    public Color TextColor = Color.White;
-    public Color BackgroundColor = new Color(60, 60, 60, 255);
-    public Color HoverColor = new Color(80, 80, 80, 255);
-    public Color PressedColor = new Color(50, 50, 50, 255);
-    public Color BorderColor = new Color(100, 100, 100, 255);
-    
-    public float BorderThickness = 1f;
-    public float CornerRadius = 4f;
-    public Vector2 Padding = new(10, 6);
-    
-    public string Text
-    {
-        get => _text;
-        set
-        {
-            if (_text == value)
-                return;
-            
-            _text = value ?? string.Empty;
-            UpdateSize();
-        }
-    }
-    
-    public float Scale = 1f;
+    [Dependency] private readonly IInputHandler _inputHandler = null!;
     
     public event Action<Button>? OnClick;
     public event Action<Button>? OnHoverChanged;
     
+    public Label Label { get; }
+
+    public Color BackgroundColor { get; set; } = new(60, 60, 60);
+    public Color HoverColor { get; set; } = new(80, 80, 80);
+    public Color PressedColor { get; set; } = new(50, 50, 50);
+    public Color BorderColor { get; set; } = new(100, 100, 100);
+
+    public float BorderThickness { get; set; } = 1f;
+    public float CornerRadius { get; set; } = 4f;
+    public Vector2 Padding { get; set; } = new(10, 6);
+
+    public string Text
+    {
+        get => Label.Text;
+        set
+        {
+            Label.Text = value;
+            UpdateSize();
+        }
+    }
+
+    private ButtonState _state = ButtonState.Normal;
+
     public Button()
     {
         HorizontalAlignment = UI.Alignment.HorizontalAlignment.Left;
         VerticalAlignment = UI.Alignment.VerticalAlignment.Top;
+
+        Label = new Label();
+        AddChild(Label);
     }
-    
-    internal void Init()
+
+    protected override void OnRender(IRenderContext context, DrawPayload payload)
     {
-        // Инициализация без привязки к окну
+        var color = GetCurrentColor();
+        var rect = Rect2.FromCenter(Position, Size);
+        
+        // Background
+        context.DrawRectangle(rect, color);
+
+        // Border
+        if (BorderThickness > 0)
+            context.DrawRectangle(rect, BorderColor, true);
+
+        // Center label inside button
+        ArrangeLabel();
+    }
+
+    protected override void OnUpdate(FrameEventArgs args)
+    {
+        var mousePosition = (Vector2)_inputHandler.MousePosition;
+
+        var isPressed = _inputHandler.IsMouseButtonHeld(MouseButton.Left);
+        var justPressed = _inputHandler.IsMouseButtonPressed(MouseButton.Left);
+        var justReleased = _inputHandler.IsMouseButtonReleased(MouseButton.Left);
+
+        UpdateInput(
+            mousePosition,
+            isPressed,
+            justPressed,
+            justReleased);
     }
     
+    internal void UpdateInput(
+        Vector2 mousePosition,
+        bool isPressed,
+        bool justPressed,
+        bool justReleased)
+    {
+        var hovered = Contains(mousePosition);
+        var wasHovered = _state is ButtonState.Hover or ButtonState.Pressed;
+
+        SetState(
+            isPressed && hovered
+                ? ButtonState.Pressed
+                : hovered
+                    ? ButtonState.Hover
+                    : ButtonState.Normal);
+
+        if (justReleased && hovered && wasHovered)
+            OnClick?.Invoke(this);
+    }
+
     protected virtual void UpdateSize()
     {
-        var textWidth = 0f;
-        var textHeight = Font?.LineHeight ?? 20;
-        
-        if (Font is not null && !string.IsNullOrEmpty(_text))
-        {
-            foreach (var c in _text)
-            {
-                if (Font.Glyphs.TryGetValue(c, out var glyph))
-                {
-                    textWidth += glyph.Advance;
-                }
-            }
-        }
-        
+        var labelSize = Label.Size;
+
         Size = new Vector2(
-            (textWidth + Padding.X * 2) * Scale,
-            (textHeight + Padding.Y * 2) * Scale
-        );
+            labelSize.X + Padding.X * 2,
+            labelSize.Y + Padding.Y * 2);
+    }
+
+    private void ArrangeLabel()
+    {
+        var rect = new Rect2(Position + Padding, Size - Padding * 2);
+        Label.Arrange(rect);
     }
     
+    private bool Contains(Vector2 point)
+    {
+        return point.X >= Position.X &&
+               point.X <= Position.X + Size.X &&
+               point.Y >= Position.Y &&
+               point.Y <= Position.Y + Size.Y;
+    }
+
+    private void SetState(ButtonState state)
+    {
+        if (_state == state)
+            return;
+
+        _state = state;
+        OnHoverChanged?.Invoke(this);
+    }
+
     private Color GetCurrentColor()
     {
         return _state switch
@@ -81,73 +141,6 @@ public class Button : Element
             ButtonState.Pressed => PressedColor,
             _ => BackgroundColor
         };
-    }
-    
-    private bool IsPointInside(Vector2 point)
-    {
-        return point.X >= Position.X &&
-               point.X <= Position.X + Size.X &&
-               point.Y >= Position.Y &&
-               point.Y <= Position.Y + Size.Y;
-    }
-    
-    private void SetState(ButtonState newState)
-    {
-        if (_state == newState)
-            return;
-        
-        _state = newState;
-        OnHoverChanged?.Invoke(this);
-    }
-    
-    internal void UpdateInput(Vector2 mousePos, bool isPressed, bool justPressed, bool justReleased)
-    {
-        var isHovered = IsPointInside(mousePos);
-        var wasHovered = _state == ButtonState.Hover || _state == ButtonState.Pressed;
-        
-        if (isPressed && isHovered)
-        {
-            SetState(ButtonState.Pressed);
-        }
-        else if (isHovered)
-        {
-            SetState(ButtonState.Hover);
-        }
-        else
-        {
-            SetState(ButtonState.Normal);
-        }
-        
-        // Обработка клика (при отпускании кнопки над элементом после нажатия)
-        if (justReleased && isHovered && wasHovered)
-        {
-            OnClick?.Invoke(this);
-        }
-    }
-    
-    public override void Render(IRenderContext context)
-    {
-        if (!Visible)
-            return;
-        
-        // Рисуем фон
-        var bgColor = GetCurrentColor();
-        context.DrawRectangle(new Rect2(Position, Size), bgColor, false);
-        
-        // Рисуем рамку
-        if (BorderThickness > 0)
-        {
-            context.DrawRectangle(new Rect2(Position, Size), BorderColor, true);
-        }
-        
-        // Рисуем текст
-        if (Font is not null && !string.IsNullOrEmpty(_text))
-        {
-            var textPos = Position + new Vector2(Padding.X, Padding.Y);
-            context.DrawText(_text, Font, textPos, TextColor, Scale);
-        }
-        
-        base.Render(context);
     }
 }
 

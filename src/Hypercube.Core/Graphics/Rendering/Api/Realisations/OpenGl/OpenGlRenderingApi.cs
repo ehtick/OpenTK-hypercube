@@ -207,7 +207,7 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi, IOpenGlRender
 
         Gl.Enable(EnableCap.Blend);
         Gl.Disable(EnableCap.ScissorTest);
-
+        
         Gl.BlendEquation(BlendEquationModeEXT.FuncAdd);
         Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 

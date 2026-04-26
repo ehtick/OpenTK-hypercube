@@ -1,4 +1,4 @@
-﻿﻿using Hypercube.Core.Resources.FileSystems;
+﻿using Hypercube.Core.Resources.FileSystems;
 using Hypercube.Core.Resources.Loaders;
 using Hypercube.Core.Resources.Preloading;
 using Hypercube.Utilities.Dependencies;
@@ -105,7 +105,7 @@ public sealed class ResourceManager : IResourceManager, IDisposable
         return (T) Load(path, typeof(T), []);
     }
 
-    public T Load<T>(ResourcePath path, ResourceLoadArg[] args) where T : Resource
+    public T Load<T>(ResourcePath path, params ResourceLoadArg[] args) where T : Resource
     {
         return (T) Load(path, typeof(T), args);
     }

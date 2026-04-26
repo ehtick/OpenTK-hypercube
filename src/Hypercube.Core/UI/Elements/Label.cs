@@ -1,66 +1,42 @@
-﻿using Hypercube.Core.Graphics.Rendering.Context;
+﻿using Hypercube.Core.Graphics.Rendering;
+using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Resources;
+using Hypercube.Core.Resources;
 using Hypercube.Mathematics;
+using Hypercube.Utilities.Dependencies;
 
 namespace Hypercube.Core.UI.Elements;
 
-public class Label : Element
+[PublicAPI]
+public sealed class Label : Element, IPostInject
 {
-    private string _text = string.Empty;
+    [Dependency] private readonly IResourceManager _resourceManager = null!;
     
-    public Font? Font;
+    public ResourcePath Font = "/fonts/OpenSans.ttf";
+    public int FontSize = FontResourceLoader.DefaultSize;
+    
     public Color Color = Color.White;
-    
-    public string Text
-    {
-        get => _text;
-        set
-        {
-            if (_text == value)
-                return;
-            
-            _text = value ?? string.Empty;
-            UpdateSize();
-        }
-    }
-    
+    public string Text = string.Empty;
     public float Scale = 1f;
+
+    private Font? _font;
     
+    public void OnPostInject()
+    {
+        _font = _resourceManager.Load<Font>(Font, ("size", FontSize));
+    }
+
     public Label()
     {
-        HorizontalAlignment = UI.Alignment.HorizontalAlignment.Left;
-        VerticalAlignment = UI.Alignment.VerticalAlignment.Top;
+        HorizontalAlignment = Alignment.HorizontalAlignment.Left;
+        VerticalAlignment = Alignment.VerticalAlignment.Top;
     }
-    
-    protected virtual void UpdateSize()
+
+    protected override void OnRender(IRenderContext context, DrawPayload payload)
     {
-        if (Font is null || string.IsNullOrEmpty(_text))
-        {
-            Size = Vector2.Zero;
-            return;
-        }
-        
-        var width = 0f;
-        var height = Font.LineHeight;
-        
-        foreach (var c in _text)
-        {
-            if (Font.Glyphs.TryGetValue(c, out var glyph))
-            {
-                width += glyph.Advance;
-            }
-        }
-        
-        Size = new Vector2(width * Scale, height * Scale);
-    }
-    
-    public override void Render(IRenderContext context)
-    {
-        base.Render(context);
-        
-        if (!Visible || Font is null || string.IsNullOrEmpty(_text))
+        if (_font is null || string.IsNullOrEmpty(Text))
             return;
         
-        context.DrawText(_text, Font, Position, Color, Scale);
+        context.DrawText(Text, _font, Position, Color, Scale);
     }
 }

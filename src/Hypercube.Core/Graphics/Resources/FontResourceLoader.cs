@@ -10,7 +10,7 @@ namespace Hypercube.Core.Graphics.Resources;
 
 public class FontResourceLoader : ResourceLoader<Font>
 {
-    private const int DefaultSize = 16;
+    public const int DefaultSize = 16;
     
     public override string[] Extensions => ["ttf", "otf"];
     public override bool SupportLoadArgs => true;

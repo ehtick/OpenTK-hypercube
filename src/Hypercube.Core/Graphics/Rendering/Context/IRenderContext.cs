@@ -87,10 +87,8 @@ public interface IRenderContext
     
     void Scissor(bool value);
     void Scissor(Rect2i rect);
-    IDisposable UseContextScope(IWindow window);
+
     IDisposable UseRenderState(Matrix4x4 view, Matrix4x4 projection);
     IDisposable UseRenderState(ICameraManager cameraManager);
-    IDisposable UseRenderView(Matrix4x4 view);
-    IDisposable UseRenderProjection(Matrix4x4 projection);
-    IDisposable UseWindowSpace(IWindow window);
+    IDisposable UseRenderState(IWindow window);
 }
