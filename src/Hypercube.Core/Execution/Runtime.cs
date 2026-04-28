@@ -2,6 +2,7 @@
 using Hypercube.Core.Ecs;
 using Hypercube.Core.Execution.Enums;
 using Hypercube.Core.Execution.LifeCycle;
+using Hypercube.Core.Execution.Timing;
 using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Resources;
 using Hypercube.Core.Utilities.Extensions;
@@ -20,6 +21,7 @@ public sealed partial class Runtime
     [Dependency] private readonly IRenderer _renderer = null!;
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
     [Dependency] private readonly IEntitySystemManager _entitySystemManager = null!;
+    [Dependency] private readonly ITime _time = null!;
 
     private readonly Debugging.Logger _logger = new();
 
@@ -63,6 +65,11 @@ public sealed partial class Runtime
     
     private void InitModules()
     {
+        _time.SetTickRate(Config.Tickrate);
+        _time.Start();
+        
+        _logger.Info($"Time started. Tickrate: {Config.Tickrate.Value}");
+
         _resourceManager.Mount(Config.MountFolders);
         
         _logger.Info("The entry points are called!");

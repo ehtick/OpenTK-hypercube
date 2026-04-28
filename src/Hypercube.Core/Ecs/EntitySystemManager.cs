@@ -13,7 +13,7 @@ public sealed partial class EntitySystemManager : IEntitySystemManager, IPostInj
 {
     [Dependency] private readonly IRuntimeLoop _runtimeLoop = null!;
 
-    private readonly SystemSequence _systemSequence = new();
+    private readonly SystemSequence<FrameEventArgs> _systemSequence = new();
     
     private readonly DependenciesContainer _container;
     private readonly IWorld _globalWorld;
@@ -31,7 +31,7 @@ public sealed partial class EntitySystemManager : IEntitySystemManager, IPostInj
 
     public void Initialize()
     {
-        foreach (var type in ReflectionHelper.GetInstantiableSubclasses<EntitySystemOriginal>())
+        foreach (var type in ReflectionHelper.GetInstantiableSubclasses<EntitySystem>())
         {
             var constructor = type.GetConstructor([]);   
             if (constructor is null) 
@@ -54,7 +54,7 @@ public sealed partial class EntitySystemManager : IEntitySystemManager, IPostInj
             
             propertyInfo?.SetValue(instance, _globalWorld);
             
-            _systemSequence.Add((ISystem) instance);
+            _systemSequence.Add((ISystem<FrameEventArgs>) instance);
             _container.RegisterSingleton(instance.GetType(), instance);
         }
         
@@ -71,8 +71,8 @@ public sealed partial class EntitySystemManager : IEntitySystemManager, IPostInj
 
     private void OnUpdate(FrameEventArgs args)
     {
-        _systemSequence.BeforeUpdate(args.DeltaSeconds);
-        _systemSequence.Update(args.DeltaSeconds);
-        _systemSequence.AfterUpdate(args.DeltaSeconds);
+        _systemSequence.BeforeUpdate(args);
+        _systemSequence.Update(args);
+        _systemSequence.AfterUpdate(args);
     }
 }

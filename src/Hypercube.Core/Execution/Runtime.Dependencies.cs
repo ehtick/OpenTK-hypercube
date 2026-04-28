@@ -1,6 +1,7 @@
 ﻿using Hypercube.Core.Audio.Manager;
 using Hypercube.Core.Ecs;
 using Hypercube.Core.Execution.LifeCycle;
+using Hypercube.Core.Execution.Timing;
 using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
@@ -21,7 +22,9 @@ public partial class Runtime
     private void InitPrimaryDependencies()
     {
         _dependencies.RegisterSingleton<ILogger>(_logger);
+        
         _dependencies.Register<IConfigManager, ConfigManager>();
+        _dependencies.Register<ITime, Time>();
     }
     
     private void InitDependencies()

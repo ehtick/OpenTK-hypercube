@@ -2,10 +2,10 @@
 
 public readonly struct FrameEventArgs
 {
-    public readonly float DeltaSeconds;
+    public readonly TimeSpan Delta;
     
-    public FrameEventArgs(float deltaSeconds)
+    public FrameEventArgs(TimeSpan delta)
     {
-        DeltaSeconds = deltaSeconds;
+        Delta = delta;
     }
 }

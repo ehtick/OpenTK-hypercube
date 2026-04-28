@@ -8,4 +8,3 @@ global using Vector3 = Hypercube.Mathematics.Vectors.Vector3;
 
 // Ecs
 global using EntitySystem = Hypercube.Core.Ecs.EntitySystem;
-global using EntitySystemOriginal = Hypercube.Ecs.System.EntitySystem;

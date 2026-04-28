@@ -1,4 +1,5 @@
-﻿using Hypercube.Utilities.Collections;
+﻿using Hypercube.Core.Execution.Timing;
+using Hypercube.Utilities.Collections;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 
@@ -7,7 +8,8 @@ namespace Hypercube.Core.Execution.LifeCycle;
 [UsedImplicitly]
 public sealed class RuntimeLoop : IRuntimeLoop
 {
-    [Dependency] private readonly ILogger _logger = default!;
+    [Dependency] private readonly ILogger _logger = null!;
+    [Dependency] private readonly ITime _time = null!;
     
     private readonly OrderedActions<FrameEventArgs> _actions = [];
     
@@ -27,6 +29,9 @@ public sealed class RuntimeLoop : IRuntimeLoop
         
         while (Running)
         {
+            if (!_time.NextFrame())
+                continue;
+            
             OnRun();
         }
         
@@ -40,6 +45,6 @@ public sealed class RuntimeLoop : IRuntimeLoop
     
     private void OnRun()
     {
-        _actions.InvokeAll(new FrameEventArgs(1));
+        _actions.InvokeAll(new FrameEventArgs(_time.Delta));
     }
 }

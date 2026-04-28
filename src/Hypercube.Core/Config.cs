@@ -1,4 +1,5 @@
-﻿using Hypercube.Core.Graphics.Rendering.Api;
+﻿using Hypercube.Core.Execution.Timing;
+using Hypercube.Core.Graphics.Rendering.Api;
 using Hypercube.Core.Windowing;
 using Hypercube.Mathematics;
 using Hypercube.Utilities.Configuration;
@@ -9,6 +10,9 @@ namespace Hypercube.Core;
 [Config("engine.json")]
 public static class Config
 {
+    public static readonly ConfigField<double> Tickrate =
+        new("Tickrate", Time.DefaultTickRate);
+    
     /**
      * Mounting
      */

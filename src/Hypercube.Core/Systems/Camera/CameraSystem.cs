@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Core.Systems.Transform;
 using Hypercube.Core.Viewports;
 using Hypercube.Ecs;
@@ -20,7 +21,7 @@ public sealed class CameraSystem : EntitySystem
         );
     }
 
-    public override void AfterUpdate(float deltaTime)
+    public override void AfterUpdate(FrameEventArgs args)
     {
         _query.With<CameraComponent, TransformComponent>((entity, ref camera, ref transform) =>
         {
