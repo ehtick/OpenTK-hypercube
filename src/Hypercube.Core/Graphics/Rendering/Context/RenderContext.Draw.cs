@@ -21,15 +21,15 @@ public sealed partial class RenderContext
         _renderingApi.EnsureBatch(PrimitiveTopology.TriangleList, shader.Handle, texture?.Gpu?.Handle);
 
         var start = _renderingApi.BatchVerticesIndex;
-        var matrix = Matrix4x4.CreateTransform(position, rotation, scale);
+        var matrix = Matrix4x4.CreateTransformSRT(position, rotation, scale);
         
         foreach (var (v, vt, vn) in model.Indices)
         {
-            var vertexPosition = matrix * model.Vertices[v];
+            var vertexPosition = model.Vertices[v] * matrix;
             
             var uv = vt >= 0 && vt < model.UVs.Length ? model.UVs[vt] : Vector2.Zero;;
             var normal = vn >= 0 && vn < model.Normals.Length
-                ? (matrix * model.Normals[vn]).Normalized
+                ? (model.Normals[vn] * matrix).Normalized
                 : Vector3.UnitZ;
     
             _renderingApi.PushVertex(new Vertex(vertexPosition, uv, color, normal));
@@ -71,13 +71,14 @@ public sealed partial class RenderContext
             new Vector2(-halfSize.X, halfSize.Y)
         );
         
-        var matrix = 
-            Matrix4x4.CreateTranslation(position) *
-            Matrix4x4.CreateRotationZ((float) rotation.Theta) *
-            Matrix4x4.CreateScale(scale);
+        var matrix = Matrix4x4.CreateTransformSRT(
+            (Vector3) position,
+            Quaternion.FromEulerZ((float) rotation),
+            (Vector3) scale
+        );
         
         _renderingApi.EnsureBatch(PrimitiveTopology.TriangleList, _renderingApi.TexturingShaderProgram.Handle, texture.Gpu?.Handle);
-        AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, matrix * rect, Rect2.UV, color);
+        AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, rect * matrix, Rect2.UV, color);
     }
     
     public void DrawRectangle(Rect2 box, Color color, bool outline = false)
@@ -86,7 +87,7 @@ public sealed partial class RenderContext
             throw new Exception();
         
         _renderingApi.EnsureBatch(outline ? PrimitiveTopology.LineList : PrimitiveTopology.TriangleList, _renderingApi.PrimitiveShaderProgram.Handle, null);
-        AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, Matrix4x4.Identity * box, Rect2.UV, color);
+        AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, box, Rect2.UV, color);
     }
     
     public void DrawLine(Vector2 start, Vector2 end, Color color, float thickness = 1f)

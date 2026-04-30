@@ -1,6 +1,5 @@
 ﻿using Hypercube.Mathematics.Matrices;
 using Hypercube.Mathematics.Quaternions;
-using Hypercube.Mathematics.Vectors;
 
 namespace Hypercube.Core.Viewports;
 
@@ -10,7 +9,7 @@ public class Camera : ICamera
     public static Camera Default => new(DefaultSize, DefaultZNear, DefaultZFar, Vector3.One);
 
     public static readonly Vector2i DefaultSize = new(640, 320);
-    public const float DefaultZNear = 0.1f;
+    public const float DefaultZNear = -1f;
     public const float DefaultZFar = 100f;
 
     public Matrix4x4 Projection { get; private set; }
@@ -99,6 +98,6 @@ public class Camera : ICamera
 
     private void UpdateView()
     {
-        View = Matrix4x4.CreateTransform(-Position, -Rotation, 1.0f / Scale);
+        View = Matrix4x4.CreateTransformSRT(-Position, Rotation.Inversed, 1.0f / Scale);
     }
 }

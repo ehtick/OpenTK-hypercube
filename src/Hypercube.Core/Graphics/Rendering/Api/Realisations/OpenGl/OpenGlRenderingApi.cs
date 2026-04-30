@@ -246,9 +246,9 @@ public sealed partial class OpenGlRenderingApi : BaseRenderingApi, IOpenGlRender
             throw new Exception();
         
         shader.Use();
-        shader.SetUniform("model", Matrix4x4.Identity);
-        shader.SetUniform("view", renderState.View);
-        shader.SetUniform("projection", renderState.Projection);
+        shader.SetUniform("model", Matrix4x4.Identity, transpose: true);
+        shader.SetUniform("view", renderState.View, transpose: true);
+        shader.SetUniform("projection", renderState.Projection, transpose: true);
 
         Gl.DrawElements(batch.PrimitiveTopology, batch.Size, DrawElementsType.UnsignedInt, batch.Start * sizeof(uint));
 
