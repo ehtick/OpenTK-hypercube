@@ -44,11 +44,10 @@ public class FontResourceLoader : ResourceLoader<Font>
         return new Font(texture, info);
     }
 
-    private static byte[] GetData(FileStream stream)
+    private static byte[] GetData(Stream stream)
     {
         using var memory = new MemoryStream();
         stream.CopyTo(memory);
-        
         return memory.ToArray();
     }
     

@@ -71,7 +71,7 @@ public sealed class PhysicalFileSystem : IFileSystem
         return File.Exists(path);
     }
 
-    public FileStream OpenRead(ResourcePath path)
+    public Stream OpenRead(ResourcePath path)
     {
         if (!path.Rooted)
             throw new ArgumentException($"Path must be rooted: {path}");
@@ -91,8 +91,15 @@ public sealed class PhysicalFileSystem : IFileSystem
             }
         }
 
-        // Fall back to direct file system access
-        return File.OpenRead(path);
+        var result = new MemoryStream();
+
+        var fileStream = File.OpenRead(path);
+        fileStream.CopyTo(result);
+        fileStream.Dispose();
+        
+        result.Position = 0;
+        
+        return result;
     }
 
     public List<ResourcePath> GetFiles(ResourcePath path)

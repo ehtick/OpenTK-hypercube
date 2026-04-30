@@ -7,6 +7,6 @@ public interface IFileSystem
     void Mount(ResourcePath physicalPath, ResourcePath relativePath);
     void Unmount(ResourcePath relativePath);
     bool Exists(ResourcePath path);
-    FileStream OpenRead(ResourcePath relativePath);
+    Stream OpenRead(ResourcePath relativePath);
     List<ResourcePath> GetFiles(ResourcePath path);
 }
