@@ -4,7 +4,6 @@ using Hypercube.Core.Graphics.Objects.Texturing;
 using Hypercube.Core.Windowing.Api.Base;
 using Hypercube.Core.Windowing.Api.Exceptions;
 using Hypercube.Core.Windowing.Windows;
-using Hypercube.Mathematics.Vectors;
 using Silk.NET.GLFW;
 
 // Silk redefine for reduce type/namespace collisions

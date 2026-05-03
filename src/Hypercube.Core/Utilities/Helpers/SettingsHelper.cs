@@ -43,6 +43,7 @@ public static class SettingsHelper
             } : null,
             WindowingApi = new WindowingApiSettings
             {
+                Multithread = Config.WindowingThreading,
                 Api = Config.Windowing,
                 WaitEventsTimeout = Config.WindowingWaitEventsTimeout,
                 EventBridgeBufferSize = Config.WindowingThreadEventBridgeBufferSize

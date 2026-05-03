@@ -12,24 +12,24 @@ public enum EngineUpdatePriority
     #region Input
     
     /// <see cref="IInputHandler"/>
-    InputHandler,
+    InputHandler = 100,
+        
+    /// <see cref="IRenderManager"/>
+    RendererUpdate = 200,
     
     /// <see cref="IInputManager"/>
-    InputManager,
+    InputManager = 300,
     
     #endregion
     
     /// <see cref="IEntitySystemManager"/>
-    EntitySystemUpdate,
+    EntitySystemUpdate = 400,
     
     /// <see cref="IUIManager"/>
-    UIUpdate,
+    UIUpdate = 500,
     
     /// <see cref="IRenderManager"/>
-    RendererUpdate,
-    
-    /// <see cref="IRenderManager"/>
-    RendererRender
+    RendererRender = 600
 }
 
 public static class EngineUpdatePriorityExtensions

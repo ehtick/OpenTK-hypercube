@@ -97,7 +97,7 @@ public abstract partial class BaseWindowingApi
         }
     }
 
-    private void ProcessEvents(bool single = true)
+    private void ProcessEvents(bool single = false)
     {
         if (_eventBridge is null)
             throw new WindowingApiNotInitializedException();
@@ -113,15 +113,10 @@ public abstract partial class BaseWindowingApi
     
     protected void Raise(IEvent ev)
     {
-        Raise(ev, false);
-    }
-    
-    private void Raise(IEvent ev, bool outOfThread)
-    {
         if (_eventBridge is null)
             throw new WindowingApiNotInitializedException();
 
-        if (Thread.CurrentThread == Thread && !outOfThread)
+        if (!_multithread)
         {
             Process(ev);
             return;

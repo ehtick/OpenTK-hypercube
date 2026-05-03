@@ -2,7 +2,6 @@
 using Hypercube.Core.Graphics.Objects.Texturing;
 using Hypercube.Core.Windowing.Api.Exceptions;
 using Hypercube.Core.Windowing.Windows;
-using Hypercube.Mathematics.Vectors;
 using Hypercube.Utilities.Extensions;
 using Hypercube.Utilities.Threads;
 
@@ -49,7 +48,8 @@ public abstract partial class BaseWindowingApi : IWindowingApi
 
     private readonly List<WindowHandle> _windows = [];
     private readonly List<MonitorHandler> _monitors = [];
-    
+
+    private readonly bool _multithread;
     private readonly float _waitEventsTimeout;
     private bool _running;
 
@@ -69,6 +69,7 @@ public abstract partial class BaseWindowingApi : IWindowingApi
 
     protected BaseWindowingApi(WindowingApiSettings settings)
     {
+        _multithread = settings.Multithread;
         _waitEventsTimeout = settings.WaitEventsTimeout;
         
         _eventBridge = new ThreadBridge<IEvent>(new BoundedChannelOptions(settings.EventBridgeBufferSize)

@@ -4,7 +4,6 @@ using Hypercube.Core.Windowing.Api;
 using Hypercube.Core.Windowing.Manager.Exceptions;
 using Hypercube.Core.Windowing.Monitors;
 using Hypercube.Core.Windowing.Windows;
-using Hypercube.Mathematics.Vectors;
 using Hypercube.Utilities.Debugging.Logger;
 using Hypercube.Utilities.Dependencies;
 

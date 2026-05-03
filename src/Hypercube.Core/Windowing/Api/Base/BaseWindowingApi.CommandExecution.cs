@@ -28,7 +28,7 @@ public abstract partial class BaseWindowingApi
             
             case CommandWindowSetTitle windowSetTitle:
                 InternalWindowSetTitle(windowSetTitle.Window, windowSetTitle.Title);
-                Raise(new EventWindowTitle(windowSetTitle.Window, windowSetTitle.Title), windowSetTitle.Thread != Thread);
+                Raise(new EventWindowTitle(windowSetTitle.Window, windowSetTitle.Title));
                 break;
             
             case CommandWindowSetPosition windowSetPosition:
@@ -48,7 +48,7 @@ public abstract partial class BaseWindowingApi
                 break;
             
             case CommandWindowCreateSync windowCreateSync:
-                Raise(new EventSync<nint>(windowCreateSync.Task, InternalWindowCreate(windowCreateSync.Settings)), windowCreateSync.Thread != Thread);
+                Raise(new EventSync<nint>(windowCreateSync.Task, InternalWindowCreate(windowCreateSync.Settings)));
                 break;
         }
     }

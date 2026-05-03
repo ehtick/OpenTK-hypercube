@@ -52,7 +52,6 @@ public sealed partial class InputHandler : IInputHandler, IPostInject
 
     private void OnKeyUpdate(WindowHandle window, KeyChangedArgs state)
     {
-        // _logger.Trace($"[Key] {state.Key} ({window})");
         GetKeySateBuffer(window).Apply(state);
     }
 
