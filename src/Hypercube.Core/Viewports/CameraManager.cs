@@ -9,6 +9,8 @@ public class CameraManager : ICameraManager, IPostInject
 {
     [Dependency] private readonly IWindowingManager _windowingManager = default!;
 
+    public event Action? OnMainCameraResized;
+    
     // Just for test
     public ICamera MainCamera { get; } = Camera.Default;
 
@@ -23,5 +25,6 @@ public class CameraManager : ICameraManager, IPostInject
     private void MainWindowingResized(Vector2i size)
     {
         MainCamera.Size = size;
+        OnMainCameraResized?.Invoke();
     }
 }

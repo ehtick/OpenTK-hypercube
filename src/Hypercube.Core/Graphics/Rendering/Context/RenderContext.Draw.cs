@@ -87,6 +87,13 @@ public sealed partial class RenderContext
             throw new Exception();
         
         _renderingApi.EnsureBatch(outline ? PrimitiveTopology.LineList : PrimitiveTopology.TriangleList, _renderingApi.PrimitiveShaderProgram.Handle, null);
+        
+        if (outline)
+        {
+            AddQuadTriangleLineBatch(_renderingApi.BatchVerticesIndex, box, Rect2.UV, color);
+            return;    
+        }
+        
         AddQuadTriangleBatch(_renderingApi.BatchVerticesIndex, box, Rect2.UV, color);
     }
     
@@ -186,5 +193,22 @@ public sealed partial class RenderContext
         _renderingApi.PushIndex(start, 1);
         _renderingApi.PushIndex(start, 2);
         _renderingApi.PushIndex(start, 3);
-    }    
+    }
+    
+    private void AddQuadTriangleLineBatch(int start, Rect2 rect, Rect2 uv, Color color)
+    {
+        _renderingApi.PushVertex(new Vertex(rect.TopRight, uv.TopRight, color));
+        _renderingApi.PushVertex(new Vertex(rect.BottomRight, uv.BottomRight, color));
+        _renderingApi.PushVertex(new Vertex(rect.BottomLeft, uv.BottomLeft, color));
+        _renderingApi.PushVertex(new Vertex(rect.TopLeft, uv.TopLeft, color));
+        
+        _renderingApi.PushIndex(start, 0);
+        _renderingApi.PushIndex(start, 1);
+        _renderingApi.PushIndex(start, 1);
+        _renderingApi.PushIndex(start, 2);
+        _renderingApi.PushIndex(start, 2);
+        _renderingApi.PushIndex(start, 3);
+        _renderingApi.PushIndex(start, 3);
+        _renderingApi.PushIndex(start, 0);
+    }  
 }

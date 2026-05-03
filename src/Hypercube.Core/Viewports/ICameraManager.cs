@@ -2,5 +2,7 @@
 
 public interface ICameraManager
 {
+    event Action? OnMainCameraResized;
+    
     ICamera MainCamera { get; }
 }

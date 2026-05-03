@@ -33,7 +33,7 @@ public interface IRenderContext
     /// <param name="color">The base color tint applied to the model.</param>
     /// <param name="texture">An optional texture that can override the model's default material texture.</param>
     void DrawModel(Model model, Vector3 position, Quaternion rotation, Vector3 scale, Color color, Texture? texture = null);
-    
+
     /// <summary>
     /// Draws a string of text on the screen.
     /// </summary>
@@ -42,7 +42,8 @@ public interface IRenderContext
     /// <param name="position">The position on the screen where the text will be drawn.</param>
     /// <param name="color">The color of the text.</param>
     /// <param name="scale">The scale factor for the text.</param>
-    void DrawText(string text, Font font, Vector2 position, Color color, float scale = 1f);
+    /// <param name="align"></param>
+    void DrawText(string text, Font font, Vector2 position, Color color, float scale = 1f, Vector2 align = default);
     
     /// <summary>
     /// Draws a rectangle on the screen.

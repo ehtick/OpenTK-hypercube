@@ -87,6 +87,35 @@ public class Font : Resource
         Info = info;
     }
     
+    public Vector2 Measure(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return Vector2.Zero;
+
+        var width = 0f;
+        var maxWidth = 0f;
+        var height = LineHeight;
+
+        foreach (var ch in text)
+        {
+            if (ch == '\n')
+            {
+                maxWidth = float.Max(maxWidth, width);
+                width = 0;
+                height += LineHeight;
+                continue;
+            }
+
+            if (!Glyphs.TryGetValue(ch, out var glyph))
+                continue;
+
+            width += glyph.Advance;
+        }
+
+        maxWidth = float.Max(maxWidth, width);
+        return new Vector2(maxWidth, height);
+    }
+    
     /// <summary>
     /// Releases the GPU resources associated with this font.
     /// </summary>

@@ -19,7 +19,7 @@ public sealed class UIPatch : Patch
     {
         using (renderer.UseRenderState(payload.Window))
         {
-            _uiManager.Root.Render(renderer, payload);
+            _uiManager.Root.Render(renderer, new UIDrawPayload(payload));
         }
     }
 }

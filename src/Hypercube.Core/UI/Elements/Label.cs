@@ -1,42 +1,73 @@
-﻿using Hypercube.Core.Graphics.Rendering;
-using Hypercube.Core.Graphics.Rendering.Context;
+﻿using Hypercube.Core.Graphics.Rendering.Context;
 using Hypercube.Core.Graphics.Resources;
 using Hypercube.Core.Resources;
 using Hypercube.Mathematics;
-using Hypercube.Utilities.Dependencies;
+using Hypercube.Mathematics.Shapes;
 
 namespace Hypercube.Core.UI.Elements;
 
 [PublicAPI]
-public sealed class Label : Element, IPostInject
+public class Label : Element
 {
-    [Dependency] private readonly IResourceManager _resourceManager = null!;
-    
-    public ResourcePath Font = "/fonts/OpenSans.ttf";
-    public int FontSize = FontResourceLoader.DefaultSize;
-    
-    public Color Color = Color.White;
-    public string Text = string.Empty;
-    public float Scale = 1f;
+    public string Text
+    {
+        get;
+        set
+        {
+            field = value;
+            UpdateLayout();
+        }
+    } = string.Empty;
 
+    public ResourcePath Font
+    {
+        get;
+        set
+        {
+            field = value;
+            UpdateFont();
+        }
+    } = "/fonts/OpenSans.ttf";
+
+    public int FontSize
+    {
+        get;
+        set
+        {
+            field = value;
+            UpdateFont();
+        }
+    } = 18;
+    
+    public Color FontColor = Color.White;
+    public Vector2 FontAlign = Vector2.Half;
+    public bool DrawDebugRect;
+    
     private Font? _font;
-    
-    public void OnPostInject()
+
+    protected override void OnStartup()
     {
-        _font = _resourceManager.Load<Font>(Font, ("size", FontSize));
+        base.OnStartup();
+        
+        UpdateFont(true);
     }
 
-    public Label()
+    protected override void OnRender(IRenderContext renderer, UIDrawPayload payload)
     {
-        HorizontalAlignment = Alignment.HorizontalAlignment.Left;
-        VerticalAlignment = Alignment.VerticalAlignment.Top;
+        if (!string.IsNullOrEmpty(Text) && _font is not null)
+            renderer.DrawText(Text, _font, AbsolutePosition + AbsoluteSize * AnchorPoint, FontColor, align: FontAlign);
+        
+        if (DrawDebugRect)
+            renderer.DrawRectangle(Rect2.FromSize(AbsolutePosition, AbsoluteSize), Color.Red, true);
+        
+        base.OnRender(renderer, payload);
     }
 
-    protected override void OnRender(IRenderContext context, DrawPayload payload)
+    private void UpdateFont(bool force = false)
     {
-        if (_font is null || string.IsNullOrEmpty(Text))
+        if (_font is null && !force)
             return;
         
-        context.DrawText(Text, _font, Position, Color, Scale);
+        _font = UI.ResourceManager.Load<Font>(Font, ("size", FontSize));
     }
 }

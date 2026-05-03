@@ -10,7 +10,7 @@ public partial class RenderContext
 {
     public IDisposable UseRenderState(IWindow window)
     {
-        var view = Matrix4x4.CreateTransformSRT(new Vector3(-window.Size.X, window.Size.Y, 0) / 2f, Quaternion.Identity, Vector3.One);
+        var view = Matrix4x4.CreateTransformSRT(new Vector3(-window.Size.X, -window.Size.Y, 0) / 2f, Quaternion.Identity, Vector3.One);
         var projection = Matrix4x4.CreateOrthographic(window.Size, -1, 1);
         
         return UseRenderState(view, projection);

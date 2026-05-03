@@ -102,7 +102,8 @@ public readonly struct FontInfo
 
         var width = 0f;
         var maxWidth = 0f;
-        var height = LineHeight * scale;
+
+        var lines = 1;
 
         foreach (var c in text)
         {
@@ -110,7 +111,7 @@ public readonly struct FontInfo
             {
                 maxWidth = MathF.Max(maxWidth, width);
                 width = 0;
-                height += LineHeight * scale;
+                lines++;
                 continue;
             }
 
@@ -119,6 +120,11 @@ public readonly struct FontInfo
         }
 
         maxWidth = MathF.Max(maxWidth, width);
+
+        var height =
+            (Ascent - Descent) * scale +
+            (lines - 1) * LineHeight;
+
         return new Vector2(maxWidth, height);
     }
 }

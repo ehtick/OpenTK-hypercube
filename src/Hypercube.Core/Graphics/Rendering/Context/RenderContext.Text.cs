@@ -7,7 +7,7 @@ namespace Hypercube.Core.Graphics.Rendering.Context;
 
 public partial class RenderContext
 {
-    public void DrawText(string text, Font font, Vector2 position, Color color, float scale = 1f)
+    public void DrawText(string text, Font font, Vector2 position, Color color, float scale = 1f, Vector2 align = default)
     {
         if (_renderingApi.TexturingShaderProgram is null)
             throw new Exception("Texturing shader program is not initialized.");
@@ -19,7 +19,12 @@ public partial class RenderContext
             font.Texture.GpuBind(_renderingApi);
         
         // Starting position for rendering
-        var pen = position;
+        var size = font.Measure(text);
+
+        var pen = new Vector2(
+            position.X - size.X * align.X,
+            position.Y - size.Y * align.Y + font.LineHeight * 0.5f * align.Y
+        );
 
         // Using a texture shader and font as a texture
         _renderingApi.EnsureBatch(PrimitiveTopology.TriangleList, _renderingApi.TexturingShaderProgram.Handle, font.Texture.Gpu?.Handle);

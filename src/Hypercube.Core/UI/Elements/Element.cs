@@ -1,146 +1,167 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Hypercube.Core.Execution.LifeCycle;
-using Hypercube.Core.Graphics.Rendering;
+﻿using Hypercube.Core.Execution.LifeCycle;
 using Hypercube.Core.Graphics.Rendering.Context;
-using Hypercube.Core.UI.Alignment;
-using Hypercube.Mathematics.Shapes;
-using Hypercube.Utilities.Dependencies;
+using Hypercube.Mathematics;
+using Hypercube.Mathematics.Dimensions;
+using Hypercube.Utilities.Helpers;
 
 namespace Hypercube.Core.UI.Elements;
 
 [PublicAPI]
-public class Element
+public class Element : IDisposable
 {
-    private const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Stretch;
-    private const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Stretch;
+    public IUIManager UI
+    {
+        get;
+        set
+        {
+            if (UI is not null)
+                throw new InvalidOperationException();
+
+            field = value;
+        }
+    } = null!;
+
+    public Element? Parent;
+    
+    public bool Started;
+
+    public HDim2 Position = HDim2.Zero;
+    public HDim2 Size = HDim2.Zero;
+    public HDim Rotation = HDim.Zero;
+
+    public HDimRect Padding;
+
+    public Vector2 AnchorPoint;
+
+    public int ZIndex;
+
+    public int LayoutOrder;
+
+    public bool Visible = true;
 
     private readonly List<Element> _children = [];
 
-    public event Action<Element>? OnChildAdded;
-    public event Action<Element>? OnChildRemoved;
-
-    public string? Name { get; set; }
-
-    public Element? Parent { get; private set; }
-
-    public IDependenciesContainer? Dependencies { get; private set; }
+    private bool _disposed;
 
     public IReadOnlyList<Element> Children => _children;
-
-    public int Count => _children.Count;
-
-    public HorizontalAlignment HorizontalAlignment { get; set; } = DefaultHorizontalAlignment;
-
-    public VerticalAlignment VerticalAlignment { get; set; } = DefaultVerticalAlignment;
-
-    public Vector2 Position { get; protected set; }
-
-    public Vector2 Size { get; protected set; }
-
-    public bool Visible { get; set; } = true;
-
-    public Vector2 MinSize { get; set; } = Vector2.Zero;
-
-    public Vector2 MaxSize { get; set; } = Vector2.PositiveInfinity;
-
-    public Rect2 Margin { get; set; }
-
-    public void Render(IRenderContext context, DrawPayload payload)
+    
+    public Vector2 RelativePosition { get; private set; }
+    public Angle RelativeRotation { get; private set; }
+    
+    public Vector2 AbsolutePosition { get; private set; }
+    public Vector2 AbsoluteSize { get; private set; }
+    public Angle AbsoluteRotation { get; private set; }
+    
+    public Vector2 ContentPosition { get; private set; }
+    public Vector2 ContentSize { get; private set; }
+    
+    ~Element()
     {
-        if (!Visible)
-            return;
+        Dispose(false);
+    }
+    
+    public void Render(IRenderContext renderer, UIDrawPayload payload)
+    {
+        OnRender(renderer, payload);
 
-        OnRender(context, payload);
-
-        foreach (var child in _children)
-            child.Render(context, payload);
+        foreach (var element in _children)
+            element.Render(renderer, payload);
     }
 
     public void Update(FrameEventArgs args)
     {
         OnUpdate(args);
-
-        foreach (var child in _children)
-            child.Update(args);
+        
+        foreach (var element in _children)
+            element.Update(args);
     }
 
-    public void Arrange(in Rect2 availableRect)
+    public void Dispose()
     {
-        if (!Visible)
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    
+    public void Dispose(bool disposing)
+    {
+        if (_disposed)
             return;
-
-        var size = CalculateSize(availableRect.Size);
-        var position = CalculatePosition(availableRect, size);
-
-        Position = position;
-        Size = size;
+        
+        if (disposing)
+            OnDisposeManaged();
+        
+        OnDisposeUnmanaged();
+        _disposed = true;
     }
 
-    public Element Find(string name)
+    public void AddChild(Element element)
     {
-        return TryFind(name, out var element)
-            ? element
-            : throw new InvalidOperationException($"Element with name '{name}' was not found.");
+        element.UI = UI;
+        element.Parent = this;
+        
+        _children.Add(element);
+        
+        element.OnStartup();
+        element.Started = true;
+        
+        UpdateLayout();
     }
 
-    public bool TryFind(string name, [NotNullWhen(true)] out Element? result)
+    public void RemoveChild(Element element)
     {
-        var queue = new Queue<Element>();
-        queue.Enqueue(this);
+        ReflectionHelper.SetField(element, nameof(Parent), null!);
+        
+        _children.Remove(element);
+        
+        UpdateLayout();
+    }
 
-        while (queue.Count > 0)
+    public void RemoveChildAtIndex(int index)
+    {
+        if (_children.Count <= index)
+            return;
+            
+        RemoveChild(_children[index]);
+    }
+    
+    public void UpdateLayout()
+    {
+        if (!Started)
+            return;
+        
+        RelativePosition = Vector2.Zero;
+        
+        AbsoluteSize = Size.Resolve(UI.ViewportSize);
+        AbsolutePosition = Position.Resolve(UI.ViewportSize) -
+                           AbsoluteSize * AnchorPoint;
+
+        if (Parent is not null)
         {
-            var current = queue.Dequeue();
-
-            if (current.Name == name)
-            {
-                result = current;
-                return true;
-            }
-
-            foreach (var child in current._children)
-                queue.Enqueue(child);
+            RelativePosition = Position.Resolve(Parent.ContentSize);
+            
+            AbsoluteSize = Size.Resolve(Parent.ContentSize);
+            AbsolutePosition = Parent.ContentPosition +
+                               RelativePosition -
+                               AbsoluteSize * AnchorPoint;
         }
 
-        result = null;
-        return false;
+        var left = Padding.Left.Resolve(AbsoluteSize.X);
+        var right = Padding.Right.Resolve(AbsoluteSize.X);
+        var top = Padding.Top.Resolve(AbsoluteSize.Y);
+        var bottom = Padding.Bottom.Resolve(AbsoluteSize.Y);
+
+        ContentPosition = AbsolutePosition + new Vector2(left, top);
+
+        ContentSize = new Vector2(
+            AbsoluteSize.X - left - right,
+            AbsoluteSize.Y - top - bottom
+        );
+
+        foreach (var child in _children)
+            child.UpdateLayout();
     }
 
-    public void AddChild(Element child)
-    {
-        ValidateChild(child);
-
-        _children.Add(child);
-        child.Parent = this;
-
-        if (Dependencies is not null)
-            child.SetDependencies(Dependencies);
-
-        OnChildAdded?.Invoke(child);
-    }
-
-    public void RemoveChild(Element child)
-    {
-        if (child.Parent != this)
-            throw new InvalidOperationException(
-                "Element is not a child of this parent.");
-
-        _children.Remove(child);
-        child.Parent = null;
-
-        OnChildRemoved?.Invoke(child);
-    }
-
-    public override string ToString()
-    {
-        return Name is null
-            ? GetType().Name
-            : $"{GetType().Name} ({Name})";
-    }
-
-    protected virtual void OnRender(
-        IRenderContext context,
-        DrawPayload payload)
+    protected virtual void OnRender(IRenderContext renderer, UIDrawPayload payload)
     {
     }
 
@@ -148,73 +169,19 @@ public class Element
     {
     }
 
-    internal virtual void SetDependencies(IDependenciesContainer dependencies)
+    protected virtual void OnStartup()
     {
-        if (Dependencies is not null)
-            return;
-
-        Dependencies = dependencies;
-        dependencies.Inject(this);
-        
-        foreach (var child in _children)
-        {
-            child.SetDependencies(dependencies);
-        }
     }
 
-    private Vector2 CalculateSize(Vector2 availableSize)
+    protected virtual void OnMeasure()
     {
-        return availableSize.Clamp(MinSize, MaxSize);
     }
 
-    private Vector2 CalculatePosition(Rect2 rect, Vector2 size)
+    protected virtual void OnDisposeManaged()
     {
-        var x = CalculateHorizontalPosition(rect, size.X);
-        var y = CalculateVerticalPosition(rect, size.Y);
-
-        return new Vector2(x, y);
     }
-
-    private float CalculateHorizontalPosition(Rect2 rect, float width)
+    
+    protected virtual void OnDisposeUnmanaged()
     {
-        return HorizontalAlignment switch
-        {
-            HorizontalAlignment.Left => rect.TopLeft.X,
-            HorizontalAlignment.Center => rect.TopLeft.X + (rect.Size.X - width) / 2,
-            HorizontalAlignment.Right => rect.TopLeft.X + rect.Size.X - width,
-            HorizontalAlignment.Stretch => rect.TopLeft.X,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
-
-    private float CalculateVerticalPosition(Rect2 rect, float height)
-    {
-        return VerticalAlignment switch
-        {
-            VerticalAlignment.Top => rect.TopLeft.Y,
-            VerticalAlignment.Center => rect.TopLeft.Y + (rect.Size.Y - height) / 2,
-            VerticalAlignment.Bottom => rect.TopLeft.Y + rect.Size.Y - height,
-            VerticalAlignment.Stretch => rect.TopLeft.Y,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
-
-    private void ValidateChild(Element child)
-    {
-        if (child == this)
-            throw new InvalidOperationException("Element cannot be its own child.");
-
-        if (child.Parent is not null)
-            throw new InvalidOperationException("Element already has a parent.");
-
-        var parent = Parent;
-
-        while (parent is not null)
-        {
-            if (parent == child)
-                throw new InvalidOperationException("Circular hierarchy detected.");
-
-            parent = parent.Parent;
-        }
     }
 }
