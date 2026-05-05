@@ -12,3 +12,10 @@ public struct ShapeUnion
     [FieldOffset(0)] public ShapeSegment Segment;
     [FieldOffset(0)] public ShapeBox Box;
 }
+
+[StructLayout(LayoutKind.Explicit)]
+public struct ShapeUnionTyped
+{
+    [FieldOffset(0)] public ShapeType Type;
+    [FieldOffset(1)] public ShapeUnion Shape;
+}

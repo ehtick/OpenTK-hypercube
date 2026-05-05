@@ -1,20 +1,20 @@
-﻿namespace Hypercube.Physics;
+﻿namespace Hypercube.Physics.Manifolds;
 
 public readonly struct ManifoldPoint
 {
-    public readonly Vector2 Point;
-    public readonly Vector2 AnchorA;
-    public readonly Vector2 AnchorB;
+    public Vector2 Point { get; init; }
+    public Vector2 AnchorA { get; init; }
+    public Vector2 AnchorB { get; init; }
     
-    public readonly float Separation;
-    public readonly float NormalImpulse;
-    public readonly float TangentImpulse;
-    public readonly float TotalNormalImpulse;
-    public readonly float NormalVelocity;
+    public float Separation { get; init; }
+    public float NormalImpulse { get; init; }
+    public float TangentImpulse { get; init; }
+    public float TotalNormalImpulse { get; init; }
+    public float NormalVelocity { get; init; }
     
-    public readonly ushort Id;
+    public ushort Id { get; init; }
     
-    public readonly bool Persisted;
+    public bool Persisted { get; init; }
 
     public ManifoldPoint(Vector2 point, Vector2 anchorA, Vector2 anchorB, float separation, ushort id)
     {
@@ -50,4 +50,6 @@ public readonly struct ManifoldPoint
         
         Persisted = persisted;
     }
+    
+    public static ushort MakeId(int a, int b) => (ushort) ((byte) a << 8 | (byte) b);
 }

@@ -14,7 +14,7 @@ namespace Hypercube.Core.Graphics.Rendering.Context;
 /// Defines a rendering context abstraction that provides high-level drawing 
 /// and rendering operations on top of a low-level rendering API.
 /// </summary>
-public interface IRenderContext
+public partial interface IRenderContext
 {
     /// <summary>
     /// Initializes the rendering context with the given rendering API.
