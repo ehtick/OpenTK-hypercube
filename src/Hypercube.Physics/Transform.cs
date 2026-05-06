@@ -42,10 +42,13 @@ public readonly struct Transform
     public Vector2 InvRotate(Vector2 vector) => InvRotate(this, vector);
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ShapeCircle TransformCircle(in ShapeCircle circle) => TransformCircle(this, circle);
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ShapePolygon TransformPolygon(in ShapePolygon polygon) => TransformPolygon(this, polygon);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Vector2 TransformVector(Vector2 vector) => TransformVector(this, vector);
+    public Vector2 TransformPoint(Vector2 vector) => TransformPoint(this, vector);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Transform GetRelativeTransform(Transform transformA, Transform transformB)
@@ -73,7 +76,7 @@ public readonly struct Transform
         transform.Rotation.InvRotate(vector);
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 TransformVector(Transform transform, Vector2 vector)
+    public static Vector2 TransformPoint(Transform transform, Vector2 vector)
     {
         var x = vector.X;
         var y = vector.Y;
@@ -85,18 +88,30 @@ public readonly struct Transform
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ShapeCircle TransformCircle(Transform transform, in ShapeCircle circle)
+    {
+        var result = new ShapeCircle
+        {
+            Center = transform.TransformPoint(circle.Center),
+            Radius = circle.Radius
+        };
+        
+        return result;
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ShapePolygon TransformPolygon(Transform transform, in ShapePolygon polygon)
     {
         var result = new ShapePolygon
         {
             Count = polygon.Count,
-            Radius = polygon.Radius,
+            Radius = polygon.Radius
         };
      
         var count = polygon.Count;
         for (var i = 0; i < count; i++)
         {
-            result.Vertices[i] = transform.TransformVector(polygon.Vertices[i]);
+            result.Vertices[i] = transform.TransformPoint(polygon.Vertices[i]);
             result.Normals[i] = transform.Rotate(polygon.Normals[i]);
         }
 

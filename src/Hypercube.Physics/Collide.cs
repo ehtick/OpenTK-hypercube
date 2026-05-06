@@ -1,4 +1,5 @@
-﻿using Hypercube.Physics.Manifolds;
+﻿using System.ComponentModel.DataAnnotations;
+using Hypercube.Physics.Manifolds;
 using Hypercube.Physics.Shapes.Structs;
 using Hypercube.Utilities.Collections;
 using JetBrains.Annotations;
@@ -11,13 +12,14 @@ public static class Collide
     public const float UnitsPerMeter = 1.0f;
     public const float LinearSlop = 0.005f * UnitsPerMeter;
     public const float SpeculativeDistance = 4.0f * LinearSlop;
+    public const float Epsilon = 1.1920929e-7f;
     
-    public static Manifold Circles(ShapeCircle circleA, Transform transformA, ShapeCircle circleB, Transform transformB)
+    public static Manifold Circles(ref ShapeCircle circleA, Transform transformA, ref ShapeCircle circleB, Transform transformB)
     {
         var transform = transformA.ToLocalSpaceOf(transformB);
 
         var pointA = circleA.Center;
-        var pointB = transform.TransformVector(pointA);
+        var pointB = transform.TransformPoint(pointA);
         var pointDirection = pointB - pointA;
 
         // NOTE: Maybe LengthFast?
@@ -79,7 +81,7 @@ public static class Collide
         
         for (var i = 0; i < localB.Count; ++i)
         {
-            localB.Vertices[i] = transform.TransformVector(polygonB.Vertices[i]);
+            localB.Vertices[i] = transform.TransformPoint(polygonB.Vertices[i]);
             localB.Normals[i] = transform.Rotate(polygonB.Normals[i]);
         }
         
@@ -123,11 +125,143 @@ public static class Collide
 
         return new Manifold(normal, 0, points, 2);
     }
-    
+
+    public static Manifold PolygonCircle(ref ShapePolygon polygonA, Transform transformA, ref ShapeCircle circleB, Transform transformB)
+    {
+        var transform = transformA.ToLocalSpaceOf(transformB);
+
+        var center = transform.TransformPoint(circleB.Center);
+
+        var radiusA = polygonA.Radius;
+        var radiusB = circleB.Radius;
+        
+        var radius = radiusA + radiusB;
+
+        var normalIndex = 0;
+        var separation = -float.MaxValue;
+
+        var vertices = polygonA.Vertices;
+        var normals = polygonA.Normals;
+
+        var count = polygonA.Count;
+        for (var i = 0; i < count; i++)
+        {
+            var sep = Vector2.Dot(normals[i], center - vertices[i]);
+            if (sep <= separation)
+                continue;
+
+            separation = sep;
+            normalIndex = i;
+        }
+
+        if (separation > SpeculativeDistance + radius)
+            return Manifold.Empty;
+
+        var vertexIndex1 = normalIndex;
+        var vertexIndex2 = vertexIndex1 + 1 < count ? vertexIndex1 + 1 : 0;
+
+        var vertex1 = vertices[vertexIndex1];
+        var vertex2 = vertices[vertexIndex2];
+
+        var u1 = Vector2.Dot(center - vertex1, vertex2 - vertex1);
+        if (u1 < 0f && separation > Epsilon)
+        {
+            var normal = Normalize(center - vertex1);
+
+            separation = Vector2.Dot(center - vertex1, normal);
+            if (separation > SpeculativeDistance + radius)
+                return Manifold.Empty;
+
+            var cA = vertex1 + radiusA * normal;
+            var cB = center  - radiusB * normal;
+      
+            var contactPointA = Vector2.Lerp(cA, cB, 0.5f);
+
+            var anchorA = transformA.Rotate(contactPointA);
+            var point = new ManifoldPoint
+            {
+                AnchorA = anchorA,
+                AnchorB = anchorA + (transformA.Position - transformB.Position),
+                Point = anchorA + transformA.Position,
+                Separation = Vector2.Dot(cB - cA, normal),
+                Id = 0
+            };
+            
+            var manifold = new Manifold
+            {
+                Normal = transformA.Rotate(normal),
+                Points = new FixedArray2<ManifoldPoint>(point),
+                PointCount = 1,
+            };
+            
+            return manifold;
+        }
+        
+        var u2 = Vector2.Dot(center - vertex2, vertex1 - vertex2);
+        if (u2 < 0f && separation > Epsilon)
+        {
+            var normal = Normalize(center - vertex2);
+
+            separation = Vector2.Dot(center - vertex2, normal);
+            if (separation > SpeculativeDistance + radius)
+                return Manifold.Empty;
+
+            var cA = vertex2 + radiusA * normal;
+            var cB = center  - radiusB * normal;
+            
+            var contactPointA = Vector2.Lerp(cA, cB, 0.5f);
+
+            var anchorA = transformA.Rotate(contactPointA);
+            var point = new ManifoldPoint
+            {
+                AnchorA = anchorA,
+                AnchorB = anchorA + (transformA.Position - transformB.Position),
+                Point = anchorA + transformA.Position,
+                Separation = Vector2.Dot(cB - cA, normal),
+                Id = 0  
+            };
+            
+            var manifold = new Manifold
+            {
+                Normal = transformA.Rotate(normal),
+                Points = new FixedArray2<ManifoldPoint>(point),
+                PointCount = 1,
+            };
+
+            return manifold;
+        }
+
+        {
+            var normal = normals[normalIndex];
+        
+            var cA = center + (radiusA - Vector2.Dot(center - vertex1, normal)) * normal;
+            var cB = center - radiusB * normal;
+
+            var contactPointA = Vector2.Lerp(cA, cB, 0.5f);
+            
+            var anchorA = transformA.Rotate(contactPointA);
+            var point = new ManifoldPoint
+            {
+                AnchorA = anchorA,
+                AnchorB = anchorA + (transformA.Position - transformB.Position),
+                Point = anchorA + transformA.Position,
+                Separation = separation - radius,
+                Id = 0
+            };
+            
+            var manifold = new Manifold
+            {
+                Normal = transformA.Rotate(normal),
+                Points = new FixedArray2<ManifoldPoint>(point),
+                PointCount = 1,
+            };
+            
+            return manifold;
+        }
+    }
+
     private static Manifold ClipPolygons(ref ShapePolygon polygonA, ref ShapePolygon polygonB, int edgeA, int edgeB, bool flip)
     {
-        const float epsilon = 1.1920929e-7f;
-        
         ref var poly1 = ref polygonA;
         ref var poly2 = ref polygonB;
 
@@ -180,11 +314,11 @@ public static class Collide
             return Manifold.Empty;
 
         var vLower = v22;
-        if (lower2 < lower1 && upper2 - lower2 > epsilon)
+        if (lower2 < lower1 && upper2 - lower2 > Epsilon)
             vLower = Vector2.Lerp(v22, v21, (lower1 - lower2) / (upper2 - lower2));
         
         var vUpper= v21;
-        if (upper2 > upper1 && upper2 - lower2 > epsilon)
+        if (upper2 > upper1 && upper2 - lower2 > Epsilon)
             vUpper = Vector2.Lerp(v22, v21, (upper1 - lower2) / (upper2 - lower2));
   
 
@@ -238,6 +372,16 @@ public static class Collide
         );
     }
 
+    private static Vector2 Normalize(Vector2 vector2)
+    {
+        var length = float.Sqrt(vector2.X * vector2.X + vector2.Y * vector2.Y);
+        if (length < Epsilon)
+            return Vector2.Zero;
+
+        var invLength = 1f / length;
+        return vector2 * invLength;
+    }
+    
     private static void Swap<T>(ref T lhs, ref T rhs) where T : struct
     {
         (lhs, rhs) = (rhs, lhs);

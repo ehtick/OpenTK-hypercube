@@ -8,10 +8,10 @@ public readonly struct Manifold
 {
     public static readonly Manifold Empty = new(Vector2.Zero, 0f, FixedArray2<ManifoldPoint>.Empty, 0);
     
-    public readonly Vector2 Normal;
-    public readonly float RollingImpulse;
-    public readonly FixedArray2<ManifoldPoint> Points;
-    public readonly int PointCount;
+    public Vector2 Normal { get; init; }
+    public float RollingImpulse { get; init; }
+    public FixedArray2<ManifoldPoint> Points { get; init; }
+    public int PointCount { get; init; }
 
     public bool IsEmpty => PointCount == 0;
     

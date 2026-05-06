@@ -1,10 +1,18 @@
 ﻿using System.Diagnostics;
+using Hypercube.Physics.Shapes;
 using Hypercube.Physics.Shapes.Structs;
 
 namespace Hypercube.Physics;
 
 public static class DebugPhysicsGuard
 {
+    [Conditional("DEBUG")]
+    public static void ValidateShapeType(ShapeType type)
+    {
+        ArgumentOutOfRangeException.ThrowIfGreaterThan((int) type, (int) ShapeType.Segment);
+        ArgumentOutOfRangeException.ThrowIfLessThan((int) type, 0);
+    }
+    
     [Conditional("DEBUG")]
     public static void ValidatePolygonIndex(in ShapePolygon polygon, int value)
     {
