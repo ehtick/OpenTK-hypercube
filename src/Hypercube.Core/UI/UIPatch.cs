@@ -1,6 +1,7 @@
 ﻿using Hypercube.Core.Graphics.Patching;
 using Hypercube.Core.Graphics.Rendering;
 using Hypercube.Core.Graphics.Rendering.Context;
+using Hypercube.Core.UI.Manager;
 
 namespace Hypercube.Core.UI;
 
