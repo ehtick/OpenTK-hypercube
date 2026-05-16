@@ -1,30 +1,42 @@
-﻿using Hypercube.Mathematics.Dimensions;
+﻿using Hypercube.Core.UI.Elements.Containers.Abstract;
+using Hypercube.Mathematics.Dimensions;
 
-namespace Hypercube.Core.UI.Elements.Containers.Abstract;
+namespace Hypercube.Core.UI.Elements.Containers;
 
 [PublicAPI]
-public abstract class ContainerLinear : Container
+public class LayoutContainer : Container
 {
-    public Alignment AlignmentOpposite = Alignment.Start;
+    public Orientation Orientation = Orientation.Vertical;
     
-    public Alignment Alignment = Alignment.Start;
+    public Alignment HAlignment = Alignment.Start;
+    
+    public Alignment VAlignment = Alignment.Start;
     
     public Direction Direction = Direction.Forward;
     
     public HDim Spacing = HDim.Zero;
 
-    protected abstract float GetPrimarySize(Vector2 size);
-    protected abstract float GetSecondarySize(Vector2 size);
+    protected float GetPrimarySize(Vector2 size) =>
+        Orientation == Orientation.Horizontal ? size.X : size.Y;
 
-    protected abstract Vector2 SetPrimary(Vector2 pos, float value);
-    protected abstract Vector2 SetSecondary(Vector2 pos, float value);
+    protected float GetSecondarySize(Vector2 size) =>
+        Orientation == Orientation.Horizontal ? size.Y : size.X;
 
-    protected abstract float GetContentPrimarySize(Vector2 contentSize);
+    protected Vector2 SetPrimary(Vector2 pos, float value) =>
+        Orientation == Orientation.Horizontal ? new Vector2(value, pos.Y) : new Vector2(pos.X, value);
+    
+    protected Vector2 SetSecondary(Vector2 pos, float value) =>
+        Orientation == Orientation.Horizontal ? new Vector2(pos.X, value) : new Vector2(value, pos.Y);
+
+    protected float GetContentPrimarySize(Vector2 contentSize) =>
+        Orientation == Orientation.Horizontal ? contentSize.X : contentSize.Y;
 
     protected float ResolveSpacing() => Spacing.Resolve(GetContentPrimarySize(ContentSize));
 
     protected override void OnUpdateLayout()
     {
+        base.OnUpdateLayout();
+        
         var children = Children.OrderBy(x => x.LayoutOrder).ToArray();
         if (children.Length == 0)
             return;
@@ -43,7 +55,7 @@ public abstract class ContainerLinear : Container
     {
         var content = GetContentPrimarySize(ContentSize);
 
-        return Alignment switch
+        return VAlignment switch
         {
             Alignment.Start => 0f,
             Alignment.Center => (content - total) / 2f,
@@ -62,24 +74,32 @@ public abstract class ContainerLinear : Container
         var totalPrimary = ordered.Sum(c =>
             GetPrimarySize(c.Size.Resolve(ContentSize)));
 
-        switch (Alignment)
+        switch (VAlignment)
         {
-            case Alignment.SpaceBetween when ordered.Length > 1:
-                dynamicSpacing = (GetContentPrimarySize(ContentSize) - totalPrimary)
-                                 / (ordered.Length - 1);
+            case Alignment.SpaceBetween:
+                if (ordered.Length - 1 <= 0)
+                    break;
+                
+                dynamicSpacing = (GetContentPrimarySize(ContentSize) - totalPrimary) / (ordered.Length - 1);
                 break;
 
             case Alignment.SpaceEvenly:
-                dynamicSpacing = (GetContentPrimarySize(ContentSize) - totalPrimary)
-                                 / (ordered.Length + 1);
+                dynamicSpacing = (GetContentPrimarySize(ContentSize) - totalPrimary) / (ordered.Length + 1);
                 start = dynamicSpacing;
                 break;
 
             case Alignment.SpaceAround:
-                dynamicSpacing = (GetContentPrimarySize(ContentSize) - totalPrimary)
-                                 / ordered.Length;
+                dynamicSpacing = (GetContentPrimarySize(ContentSize) - totalPrimary) / ordered.Length;
                 start = dynamicSpacing / 2f;
                 break;
+            
+            case Alignment.Start:
+            case Alignment.Center:
+            case Alignment.End:
+                break;
+            
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
         var offset = start;
@@ -87,7 +107,7 @@ public abstract class ContainerLinear : Container
         foreach (var child in ordered)
         {
             var size = child.Size.Resolve(ContentSize);
-            var secondary = AlignmentOpposite switch
+            var secondary = HAlignment switch
             {
                 Alignment.Start => 0f,
                 Alignment.Center => (GetSecondarySize(ContentSize) - GetSecondarySize(size)) / 2f,

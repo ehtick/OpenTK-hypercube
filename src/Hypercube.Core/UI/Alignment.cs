@@ -7,6 +7,5 @@ public enum Alignment
     End,
     SpaceBetween,
     SpaceAround,
-    SpaceEvenly,
-    Stretch
+    SpaceEvenly
 }

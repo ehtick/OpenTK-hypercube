@@ -20,15 +20,15 @@ public class Element : IDisposable
     /// </summary>
     public IUIManager UI
     {
-        get;
+        get => _ui ?? throw new InvalidOperationException();
         internal set
         {
-            if (UI is not null)
+            if (_ui is not null)
                 throw new InvalidOperationException();
 
-            field = value;
+            _ui = value;
         }
-    } = null!;
+    }
 
     /// <summary>
     /// Parent element in the UI hierarchy.
@@ -177,6 +177,8 @@ public class Element : IDisposable
     /// </summary>
     public bool Visible = true;
 
+    public bool Scissor;
+
     /// <summary>
     /// Position relative to parent element.
     /// </summary>
@@ -241,6 +243,8 @@ public class Element : IDisposable
     }
 
     private bool _disposed;
+    
+    private IUIManager? _ui;
 
     private readonly List<Element> _children = [];
 
@@ -274,6 +278,8 @@ public class Element : IDisposable
     /// Read-only collection of child elements.
     /// </summary>
     public IReadOnlyList<Element> Children => _children;
+    
+    public bool Attached => _ui is not null;
 
     /// <summary>
     /// Finalizer ensures unmanaged cleanup if Dispose was not called.
@@ -289,6 +295,9 @@ public class Element : IDisposable
     /// <seealso cref="OnRender"/>
     public void Render(IRenderContext renderer, UIDrawPayload payload)
     {
+        if (!Visible)
+            return;
+        
         OnRender(renderer, payload);
 
         foreach (var element in _children)
@@ -340,7 +349,7 @@ public class Element : IDisposable
         element.UI = UI;
         element.Parent = this;
 
-        // Config local paramters
+        // Config local parameters
         element._positioning = ChildrenPositioning;
         
         OnChildAdded(element);
@@ -406,7 +415,10 @@ public class Element : IDisposable
         var padding = Padding.Resolve(AbsoluteSize);
         
         ContentPosition = AbsolutePosition + padding.TopLeft;
-        ContentSize = AbsoluteSize - padding.BottomRight;
+        ContentSize = new Vector2(
+            AbsoluteSize.X - padding.Left - padding.Right,
+            AbsoluteSize.Y - padding.Top - padding.Bottom
+        );
         
         OnUpdateLayout();
 
