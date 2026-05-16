@@ -11,6 +11,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <NoWarn>HUA0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
